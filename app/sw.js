@@ -1,5 +1,5 @@
 /* Service Worker — Malachie 4 Projections v3 (hors-ligne progressif) */
-const CACHE = 'm4p-v3b' /* v3b : compteurs + embarquement complet */;
+const CACHE = 'm4p-v3c'; /* v3c : appui long tactile, synchro lecture zone5<->zone3, fenetre publique ?public=1 */
 const SHELL = ['./', './index.html', './manifest.json',
   './assets/logo.png', './assets/logo-192.png', './assets/apple-touch-icon.png',
   './data/bible.js', './data/chants.js', './data/brochures-index.js'];
