@@ -289,7 +289,7 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
     <!-- ZONE 5 : PRÉPARATION / ÉDITION -->
     <section class="tile" id="z5">
       <div class="tete"><span class="num">5</span><b>Préparation</b><span class="inf">détails &amp; édition</span></div>
-      <div id="z5titre"><span id="z5nom" class="vide">Sélectionnez une ressource dans la zone 4</span></div>
+      <div id="z5titre"><span id="z5nom" class="vide">Sélectionnez une ressource dans la zone 4</span><span id="z5nav" style="margin-left:auto;display:flex;gap:4px;flex:none"><button class="btn" id="z5up" title="Monter / précédent" style="font-size:1rem;padding:2px 11px">↑</button><button class="btn" id="z5dn" title="Descendre / suivant" style="font-size:1rem;padding:2px 11px">↓</button></span></div>
       <div id="z5corps"><div class="vide">Le contenu ouvert apparaît ici (cantique complet, chapitre biblique, brochure avec ses deux lectures).</div></div>
     </section>
     <!-- ZONE 6 : HISTORIQUE DES PROJECTIONS -->
@@ -516,9 +516,21 @@ function restaurerSnap(s, directe){
 }
 /* geste maintien long universel */
 function garde(el, fn){
-  let t=null;
-  el.addEventListener('pointerdown', ()=>{ t=setTimeout(fn, 550); });
-  ['pointerup','pointerleave','pointercancel','contextmenu'].forEach(ev=>el.addEventListener(ev, ()=>clearTimeout(t)));
+  let t=null; el._lp=false;
+  const demarre = ()=>{ t=setTimeout(()=>{ el._lp=true; fn(); try{ navigator.vibrate && navigator.vibrate(28); }catch(_){} }, 480); };
+  const stoppe = ()=>clearTimeout(t);
+  /* souris / stylet */
+  el.addEventListener('pointerdown', e=>{ if(e.pointerType!=='touch') demarre(); });
+  ['pointerup','pointerleave','pointercancel'].forEach(ev=>el.addEventListener(ev, stoppe));
+  /* tactile dédié : tolérance de glisse 38px, aucune annulation par le défilement */
+  let sx=0, sy=0;
+  el.addEventListener('touchstart', e=>{ const c=e.changedTouches[0]; sx=c.clientX; sy=c.clientY; demarre(); }, {passive:true});
+  el.addEventListener('touchmove', e=>{ const c=e.changedTouches[0]; if(Math.abs(c.clientX-sx)>38||Math.abs(c.clientY-sy)>38) stoppe(); }, {passive:true});
+  el.addEventListener('touchend', stoppe);
+  el.addEventListener('touchcancel', stoppe);
+  el.addEventListener('contextmenu', e=>e.preventDefault());
+  el.addEventListener('dragstart', e=>e.preventDefault());
+  el.addEventListener('click', e=>{ if(el._lp){ el._lp=false; e.preventDefault(); e.stopPropagation(); } }, true);
 }
 
 /* ================= ZONE 2 : PARAMÈTRES ================= */
@@ -722,6 +734,15 @@ function broParagraphe(){
   function scrollSel(){ const s=EL('z5corps').querySelector('.bropanel .chnum.sel'); if(s) s.scrollIntoView({block:'nearest'}); }
   scrollSel();
   preparerZ3(itemBro(cur));
+  const bx = EL('brox');
+  if(bx) bx.addEventListener('scroll', ()=>{
+    const cible = EL('contenu'); if(!cible) return;
+    const t = cible.querySelector('.texte'); if(!t) return;
+    const frac = bx.scrollHeight > bx.clientHeight ? bx.scrollTop/(bx.scrollHeight-bx.clientHeight) : 0;
+    const depasse = Math.max(0, t.scrollHeight - cible.clientHeight);
+    t.style.transition = 'transform .12s';
+    t.style.transform = 'translateY(' + (-Math.round(frac*depasse)) + 'px)';
+  }, {passive:true});
 }
 function broContinuous(){
   const bro = state.bro;
@@ -913,6 +934,31 @@ function nav(d){
   }
 }
 EL('prev').onclick=()=>nav(-1); EL('next').onclick=()=>nav(1);
+EL('z5up').onclick=()=>nav(-1); EL('z5dn').onclick=()=>nav(1);
+/* SYNCHRO au défilement : la strophe/le verset visible en tête devient courant dans la zone 3 */
+EL('z5corps').addEventListener('scroll', ()=>{
+  const stubs = EL('z5corps').querySelectorAll('.strophe');
+  if(!stubs.length) return;
+  const top = EL('z5corps').getBoundingClientRect().top;
+  let best = null;
+  stubs.forEach(p=>{ if(p.getBoundingClientRect().top < top + 70) best = p; });
+  if(!best || best.dataset.i===undefined) return;
+  const i = +best.dataset.i;
+  if(state.selectedResourceType==='bible' && state.bible.livre>=0 && i!==state.bible.verset){
+    const L=M4_BIBLE.livres[state.bible.livre], C=L.chapitres[state.bible.chapitre];
+    state.bible.verset=i;
+    projeterSync({entete:`${L.nom} ${state.bible.chapitre+1}:${i+1} — Segond 1910`, titre:refTxt()+':'+(i+1), texte:C[i],
+      label:`📖 ${refTxt()}:${i+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:i}});
+  } else if(!state.bro.id && state.chant.idx>=0 && i!==state.chant.pos){
+    const R=M4_CHANTS.recueils[state.chant.recueil];
+    const parties=partiesChant((state.edits[R.id+'-'+state.chant.idx])||R.songs[state.chant.idx].texte);
+    if(!parties[i]) return;
+    state.chant.pos=i;
+    projeterSync({entete:R.songs[state.chant.idx].titre, titre:`${R.songs[state.chant.idx].num} — ${R.songs[state.chant.idx].titre} · ${parties[i].tag}`,
+      texte:parties[i].texte, label:`🎵 ${R.songs[state.chant.idx].num} ${R.songs[state.chant.idx].titre} · ${parties[i].tag}`,
+      snap:{kind:'chant',recueil:state.chant.recueil,idx:state.chant.idx,pos:i}});
+  }
+}, {passive:true});
 document.addEventListener('keydown', e=>{
   if(e.target.matches('input,textarea') ) return;
   if(e.key==='ArrowDown'||e.key===' '){ e.preventDefault(); nav(1); }
