@@ -15,7 +15,7 @@
   --vert:#1c3a2a; --vert2:#122418; --or:#c9a34e; --or2:#8a5a00;
   --parcho:#ece4d0; --fond:#efe9d9; --carte:#fffdf7; --doux:#6b7d6f;
   --bord:#d9cba4; --danger:#8f2d2d;
-  --police:Georgia,'Times New Roman',serif; --taille:32px; --interligne:1.35;
+  --police:Sermon,Cambria,'Noto Serif',Georgia,serif; --taille:32px; --interligne:1.35;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -248,10 +248,10 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
         </div>
         <div class="z2grp"><small>POLICE (3 proposées, visibles)</small>
           <div class="polices">
-            <button class="police on" data-p="Georgia,'Times New Roman',serif" style="font-family:Georgia,serif">Georgia — élégante livre</button>
+            <button class="police" data-p="Georgia,'Times New Roman',serif" style="font-family:Georgia,serif">Georgia — élégante livre</button>
             <button class="police" data-p="Calibri,'Segoe UI',Arial,sans-serif" style="font-family:Calibri,'Segoe UI',Arial,sans-serif">Calibri — moderne ronde</button>
             <button class="police" data-p="Verdana,Geneva,sans-serif" style="font-family:Verdana,sans-serif">Verdana — très lisible</button>
-            <button class="police" data-p="Sermon,Cambria,'Noto Serif',Georgia,serif" style="font-family:Sermon,Cambria,'Noto Serif',Georgia,serif">Sermon — écriture des brochures</button>
+            <button class="police on" data-p="Sermon,Cambria,'Noto Serif',Georgia,serif" style="font-family:Sermon,Cambria,'Noto Serif',Georgia,serif">Sermon — écriture des brochures</button>
           </div>
         </div>
         <div class="z2grp"><small>INTERLIGNE</small>
@@ -343,7 +343,7 @@ const state = {
   selectedResourceType: 'recueil',// recueil | bible | brochure
   selectedResourceId: null,
   preview: null,                  // {key,label,html} contenu en zone 3
-  fontFamily: "Georgia,'Times New Roman',serif",
+  fontFamily: "Sermon,Cambria,'Noto Serif',Georgia,serif",
   fontSize: 32,
   lineSpacing: 1.3,
   background: 'parchment',        // parchment | charcoal | white
