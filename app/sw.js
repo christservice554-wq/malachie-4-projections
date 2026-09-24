@@ -1,5 +1,7 @@
-/* Service Worker — Malachie 4 Projections v3 (hors-ligne progressif) */
-const CACHE = 'm4p-v3d';
+/* Service Worker — Malachie 4 Projections v3e
+   Stratégie : pages HTML = RÉSEAU D'ABORD (mises à jour toujours reçues),
+   données (Bible/chants/brochures/assets) = cache d'abord (hors-ligne garanti) */
+const CACHE = 'm4p-v3e';
 const SHELL = ['./', './index.html', './manifest.json',
   './assets/logo.png', './assets/logo-192.png', './assets/apple-touch-icon.png',
   './data/bible.js', './data/chants.js', './data/brochures-index.js'];
@@ -13,8 +15,21 @@ self.addEventListener('activate', e => {
       .then(() => self.clients.claim())
   );
 });
-/* brochures embarquées à la demande puis gardées en cache (usage 100 % hors-ligne ensuite) */
 self.addEventListener('fetch', e => {
+  const chemin = new URL(e.request.url).pathname;
+  const estPage = /(\.html?|\/)$/.test(chemin) && !chemin.includes('/data/');
+  if (estPage) {
+    /* RÉSEAU D'ABORD : une nouvelle version d'app arrive toujours */
+    e.respondWith(
+      fetch(e.request).then(rep => {
+        const copie = rep.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copie));
+        return rep;
+      }).catch(() => caches.match(e.request, { ignoreSearch: true }))
+    );
+    return;
+  }
+  /* cache d'abord pour les données */
   e.respondWith(
     caches.match(e.request, { ignoreSearch: true }).then(hit =>
       hit || fetch(e.request).then(rep => {
