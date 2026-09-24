@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Malachie 4 Projections</title>
+<meta name="theme-color" content="#1c3a2a">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./assets/logo-192.png">
+<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+<style>
+/* ============== THEME / VARIABLES ============== */
+:root{
+  --vert:#1c3a2a; --vert2:#122418; --or:#c9a34e; --or2:#8a5a00;
+  --parcho:#ece4d0; --fond:#efe9d9; --carte:#fffdf7; --doux:#6b7d6f;
+  --bord:#d9cba4; --danger:#8f2d2d;
+  --police:Georgia,'Times New Roman',serif; --taille:32px; --interligne:1.35;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);color:#21352a;
+  display:flex;flex-direction:column;gap:8px;padding:9px;height:100vh;overflow:hidden}
+/* ============== SPLASH (identique au modèle d'origine) ============== */
+#splash{position:fixed;inset:0;z-index:90;background:radial-gradient(ellipse at center,#1c3a2a,#122418);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .5s;padding:20px}
+#splash .logo{width:120px;height:120px;border-radius:50%;border:4px solid #d9a441;object-fit:cover;animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,164,65,.55)}50%{box-shadow:0 0 0 16px rgba(217,164,65,0)}}
+#splash h1{color:#fff;margin:14px 0 4px;font-size:26px}
+#splash .verset{color:#c9a34e;font-style:italic;margin-bottom:14px;font-size:15px}
+#splash .chargement{color:#bcd6c6;font-size:14px}
+#splash .barre{width:210px;height:6px;border-radius:4px;background:rgba(255,255,255,.15);margin-top:9px;overflow:hidden}
+#splash .barre i{display:block;height:100%;width:0;background:#d9a441;animation:charge 2.4s ease forwards}
+@keyframes charge{to{width:100%}}
+/* ============== ZONE 8 — BANDE SUPÉRIEURE ============== */
+#z8{display:flex;align-items:center;gap:10px;background:var(--vert);color:#fff;border-radius:12px;padding:6px 14px;flex:none}
+#z8 img{width:36px;height:36px;border-radius:50%;border:2px solid var(--or)}
+#z8 .nom{font-weight:700;font-size:1rem;white-space:nowrap}
+#z8 .nom small{display:block;color:var(--or);font-size:.62rem;font-weight:400}
+#z8 .sp{flex:1}
+#z8 .etat{font-size:.66rem;color:#b9e2c8;background:rgba(255,255,255,.08);border:1px solid rgba(217,164,65,.5);
+  border-radius:20px;padding:4px 12px;white-space:nowrap}
+.zbtn{border:1px solid var(--or);border-radius:9px;padding:7px 12px;font-size:.8rem;cursor:pointer;font-weight:800;background:transparent;color:#fff}
+.zbtn.on{background:#2e6b4f;border-color:#3f8f68}
+.zbtn.off{background:#5a2b2b;border-color:#8f3d3d}
+/* ============== GRILLE / ZONES ============== */
+#grille{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
+.rang{flex:1;display:flex;gap:8px;min-height:0}
+.rang.h1{flex:2}
+.rang.h2{flex:3}
+.rang.h1>.tile:nth-child(1){flex:2}.rang.h1>.tile:nth-child(2){flex:1}.rang.h1>.tile:nth-child(3){flex:2}
+.rang.h2>.tile:nth-child(1){flex:3}.rang.h2>.tile:nth-child(2){flex:4}.rang.h2>.tile:nth-child(3){flex:3}
+.tile{background:var(--carte);border:2px solid var(--bord);border-radius:12px;display:flex;flex-direction:column;
+  min-width:206px;min-height:0;position:relative;overflow:hidden}
+.tile .in{display:flex;flex-direction:column;flex:1;min-height:0;overflow:auto}
+.tile{resize:both;}                       /* redimensionnement manuel (coin) */
+.tile::-webkit-resizer{background:transparent}
+.tile::after{content:"⟷";position:absolute;right:4px;bottom:2px;color:var(--or2);font-size:.75rem;pointer-events:none;z-index:9}
+.tete{display:flex;align-items:center;gap:7px;background:linear-gradient(180deg,#fbf6e8,#f2e8cf);
+  padding:6px 9px;border-bottom:1px solid #e0d2ac;position:sticky;top:0;z-index:3;flex:none}
+.num{width:22px;height:22px;min-width:22px;border-radius:50%;background:var(--vert);color:var(--or);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem}
+.tete b{font-size:.72rem;text-transform:uppercase;letter-spacing:.02em}
+.tete .inf{margin-left:auto;font-size:.62rem;color:var(--doux);font-style:italic}
+.corps{padding:8px;flex:1;min-height:0;overflow:auto}
+.pied{flex:none;border-top:1px dashed var(--bord);background:#faf5e6;padding:5px;display:flex;gap:5px;justify-content:center}
+.pied button{border:1px solid var(--or2);background:#fff;border-radius:7px;padding:4px 13px;cursor:pointer;font-weight:800;font-size:.78rem}
+@media (max-width:980px){body{overflow:auto}#grille,.rang{display:block}.tile{margin-bottom:8px;min-height:220px}}
+/* ============== COMMUNS ============== */
+.btn{border:1px solid var(--or2);background:#fff;border-radius:8px;padding:5px 11px;cursor:pointer;font-weight:800;font-size:.78rem}
+.btn.prim{background:var(--or);color:#2b1e00}
+.btn.vert{background:var(--vert);color:var(--parcho)}
+.rech{width:100%;border:1px solid #cbb87e;border-radius:8px;padding:6px 9px;font-size:.85rem;background:#fff;margin-bottom:7px}
+.rowi{display:block;width:100%;text-align:left;border:1px solid #e0d5b8;background:#fff;border-radius:8px;
+  padding:6px 8px;margin-bottom:5px;cursor:pointer;user-select:none;font-size:.86rem}
+.rowi:hover{border-color:var(--or)}
+.rowi.sel{border:2px solid var(--or2);background:#fff8e6}
+.badge{display:inline-block;font-size:.58rem;font-weight:800;border-radius:5px;padding:1px 6px;color:#fff;margin-right:5px;vertical-align:middle}
+.bnv{background:#2e6b4f}.bhist{background:#7a5c1e}.bvgr{background:#2e6b4f}.bskn{background:#a5740a}
+.mini{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid #e0d5b8;border-radius:8px;padding:5px 7px;margin-bottom:5px;font-size:.76rem}
+.mini .lbl{flex:1;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini .x{border:none;background:var(--danger);color:#fff;width:18px;height:18px;border-radius:6px;cursor:pointer;font-weight:800;flex:none}
+.vide{color:var(--doux);font-style:italic;font-size:.75rem;text-align:center;padding:10px 6px}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px}
+.chip{border:1px solid var(--or2);color:var(--or2);border-radius:14px;padding:2px 9px;font-size:.72rem;background:#fff;cursor:pointer;font-weight:800}
+.chip.on{background:var(--or2);color:#fff}
+#toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:var(--vert);color:#fff;padding:9px 18px;
+  border-radius:22px;font-weight:600;font-size:.84rem;box-shadow:0 4px 14px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:.3s;z-index:80}
+#toast.show{opacity:1}
+/* ============== ZONE 2 ============== */
+.z2grp{margin-bottom:10px}
+.z2grp>small{display:block;color:var(--doux);font-size:.68rem;margin-bottom:4px}
+.z2row{display:flex;align-items:center;gap:7px}
+.z2row .btn{width:32px;height:32px;padding:0}
+.z2row b{flex:1;text-align:center;font-size:.85rem}
+.polices{display:flex;flex-direction:column;gap:4px}
+.police{border:1px solid #cbb87e;border-radius:8px;background:#fff;padding:6px 8px;cursor:pointer;font-size:.86rem;text-align:left}
+.police.on{border:2px solid var(--or2);background:#fff8e6}
+.inter{display:flex;gap:5px}
+.inter .chip{flex:1;text-align:center}
+.fonds{display:flex;gap:6px}
+.fond{flex:1;border-radius:8px;padding:9px 4px;text-align:center;cursor:pointer;border:2px solid var(--or);font-size:.7rem;font-weight:800}
+.fond.parchment{background:var(--parcho);color:#4a3a12}
+.fond.charcoal{background:#232b25;color:var(--parcho)}
+.fond.white{background:#fff;color:#333}
+/* ============== ZONE 3 — MINI-ÉCRAN ============== */
+#z3 .in{overflow:hidden}
+#ecran{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;
+  border-radius:0;transition:.25s;min-height:0;overflow:hidden}
+#ecran.fond-parchment{background:var(--parcho);color:#3a2f14}
+#ecran.fond-charcoal{background:#1d2420;color:var(--parcho)}
+#ecran.fond-white{background:#fff;color:#222}
+#ecran.transparent{background:repeating-linear-gradient(45deg,#202620,#202620 14px,#242c26 14px,#242c26 28px);color:#8fa890}
+#ecran.deconnecte{background:#161616;color:#777}
+.veill{color:#9c8c56;padding:14px}
+.veill img{width:56px;border-radius:50%;border:2px solid #b9a868;opacity:.8}
+.veill .cit{font-style:italic;margin-top:7px;font-size:.82rem}
+.veill .bdg{display:inline-block;margin-top:8px;font-size:.58rem;letter-spacing:.18em;border:1px solid #b9a868;border-radius:18px;padding:3px 11px}
+#contenu{width:100%;height:100%;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 16px;text-align:center}
+#contenu .titre{font-size:.7em;font-weight:800;color:var(--or2);margin-bottom:.5em;max-width:100%}
+.fond-charcoal #contenu .titre{color:var(--or)}
+#contenu .texte{font-family:var(--police);font-size:calc(var(--taille)*.62);line-height:var(--interligne);
+  font-weight:600;white-space:pre-line;max-width:100%;overflow:hidden}
+#contenu .ref{margin-top:.5em;font-size:.62em;font-weight:800;color:var(--or2)}
+.fond-charcoal #contenu .ref{color:var(--or)}
+/* ============== ZONE 4 ============== */
+.z4tetes{display:flex;gap:4px;padding:6px 7px;border-bottom:1px solid #e0d2ac;background:#f7f0dd;flex:none}
+.z4tetes .fam{flex:1;border:1.5px solid var(--vert);border-radius:8px;background:#eef4ef;padding:6px 4px;
+  font-size:.72rem;font-weight:800;cursor:pointer;color:var(--vert);text-align:center}
+.z4tetes .fam.on{background:var(--vert);color:var(--parcho)}
+.z4tetes .plus{flex:none;width:34px;border:1.5px solid var(--or2);border-radius:8px;background:var(--or);font-size:1rem;font-weight:900;cursor:pointer;color:#2b1e00}
+#z4corps{display:flex;flex-direction:column;flex:1;min-height:0;padding:7px;overflow:hidden}
+#z4liste{flex:1;min-height:0;overflow:auto}
+/* Bible explorateur 3 niveaux */
+.biv3{display:flex;gap:6px;flex:1;min-height:0;overflow:hidden}
+.bcol{flex:1;min-width:0;overflow:auto;border:1px solid #e0d5b8;border-radius:8px;padding:6px;background:#fdfaf1;transition:.2s}
+.bcol.shrink{flex:none;width:86px}
+.bcol.cache{display:none}
+.bcol h6{font-size:.64rem;color:var(--or2);text-transform:uppercase;margin-bottom:5px}
+.livres{display:grid;gap:4px}
+.livres.c2{grid-template-columns:1fr 1fr}
+.livres.c3{grid-template-columns:1fr 1fr 1fr}
+.livre{border:1px solid #b9cfa8;background:#eef4ef;border-radius:7px;padding:5px 6px;font-size:.72rem;cursor:pointer;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.livre.sel{background:var(--vert);color:var(--parcho)}
+.chnums,.vnums{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:4px}
+.chnum,.vnum{border:1px solid #cbb87e;background:#fff;border-radius:7px;padding:5px 2px;text-align:center;font-size:.75rem;cursor:pointer;font-weight:800}
+.chnum.sel,.vnum.sel{background:var(--or2);color:#fff;border-color:var(--or2)}
+/* ============== ZONE 5 ============== */
+#z5titre{flex:none;padding:6px 9px;border-bottom:1px solid #e0d2ac;background:#f7f0dd;font-size:.8rem;font-weight:800;display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+#z5corps{flex:1;min-height:0;overflow:auto;padding:9px}
+.strophe{border:1px solid #e0d5b8;background:#fff;border-radius:9px;padding:8px 10px;margin-bottom:8px;cursor:pointer;user-select:none}
+.strophe:hover{border-color:var(--or)}
+.strophe.sel{border:2px solid var(--or2);background:#fff8e6}
+.strophe .tch{display:inline-block;font-size:.6rem;font-weight:800;color:#fff;background:var(--vert);border-radius:5px;padding:2px 7px;margin-bottom:4px}
+.strophe .tch.choeur{background:var(--or2)}
+.strophe .txt{white-space:pre-line;font-size:.92rem}
+.tabs{display:flex;gap:6px}
+.tabs .tab{border:1.5px solid var(--vert);border-radius:8px;background:#eef4ef;padding:5px 12px;font-size:.74rem;font-weight:800;cursor:pointer;color:var(--vert)}
+.tabs .tab.on{background:var(--vert);color:var(--parcho)}
+.brozone{display:flex;gap:8px;height:100%;min-height:0;max-height:100%}
+.bropanel{flex:none;width:132px;overflow:auto;border:1px solid #e0d5b8;border-radius:8px;padding:5px;background:#fdfaf1;max-height:100%}
+.bropanel .chnums{grid-template-columns:repeat(3,1fr)}
+.brostexte{flex:1;min-width:0;overflow:auto;padding:4px 8px;font-family:var(--police);font-size:15px}
+/* lecture continue : cadre fixe, défilement ligne par ligne */
+.brocont{flex:1;min-width:0;position:relative;overflow:hidden;border:1px solid #d9cba4;border-radius:10px;background:#fff}
+.brocont .flux{position:absolute;left:12px;right:12px;top:8px;transition:transform .18s ease;
+  font-family:var(--police);font-size:calc(var(--taille)*.5);line-height:var(--interligne)}
+.brocont .flux p{margin:0 0 .35em}
+.brop{position:relative}
+.brop .pn{position:absolute;left:-6px;color:var(--or2);font-size:.6em;font-weight:800}
+.brocmd{position:absolute;right:6px;bottom:6px;display:flex;gap:5px;z-index:2}
+.brocmd button{border:1px solid var(--or2);background:#fff;border-radius:7px;padding:4px 12px;cursor:pointer;font-weight:800;font-size:.74rem;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+textarea.ed{width:100%;min-height:240px;font-family:inherit;font-size:.9rem;padding:8px;border:1px solid #cbb87e;border-radius:9px;resize:vertical}
+/* ============== MODALES ============== */
+.modal{position:fixed;inset:0;background:rgba(20,26,22,.82);display:none;align-items:center;justify-content:center;z-index:70;padding:12px}
+.modal .boite{background:var(--carte);max-width:480px;width:100%;border-radius:14px;border:3px solid var(--or);overflow:hidden}
+.modal .h{background:var(--vert);color:#fff;padding:10px 14px;font-weight:700;font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+.modal .c{padding:14px;font-size:.86rem;max-height:70vh;overflow:auto}
+.modal .f{padding:10px;text-align:right;background:#faf5e6;display:flex;gap:6px;justify-content:flex-end}
+.choix{display:flex;flex-direction:column;gap:8px}
+.choix button{border:2px solid var(--vert);border-radius:10px;background:#eef4ef;padding:11px;font-weight:800;cursor:pointer;font-size:.9rem;color:var(--vert)}
+.choix button:hover{background:var(--vert);color:var(--parcho)}
+.lbl2{display:block;font-size:.72rem;color:var(--doux);margin:8px 0 3px}
+input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;padding:7px 9px;font-size:.86rem;background:#fff}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <img class="logo" src="./assets/logo.png" alt="Malachie 4 Projections">
+  <h1>Malachie 4 Projections</h1>
+  <div class="verset">« Voici, je vous enverrai Élie, le prophète » — Malachie 4:5</div>
+  <div class="chargement">🕊️ Ouverture…</div>
+  <div class="barre"><i></i></div>
+</div>
+
+<!-- ========== ZONE 8 ========== -->
+<header id="z8">
+  <img src="./assets/logo.png" alt="logo">
+  <div class="nom">Malachie 4 Projections<small>réglage &amp; projection du culte · hors-ligne</small></div>
+  <span class="sp"></span>
+  <span class="etat" id="etat">…</span>
+  <button class="zbtn on" id="bProj">🖥️ PROJECTION</button>
+  <button class="zbtn" id="bAff">👁 AFFICHAGE</button>
+</header>
+
+<div id="grille">
+  <!-- LIGNE DU HAUT : ZONES 1 · 2 · 3 -->
+  <div class="rang h1">
+    <!-- ZONE 1 : RÉSERVES -->
+    <section class="tile" id="z1">
+      <div class="tete"><span class="num">1</span><b>Réserves</b><span class="inf">contenus préparés</span></div>
+      <div class="in">
+        <div class="corps" id="z1liste"><div class="vide">Rien en réserve.<br>Maintien long (½ s) sur un élément pour l'y déposer.<br>La réserve ne se vide jamais toute seule.</div></div>
+        <div class="pied"><button id="z1vide">🗑️ Tout vider</button></div>
+      </div>
+    </section>
+    <!-- ZONE 2 : PARAMÈTRES VISUELS -->
+    <section class="tile" id="z2">
+      <div class="tete"><span class="num">2</span><b>Écrits</b><span class="inf">visuels &amp; typo</span></div>
+      <div class="in"><div class="corps">
+        <div class="z2grp"><small>TAILLE DU TEXTE</small>
+          <div class="z2row"><button class="btn" id="moins">A−</button><b id="taille">32</b><button class="btn" id="plus">A+</button></div>
+        </div>
+        <div class="z2grp"><small>POLICE (3 proposées, visibles)</small>
+          <div class="polices">
+            <button class="police on" data-p="Georgia,'Times New Roman',serif" style="font-family:Georgia,serif">Georgia — élégante livre</button>
+            <button class="police" data-p="Calibri,'Segoe UI',Arial,sans-serif" style="font-family:Calibri,'Segoe UI',Arial,sans-serif">Calibri — moderne ronde</button>
+            <button class="police" data-p="Verdana,Geneva,sans-serif" style="font-family:Verdana,sans-serif">Verdana — très lisible</button>
+          </div>
+        </div>
+        <div class="z2grp"><small>INTERLIGNE</small>
+          <div class="inter"><span class="chip on" data-i="1.3">Normal</span><span class="chip" data-i="1.55">Moyen</span><span class="chip" data-i="1.85">Grand</span></div>
+        </div>
+        <div class="z2grp"><small>ARRIÈRE-PLAN (défaut : parchemin)</small>
+          <div class="fonds">
+            <div class="fond parchment on-sel" data-f="parchment">Parchemin</div>
+            <div class="fond charcoal" data-f="charcoal">Charbon</div>
+            <div class="fond white" data-f="white">Blanc</div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+    <!-- ZONE 3 : MINI-ÉCRAN (prévisualisation = écran public) -->
+    <section class="tile" id="z3">
+      <div class="tete"><span class="num">3</span><b>Mini-écran</b><span class="inf">= ce que l'église voit</span></div>
+      <div class="in">
+        <div id="ecran" class="transparent"></div>
+        <div class="pied"><button id="prev">▲ Précédent</button><button id="next">Suivant ▼</button></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- LIGNE DU BAS : ZONES 4 · 5 · 6 -->
+  <div class="rang h2">
+    <!-- ZONE 4 : SÉLECTION DES RESSOURCES (+ bouton ＋ = zone 7) -->
+    <section class="tile" id="z4">
+      <div class="tete"><span class="num">4</span><b>Ressources</b></div>
+      <div class="z4tetes">
+        <button class="fam on" data-fam="recueil">🎵 Recueil</button>
+        <button class="fam" data-fam="bible">📖 Bible</button>
+        <button class="fam" data-fam="brochure">📄 Brochures</button>
+        <button class="plus" id="bPlus" title="Zone 7 — Ajouter">＋</button>
+      </div>
+      <div id="z4corps">
+        <input class="rech" id="z4rech" placeholder="🔍 Rechercher… (saisie automatique)">
+        <div id="z4sous"></div>
+        <div id="z4liste"></div>
+      </div>
+    </section>
+    <!-- ZONE 5 : PRÉPARATION / ÉDITION -->
+    <section class="tile" id="z5">
+      <div class="tete"><span class="num">5</span><b>Préparation</b><span class="inf">détails &amp; édition</span></div>
+      <div id="z5titre"><span id="z5nom" class="vide">Sélectionnez une ressource dans la zone 4</span></div>
+      <div id="z5corps"><div class="vide">Le contenu ouvert apparaît ici (cantique complet, chapitre biblique, brochure avec ses deux lectures).</div></div>
+    </section>
+    <!-- ZONE 6 : HISTORIQUE DES PROJECTIONS -->
+    <section class="tile" id="z6">
+      <div class="tete"><span class="num">6</span><b>Historique</b><span class="inf">projections remplacées</span></div>
+      <div class="in">
+        <div class="corps" id="z6liste"><div class="vide">Les contenus projetés puis remplacés descendent ici.<br>Re-clic = revenir là où on s'était arrêté.</div></div>
+        <div class="pied"><button id="z6vide">🗑️ Tout vider</button></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ========== ZONE 7 : AJOUT (modale du bouton ＋) ========== -->
+<div class="modal" id="m7"><div class="boite">
+  <div class="h">＋ Zone 7 — Ajouter une ressource <button class="btn" onclick="ferme('m7')">✕</button></div>
+  <div class="c" id="m7corps"></div>
+  <div class="f"><button class="btn" onclick="ferme('m7')">Fermer</button></div>
+</div></div>
+
+<!-- choix VGR / Shekinah -->
+<div class="modal" id="mvs"><div class="boite">
+  <div class="h" id="mvsT">Choisir la traduction <button class="btn" onclick="ferme('mvs')">✕</button></div>
+  <div class="c"><div class="choix">
+    <button id="mvsV">🟢 VGR — La Voix de Dieu (officiel)</button>
+    <button id="mvsS">🟡 Shekinah — Shekinah Publications</button>
+  </div></div>
+</div></div>
+
+<script src="./data/bible.js"></script>
+<script src="./data/chants.js"></script>
+<script src="./data/brochures-index.js"></script>
+<script>
+/* ==================================================================
+   MALACHIE 4 PROJECTIONS — code source v3 (cahier des charges zones 1-8)
+   État global documenté (cf. CAHIER_DES_CHARGES.md §États techniques)
+================================================================== */
+const state = {
+  projectionConnected: true,      // commande Projection (zone 8)
+  displayEnabled: false,          // commande Affichage (zone 8)
+  selectedResourceType: 'recueil',// recueil | bible | brochure
+  selectedResourceId: null,
+  preview: null,                  // {key,label,html} contenu en zone 3
+  fontFamily: "Georgia,'Times New Roman',serif",
+  fontSize: 32,
+  lineSpacing: 1.3,
+  background: 'parchment',        // parchment | charcoal | white
+  lecture: 'paragraph',           // brochure : paragraph | continuous
+  readingPosition: 0,
+  historyItems: [],               // zone 6
+  reserveItems: [],               // zone 1
+  // navigation interne
+  recueilId: 'nouveau',
+  bible: {livre:-1, chapitre:-1, verset:-1},
+  chant: {recueil:0, idx:-1, pos:0},
+  bro: {id:null, trad:null, paras:[], pos:0, mode:'paragraph'},
+  edits: JSON.parse(localStorage.getItem('m4_edits')||'{}'),
+  ajouts: JSON.parse(localStorage.getItem('m4_ajouts')||'{"chants":[],"bibles":[],"brochures":[]}')
+};
+const EL = k => document.getElementById(k);
+const norm = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+function toast(m){const t=EL('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
+function ferme(id){EL(id).style.display='none';} window.ferme=ferme;
+
+/* ================= ZONE 3 : RENDU PUBLIC =================
+   Règle : publicVisible = projectionConnected && displayEnabled
+   - Projection seule : écran connecté mais TRANSPARENT
+   - Affichage ON     : fond parchemin (par défaut) + texte centré et borné */
+function rendreZ3(){
+  const e = EL('ecran'), st = EL('etat');
+  e.className = '';
+  if(!state.projectionConnected){
+    e.classList.add('deconnecte');
+    e.innerHTML = '<div class="veill" style="color:#777">🖥️<div class="cit" style="font-style:normal">Projection désactivée.<br>Le deuxième écran est déconnecté.<br>Réactivez-la dans la barre du haut (zone 8).</div></div>';
+    st.textContent = '⛔ Rien n\u2019est envoyé au public';
+    st.style.color = '#f1b0a8'; return;
+  }
+  if(!state.displayEnabled){
+    e.classList.add('transparent');
+    e.innerHTML = `<div class="veill"><img src="./assets/logo.png" alt="">
+      <div class="cit">« Voici, je vous enverrai Élie, le prophète »</div>
+      <div class="bdg">TRANSPARENT · CONNECTÉ · PAS D'AFFICHAGE</div></div>`;
+    st.textContent = state.preview ? '👁 Connecté — contenu prêt, transparent' : '🖥 Connecté — transparent';
+    st.style.color = '#cfe6b9'; return;
+  }
+  e.classList.add('fond-'+state.background);
+  if(state.preview){
+    e.innerHTML = `<div id="contenu"><div class="titre">${state.preview.titre||''}</div>
+      <div class="texte">${state.preview.texte}</div>
+      ${state.preview.ref?`<div class="ref">${state.preview.ref}</div>`:''}</div>`;
+    st.textContent = '🟢 PUBLIC — affiché à l\u2019église';
+    st.style.color = '#9fe0a9';
+  } else {
+    e.innerHTML = `<div class="veill" style="color:${state.background==='charcoal'?'#9c8c56':'#8a7a4a'}">
+      <img src="./assets/logo.png" alt=""><div class="cit">« Voici, je vous enverrai Élie, le prophète »</div>
+      <div class="bdg">AFFICHAGE ACTIF · VEILLE</div></div>`;
+    st.textContent = '🖥 Affichage actif — veille';
+    st.style.color = '#ffe9a8';
+  }
+}
+/* ================= ZONE 8 : COMMANDES ================= */
+function majBoutons(){
+  EL('bProj').className = 'zbtn ' + (state.projectionConnected?'on':'off');
+  EL('bAff').className  = 'zbtn ' + (state.displayEnabled?'on':'off');
+  EL('bAff').style.opacity = state.projectionConnected ? 1 : .45;
+}
+EL('bProj').onclick = () => {
+  state.projectionConnected = !state.projectionConnected;
+  if(!state.projectionConnected) state.displayEnabled = false; // déconnecté -> rien n'est envoyé
+  majBoutons(); rendreZ3();
+  toast(state.projectionConnected ? '🖥 Projecteur reconnecté — mode transparent' : '⛔ Projection désactivée — église déconnectée');
+};
+EL('bAff').onclick = () => {
+  if(!state.projectionConnected){ toast('⚠️ Activez d\u2019abord la PROJECTION'); return; }
+  state.displayEnabled = !state.displayEnabled;
+  majBoutons(); rendreZ3();
+  toast(state.displayEnabled ? '👁 AFFICHAGE : le public voit la zone 3' : '🫥 Affichage coupé — retour transparent');
+};
+/* ================= PROJECTION D'UN CONTENU ================= */
+function projeter(item){                    // DOUBLE-CLIC : zone 3 + AFFICHAGE auto
+  state.preview = item;
+  state.displayEnabled = true;
+  majBoutons(); rendreZ3();
+  histPush(item);
+  toast('▶ Affiché au public : ' + item.label);
+}
+function preparerZ3(item){                  // SIMPLE CLIC : préparé SANS activer l'affichage
+  state.preview = item; rendreZ3();
+  toast('… Préparé (transparent) : ' + item.label);
+}
+function histPush(item){
+  const cle = item.key || item.label;
+  if(!state.historyItems.find(h=>h.cle===cle)){
+    state.historyItems.unshift({cle, label:item.label, snap:item.snap||null});
+    renderHist();
+  }
+}
+function histRemove(i){ state.historyItems.splice(i,1); renderHist(); }
+function renderHist(){
+  const b = EL('z6liste');
+  if(!state.historyItems.length){ b.innerHTML = '<div class="vide">Les contenus projetés puis remplacés descendent ici.</div>'; return; }
+  b.innerHTML = state.historyItems.map((h,i)=>`<div class="mini"><span class="lbl" data-i="${i}" title="Revenir là où on s'était arrêté">${h.label}</span><button class="x" data-i="${i}">×</button></div>`).join('');
+  b.querySelectorAll('.lbl').forEach(l => l.onclick = () => restaurerHist(+l.dataset.i));
+  b.querySelectorAll('.x').forEach(x => x.onclick = () => histRemove(+x.dataset.i));
+}
+EL('z6vide').onclick = () => { if(state.historyItems.length && confirm('Vider TOUT l\u2019historique de la zone 6 ?')){ state.historyItems=[]; renderHist(); } };
+EL('z1vide').onclick = () => { if(state.reserveItems.length && confirm('Vider TOUTE la réserve de la zone 1 ?')){ state.reserveItems=[]; renderReserve(); } };
+function restaurerHist(i){
+  const h = state.historyItems[i]; if(!h) return;
+  if(!h.snap){ if(state.preview) projeter({label:h.label, titre:'', texte:state.preview.texte, ref:''}); return; }
+  const s = h.snap;
+  if(s.kind==='chant'){ ouvrirChant(s.recueil, s.idx, s.pos, true); }
+  if(s.kind==='bible'){ state.bible.livre=s.livre; state.bible.chapitre=s.chapitre; bibleNiveau(); ouvrirVersets(s.livre,s.chapitre,s.verset,true); }
+  if(s.kind==='brochure'){ chargerBrochure(s.id, s.trad, s.titre, s.pos, s.mode, true); }
+}
+function reserver(it){
+  if(state.reserveItems.find(r=>r.cle===it.cle)){ toast('Déjà dans la réserve ①'); return; }
+  state.reserveItems.push(it); renderReserve(); toast('⤵ Déposé dans la réserve ①');
+}
+function renderReserve(){
+  const b = EL('z1liste');
+  if(!state.reserveItems.length){ b.innerHTML = '<div class="vide">Rien en réserve. Maintien long (½ s) sur un élément.</div>'; return; }
+  b.innerHTML = state.reserveItems.map((r,i)=>`<div class="mini"><span class="lbl" data-i="${i}">${r.label}</span><button class="x" data-i="${i}">×</button></div>`).join('');
+  b.querySelectorAll('.lbl').forEach(l => {
+    l.onclick = () => { const r = state.reserveItems[+l.dataset.i]; if(r && r.snap) restaurerHist(-1) || restaurerSnap(r.snap); };
+    l.ondblclick = () => { const r = state.reserveItems[+l.dataset.i]; if(r && r.snap) restaurerSnap(r.snap, true); };
+  });
+  b.querySelectorAll('.x').forEach(x => x.onclick = () => { state.reserveItems.splice(+x.dataset.i,1); renderReserve(); });
+}
+function restaurerSnap(s, directe){
+  if(s.kind==='chant'){ ouvrirChant(s.recueil, s.idx, s.pos, directe); }
+  if(s.kind==='bible'){ state.bible.livre=s.livre; state.bible.chapitre=s.chapitre; bibleNiveau(); ouvrirVersets(s.livre,s.chapitre,s.verset,directe); }
+  if(s.kind==='brochure'){ chargerBrochure(s.id, s.trad, s.titre, s.pos, s.mode, directe); }
+}
+/* geste maintien long universel */
+function garde(el, fn){
+  let t=null;
+  el.addEventListener('pointerdown', ()=>{ t=setTimeout(fn, 550); });
+  ['pointerup','pointerleave','pointercancel','contextmenu'].forEach(ev=>el.addEventListener(ev, ()=>clearTimeout(t)));
+}
+
+/* ================= ZONE 2 : PARAMÈTRES ================= */
+EL('moins').onclick=()=>{ state.fontSize=Math.max(20,state.fontSize-4); majZ2(); };
+EL('plus').onclick =()=>{ state.fontSize=Math.min(56,state.fontSize+4); majZ2(); };
+function majZ2(){ document.documentElement.style.setProperty('--taille', state.fontSize+'px'); EL('taille').textContent=state.fontSize; rendreZ3(); if(state.bro.id&&state.bro.mode==='continuous') broContinuous(); }
+EL('taille').parentElement
+document.querySelectorAll('.police').forEach(p=>p.onclick=()=>{
+  document.querySelectorAll('.police').forEach(x=>x.classList.remove('on')); p.classList.add('on');
+  state.fontFamily=p.dataset.p; document.documentElement.style.setProperty('--police', state.fontFamily); rendreZ3(); if(state.bro.id) broCorps();
+});
+document.querySelectorAll('.inter .chip').forEach(c=>c.onclick=()=>{
+  document.querySelectorAll('.inter .chip').forEach(x=>x.classList.remove('on')); c.classList.add('on');
+  state.lineSpacing=+c.dataset.i; document.documentElement.style.setProperty('--interligne', c.dataset.i); rendreZ3(); if(state.bro.id&&state.bro.mode==='continuous') broContinuous();
+});
+document.querySelectorAll('.fond').forEach(f=>f.onclick=()=>{
+  document.querySelectorAll('.fond').forEach(x=>x.classList.remove('on-sel')); f.classList.add('on-sel');
+  state.background=f.dataset.f; rendreZ3();
+});
+
+/* ================= ZONE 4 : RESSOURCES ================= */
+document.querySelectorAll('.fam').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.fam').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  state.selectedResourceType=b.dataset.fam;
+  EL('z4rech').value=''; EL('z4rech').focus();         // saisie automatique
+  construireZ4();
+});
+EL('z4rech').oninput = () => construireZ4(true);
+function construireZ4(rechercheSeule){
+  const t = state.selectedResourceType;
+  if(t==='recueil') z4Recueil(rechercheSeule);
+  if(t==='bible')   { if(!rechercheSeule) bibleAccueil(); }
+  if(t==='brochure') z4Brochures();
+}
+/* ---- 4A. RECUEIL ---- */
+function recueilCourant(){ return M4_CHANTS.recueils.find(r=>r.id===state.recueilId); }
+function z4Recueil(rechercheSeule){
+  if(!rechercheSeule){
+    EL('z4sous').innerHTML = `<div class="chips">${M4_CHANTS.recueils.map(r=>
+      `<span class="chip ${r.id===state.recueilId?'on':''}" data-r="${r.id}">${r.nom} (${r.nb})</span>`).join('')}</div>`;
+    EL('z4sous').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ state.recueilId=c.dataset.r; construireZ4(); });
+  }
+  const f = norm(EL('z4rech').value);
+  const R = recueilCourant();
+  const trouves = R.songs.map((s,i)=>({s,i})).filter(({s})=>!f||norm(s.num+' '+s.titre+' '+s.texte).includes(f));
+  EL('z4liste').innerHTML = trouves.slice(0,300).map(({s,i})=>
+    `<div class="rowi" data-i="${i}"><span class="badge ${R.id==='nouveau'?'bnv':'bhist'}">${R.id==='nouveau'?'NV':'A'}</span><b>${s.num}</b> — ${s.titre}</div>`).join('')
+    || '<div class="vide">Aucun chant trouvé</div>';
+  if(trouves.length>300) EL('z4liste').innerHTML += `<div class="vide">… +${trouves.length-300} (précisez la recherche)</div>`;
+  EL('z4liste').querySelectorAll('.rowi').forEach(r=>{
+    const i=+r.dataset.i; const ri= M4_CHANTS.recueils.indexOf(R);
+    r.onclick = () => { EL('z4liste').querySelectorAll('.rowi').forEach(x=>x.classList.remove('sel')); r.classList.add('sel'); ouvrirChant(ri, i, 0, false); };
+    r.ondblclick = () => ouvrirChant(ri, i, 0, true);
+    garde(r, ()=>reserver({cle:'chant-'+R.id+'-'+i, label:`🎵 ${R.songs[i].num} ${R.songs[i].titre}`, snap:{kind:'chant',recueil:ri,idx:i,pos:0}}));
+  });
+}
+/* ---- 4B. BIBLE : livres -> chapitres -> versets (rétrécissement progressif) ---- */
+const ABREV = {Genèse:'Gn',Exode:'Ex',Lévitique:'Lv',Nombres:'Nb',Deutéronome:'Dt',Josué:'Jos',Juges:'Jg',Ruth:'Rt','1 Samuel':'1 S','2 Samuel':'2 S','1 Rois':'1 R','2 Rois':'2 R','1 Chroniques':'1 Ch','2 Chroniques':'2 Ch',Esdras:'Esd',Néhémie:'Né',Esther:'Est',Job:'Jb',Psaumes:'Ps',Proverbes:'Pr',Ecclésiaste:'Ec','Cantique des Cantiques':'Ct',Ésaïe:'És',Jérémie:'Jr',Lamentations:'Lm',Ézéchiel:'Éz',Daniel:'Da',Osée:'Os',Joël:'Jl',Amos:'Am',Abdias:'Ab',Jonas:'Jon',Michée:'Mi',Nahum:'Na',Habakuk:'Ha',Sophonie:'So',Aggée:'Ag',Zacharie:'Za',Malachie:'Mal',Matthieu:'Mt',Marc:'Mc',Luc:'Lc',Jean:'Jn','Actes des Apôtres':'Ac',Romains:'Rm','1 Corinthiens':'1 Co','2 Corinthiens':'2 Co',Galates:'Ga',Éphésiens:'Ép',Philippiens:'Ph',Colossiens:'Col','1 Thessaloniciens':'1 Th','2 Thessaloniciens':'2 Th','1 Timothée':'1 Ti','2 Timothée':'2 Ti',Tite:'Tt',Philémon:'Phm',Hébreux:'Hé',Jacques:'Jc','1 Pierre':'1 P','2 Pierre':'2 P','1 Jean':'1 Jn','2 Jean':'2 Jn','3 Jean':'3 Jn',Jude:'Ju',Apocalypse:'Ap'};
+function bibleAccueil(){ state.bible={livre:-1,chapitre:-1,verset:-1}; bibleNiveau(); }
+function bibleNiveau(){
+  const b = state.bible;
+  const f = norm(EL('z4rech').value);
+  let livres = M4_BIBLE.livres.map((l,i)=>({l,i}));
+  if(f) livres = livres.filter(({l})=>norm(l.nom).includes(f));
+  const colL = `<div class="bcol ${b.livre>=0?'shrink':''}" id="bL"><h6>${b.livre>=0?'Livre':'66 livres'}</h6>
+    <div class="livres ${b.livre>=0?'':'c2'}">${livres.map(({l,i})=>
+      `<div class="livre ${i===b.livre?'sel':''}" data-i="${i}" title="${l.nom}">${b.livre>=0? (ABREV[l.nom]||l.nom.slice(0,3)) : l.nom}</div>`).join('')}</div></div>`;
+  let colC='', colV='';
+  if(b.livre>=0){
+    const L = M4_BIBLE.livres[b.livre];
+    colC = `<div class="bcol ${b.chapitre>=0?'shrink':''}"><h6>Chapitres — ${L.nom}</h6>
+      <div class="chnums">${L.chapitres.map((c,i)=>`<div class="chnum ${i===b.chapitre?'sel':''}" data-i="${i}">${i+1}</div>`).join('')}</div></div>`;
+  }
+  if(b.chapitre>=0){
+    const C = M4_BIBLE.livres[b.livre].chapitres[b.chapitre];
+    colV = `<div class="bcol"><h6>Versets</h6>
+      <div class="vnums">${C.map((v,i)=>`<div class="vnum" data-i="${i}">${i+1}</div>`).join('')}</div></div>`;
+  }
+  EL('z4liste').innerHTML = `<div class="biv3">${colL}${colC}${colV}</div>`;
+  EL('z4liste').querySelectorAll('#bL .livre').forEach(x=>x.onclick=()=>{
+    state.bible.livre=+x.dataset.i; state.bible.chapitre=-1; state.bible.verset=-1; bibleNiveau();   // rétrécit -> chapitres reçoivent l'espace
+  });
+  EL('z4liste').querySelectorAll('.chnum').forEach(x=>x.onclick=()=>{
+    state.bible.chapitre=+x.dataset.i; state.bible.verset=-1; bibleNiveau();                       // livres chapitres rétrécissent -> versets
+  });
+  EL('z4liste').querySelectorAll('.vnum').forEach(x=>{
+    const v=+x.dataset.i;
+    x.onclick = () => ouvrirVersets(state.bible.livre, state.bible.chapitre, v, false);            // zone 5 : livre ouvert entier
+    x.ondblclick = () => versetItem(v,true) && projeter(versetItem(v,true));
+    garde(x, ()=>reserver({cle:'b'+state.bible.livre+'c'+state.bible.chapitre+'v'+v, label:`📖 ${refTxt()}:${v+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:v}}));
+  });
+}
+function refTxt(){ return M4_BIBLE.livres[state.bible.livre].nom+' '+(state.bible.chapitre+1); }
+function versetItem(v,direct){
+  const L=M4_BIBLE.livres[state.bible.livre], t=L.chapitres[state.bible.chapitre][v];
+  const ref=`${L.nom} ${state.bible.chapitre+1}:${v+1}`;
+  return {key:ref, label:'📖 '+ref, titre:ref+' — Segond 1910', texte:t, ref:'',
+    snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:v}};
+}
+function ouvrirVersets(l,c,v,direct){
+  state.selectedResourceType='bible'; state.bible={livre:l,chapitre:c,verset:v};
+  const L=M4_BIBLE.livres[l], C=L.chapitres[c];
+  EL('z5nom').innerHTML = `📖 <b>${L.nom} ${c+1}</b> — ${C.length} versets <span class="vide" style="padding:0 8px">(1 clic = préparer · double-clic = afficher)</span>`;
+  EL('z5corps').innerHTML = C.map((t,i)=>
+    `<div class="strophe ${i===v?'sel':''}" data-i="${i}"><div class="txt"><b style="color:var(--or2)">${i+1}.</b> ${t}</div></div>`).join('');
+  EL('z5corps').querySelectorAll('.strophe').forEach(el=>{
+    const i=+el.dataset.i;
+    el.onclick=()=>{ EL('z5corps').querySelectorAll('.strophe').forEach(x=>x.classList.remove('sel')); el.classList.add('sel');
+      preparerZ3({key:'bi',titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}); };
+    el.ondblclick=()=>projeter({key:'bi',titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}});
+    garde(el,()=>reserver({cle:'b'+l+'c'+c+'v'+i,label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}));
+  });
+  if(direct && v>=0) projeter({key:'bi',titre:refTxt()+':'+(v+1),texte:L.chapitres[c][v],label:`📖 ${refTxt()}:${v+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:v}});
+}
+/* ---- 4C. BROCHURES ---- */
+function z4Brochures(){
+  const f = norm(EL('z4rech').value);
+  const tous = (M4_BROCHURES.brochures||[]).concat(state.ajouts.brochures||[]);
+  const trouves = tous.filter(b=>!f||norm(b.id+' '+b.titre).includes(f));
+  EL('z4liste').innerHTML = trouves.map((b,i)=>{
+    const deux = b.vgr && b.shekinah;
+    const badge = deux ? '<span class="badge bvgr">VGR</span><span class="badge bskn">SKN</span>'
+                       : b.vgr ? '<span class="badge bvgr">VGR</span>' : '<span class="badge bskn">SKN</span>';
+    return `<div class="rowi" data-i="${i}"><b>${b.id}</b> ${badge} — ${b.titre}</div>`;
+  }).join('') || '<div class="vide">Aucune brochure trouvée</div>';
+  EL('z4liste').querySelectorAll('.rowi').forEach((r,idx)=>{
+    const b = trouves[idx];
+    r.onclick = () => {
+      EL('z4liste').querySelectorAll('.rowi').forEach(x=>x.classList.remove('sel')); r.classList.add('sel');
+      if(b.vgr && b.shekinah){                                        // deux traductions -> choix demandé
+        EL('mvsT').textContent = `${b.id} « ${b.titre} » — choisir la traduction`;
+        EL('mvsV').onclick = () => { ferme('mvs'); chargerBrochure(b.id,'VGR',b.titre,0,'paragraph',false); };
+        EL('mvsS').onclick = () => { ferme('mvs'); chargerBrochure(b.id,'SHEKINAH',b.titre,0,'paragraph',false); };
+        EL('mvs').style.display='flex';
+      } else {
+        chargerBrochure(b.id, b.vgr?'VGR':'SHEKINAH', b.titre, 0, 'paragraph', false);
+      }
+    };
+    garde(r, ()=>reserver({cle:'bro-'+b.id, label:`📄 ${b.id} ${b.titre}`, snap:{kind:'brochure',id:b.id,trad:b.vgr?'VGR':'SHEKINAH',titre:b.titre,pos:0,mode:'paragraph'}}));
+  });
+}
+/* téléchargement du texte d'une brochure (gzip -> DecompressionStream) + repli démo */
+async function chargerBrochure(code, trad, titre, pos, mode, directe){
+  mode = mode || state.bro.mode || 'paragraph';
+  EL('z5nom').innerHTML = `⏳ Chargement de « ${titre||code} » (${trad})…`;
+  let data = null;
+  const chemin = `data/brochures/${trad==='VGR'?'vgr':'shekinah'}-textes/${code}.json.gz`;
+  try {
+    const r = await fetch(chemin);
+    if(!r.ok) throw 0;
+    const flux = r.body.pipeThrough(new DecompressionStream('gzip'));
+    data = JSON.parse(await new Response(flux).text());
+  } catch(e) {
+    if(code==='47-0412'){                                        // repli hors-ligne démo
+      data = {id:code, titre, trad, paras: DEMO_BRO};
+      toast('⚠️ Texte distant inaccessible (hors-serveur) — extrait démo de 47-0412 affiché');
+    } else { EL('z5nom').innerHTML = '⚠️ Brochure inaccessible (servez l\u2019app en http, ou tout-embarquer nécessaire)'; return; }
+  }
+  state.bro = {id:code, trad, paras:data.paras, pos:pos||0, mode, titre:data.titre||titre||code};
+  broEntete(); broCorps();
+  if(direct){ const p = state.bro.paras[state.bro.pos]||state.bro.paras[0]; projeter(itemBro(p)); }
+}
+function itemBro(p){
+  return {key:'br'+state.bro.id+'§'+p[0], titre:`${state.bro.id} — ${state.bro.titre} (${state.bro.trad}) — §${p[0]}/${state.bro.paras.length}`,
+    texte:p[1], label:`📄 §${p[0]} · ${state.bro.id}`,
+    snap:{kind:'brochure',id:state.bro.id,trad:state.bro.trad,titre:state.bro.titre,pos:state.bro.paras.indexOf(p),mode:state.bro.mode}};
+}
+function broEntete(){
+  EL('z5nom').innerHTML = `📄 <b>${state.bro.id} « ${state.bro.titre} »</b>
+    <span class="badge ${state.bro.trad==='VGR'?'bvgr':'bskn'}">${state.bro.trad}</span>
+    <span class="tabs">
+      <button class="tab ${state.bro.mode==='paragraph'?'on':''}" id="tabP">§ Par paragraphe</button>
+      <button class="tab ${state.bro.mode==='continuous'?'on':''}" id="tabC">↕ Lecture continue</button>
+    </span>`;
+  EL('tabP').onclick=()=>{ state.bro.mode='paragraph'; broEntete(); broCorps(); };
+  EL('tabC').onclick=()=>{ state.bro.mode='continuous'; broEntete(); broCorps(); };
+}
+function broCorps(){
+  if(state.bro.mode==='continuous') broContinuous(); else broParagraphe();
+}
+function broParagraphe(){
+  const bro = state.bro, cur = bro.paras[bro.pos]||bro.paras[0];
+  EL('z5corps').innerHTML = `<div class="brozone">
+    <div class="bropanel"><div class="chnums">${bro.paras.map((p,i)=>
+      `<div class="chnum ${i===bro.pos?'sel':''}" data-i="${i}">${p[0]}</div>`).join('')}</div></div>
+    <div class="brostexte" id="brox"></div></div>`;
+  const zone = EL('brox');
+  zone.innerHTML = `<b style="color:var(--or2)">§${cur[0]}</b> — ${cur[1]}<br>
+    <div style="margin-top:10px" class="vide">1 clic sur un § = préparé · double-clic = affiché au public · maintien long = réserve</div>`;
+  EL('z5corps').querySelectorAll('.bropanel .chnum').forEach(c=>{
+    c.onclick=()=>{ state.bro.pos=+c.dataset.i; broParagraphe(); scrollSel(); preparerZ3(itemBro(state.bro.paras[state.bro.pos])); };
+    c.ondblclick=()=>{ state.bro.pos=+c.dataset.i; broParagraphe(); projeter(itemBro(state.bro.paras[state.bro.pos])); };
+    garde(c,()=>{ state.bro.pos=+c.dataset.i; reserver({cle:'br§'+state.bro.id+'p'+state.bro.pos,label:`📄 §${state.bro.paras[state.bro.pos][0]} · ${state.bro.id}`,snap:{kind:'brochure',id:state.bro.id,trad:state.bro.trad,titre:state.bro.titre,pos:state.bro.pos,mode:'paragraph'}}); });
+  });
+  function scrollSel(){ const s=EL('z5corps').querySelector('.bropanel .chnum.sel'); if(s) s.scrollIntoView({block:'nearest'}); }
+  scrollSel();
+  preparerZ3(itemBro(cur));
+}
+function broContinuous(){
+  const bro = state.bro;
+  EL('z5corps').innerHTML = `<div class="brozone">
+    <div class="bropanel"><div class="chnums">${bro.paras.map((p,i)=>
+      `<div class="chnum ${i===bro.pos?'sel':''}" data-i="${i}">${p[0]}</div>`).join('')}</div></div>
+    <div class="brocont" id="bcont"><div class="flux" id="bflux">${bro.paras.map((p,i)=>
+      `<p class="brop" data-i="${i}"><span class="pn">${p[0]}</span>${p[1]}</p>`).join('')}</div>
+      <div class="brocmd"><button id="bup">⌃ Monter</button><button id="bdn">⌄ Descendre</button></div></div></div>`;
+  const flux = EL('bflux'), cont = EL('bcont');
+  let lignesMax = () => Math.max(0, flux.scrollHeight - cont.clientHeight + 20);
+  let y = Math.min(state.bro.posY||0, lignesMax());
+  const pas = () => Math.round(state.fontSize*.5*state.lineSpacing)+2;
+  function applique(){ flux.style.transform = `translateY(${-y}px)`; }
+  function bouge(dy){
+    y = Math.max(0, Math.min(lignesMax(), y + dy));        // ligne par ligne, borné
+    state.bro.posY = y; applique();
+  }
+  EL('bup').onclick=()=>bouge(-pas()); EL('bdn').onclick=()=>bouge(pas());
+  cont.addEventListener('wheel', e=>{ e.preventDefault(); bouge(e.deltaY>0?pas():-pas()); }, {passive:false});
+  cont._bouge = bouge;
+  applique();
+  EL('z5corps').querySelectorAll('.bropanel .chnum').forEach(c=>{
+    c.onclick=()=>{
+      state.bro.pos=+c.dataset.i;
+      const para = EL('bflux').querySelector(`.brop[data-i="${state.bro.pos}"]`);
+      if(para){ y = Math.max(0, Math.min(lignesMax(), para.offsetTop-10)); state.bro.posY=y; applique(); }
+      preparerZ3(itemBro(bro.paras[state.bro.pos]));
+    };
+    c.ondblclick=()=>{ state.bro.pos=+c.dataset.i; projeter(itemBro(bro.paras[state.bro.pos])); };
+  });
+  EL('bflux').querySelectorAll('.brop').forEach(p=>{
+    p.style.cursor='pointer';
+    p.ondblclick=()=>{ state.bro.pos=+p.dataset.i; projeter(itemBro(bro.paras[state.bro.pos])); };
+    garde(p,()=>{ state.bro.pos=+p.dataset.i; preparerZ3(itemBro(bro.paras[state.bro.pos])); });
+  });
+}
+/* ---- 4D. CHANT : zone 5 (titre, strophes séparées, édition) ---- */
+function partiesChant(texte){
+  const blocs = texte.split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean);
+  if(blocs.length===1){ const ls = blocs[0].split('\n'); const out=[]; for(let i=0;i<ls.length;i+=5) out.push(ls.slice(i,i+5).join('\n')); blocs.length=0; out.forEach(o=>blocs.push(o)); }
+  // refrain = premier bloc répété
+  return blocs.map((txt,i)=>{
+    const hdr = (txt.match(/^\[(.+?)\]/)||[])[1];
+    let tag = hdr || (i>0 && txt===blocs[0] ? 'Chœur' : (blocs.indexOf(txt)>0 && txt===blocs[0] ? 'Chœur' : `Strophe ${i+1}`));
+    const corps = txt.replace(/^\[.+?\]\s*/,'');
+    let tag2 = tag;
+    if(!hdr){
+      if(i===0) tag2 = blocs.slice(1).includes(txt) ? 'Chœur' : 'Strophe 1';
+      else if(txt===blocs[0]) tag2='Chœur';
+    }
+    return {tag:tag2, texte:corps};
+  });
+}
+function ouvrirChant(ri, i, pos, directe){
+  const R = M4_CHANTS.recueils[ri]; const base = R.songs[i];
+  const txt = (state.edits[R.id+'-'+i]) || base.texte;
+  state.chant = {recueil:ri, idx:i, pos:pos||0};
+  const parties = partiesChant(txt);
+  EL('z5nom').innerHTML = `🎵 <b>${base.num} — ${base.titre}</b> <span class="badge ${R.id==='nouveau'?'bnv':'bhist'}">${R.nom}</span>
+    <button class="btn prim" id="bEdit">✎ Modifier</button>`;
+  EL('bEdit').onclick = () => editerChant(R, i, base);
+  EL('z5corps').innerHTML = parties.map((p,k)=>
+    `<div class="strophe" data-i="${k}"><span class="tch ${/chœur|choeur|refrain/i.test(p.tag)?'choeur':''}">${p.tag}</span><div class="txt">${p.texte}</div></div>`).join('');
+  EL('z5corps').querySelectorAll('.strophe').forEach(el=>{
+    const k=+el.dataset.i;
+    const mk = ()=>({key:'ch'+R.id+i+k, titre:`${base.num} — ${base.titre} · ${parties[k].tag}`, texte:parties[k].texte,
+      label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`, snap:{kind:'chant',recueil:ri,idx:i,pos:k}});
+    el.onclick=()=>{ EL('z5corps').querySelectorAll('.strophe').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); state.chant.pos=k; preparerZ3(mk()); };
+    el.ondblclick=()=>{ state.chant.pos=k; projeter(mk()); };
+    garde(el,()=>{ state.chant.pos=k; reserver({cle:'chant-'+R.id+'-'+i+'-'+k,label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`,snap:{kind:'chant',recueil:ri,idx:i,pos:k}}); });
+  });
+  if(directe){ const k = Math.min(state.chant.pos, parties.length-1); const mk0={key:'ch'+R.id+i+k,titre:`${base.num} — ${base.titre} · ${parties[k].tag}`,texte:parties[k].texte,label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`,snap:{kind:'chant',recueil:ri,idx:i,pos:k}}; projeter(mk0); }
+}
+function editerChant(R, i, base){
+  const cle = R.id+'-'+i;
+  EL('z5corps').innerHTML = `<div class="z2grp"><small>Ligne vide = nouvelle strophe · [Chœur], [Strophe 2]… reconnus · OK = la nouvelle version</small></div>
+    <textarea class="chp ed" id="edTxt">${(state.edits[cle]||base.texte)}</textarea>
+    <div style="display:flex;gap:6px;margin-top:8px"><button class="btn prim" id="edOk">✅ OK — enregistrer</button><button class="btn" id="edNo">Annuler</button></div>`;
+  EL('edOk').onclick = () => {
+    state.edits[cle] = EL('edTxt').value;
+    localStorage.setItem('m4_edits', JSON.stringify(state.edits));
+    toast('✅ Modifié — cette version est maintenant utilisée');
+    ouvrirChant(R.songs?state.chant.recueil:R===undefined?0:M4_CHANTS.recueils.indexOf(R), i, 0, false);
+  };
+  EL('edNo').onclick = () => ouvrirChant(state.chant.recueil, i, 0, false);
+}
+/* ================= ZONE 7 : AJOUT (bouton ＋ de la zone 4) ================= */
+EL('bPlus').onclick = () => {
+  EL('m7corps').innerHTML = `<div class="choix">
+    <button id="a1">🎵 Ajouter un chant (recueil)</button>
+    <button id="a2">📖 Ajouter une Bible (JSON)</button>
+    <button id="a3">📄 Ajouter une brochure</button></div>`;
+  EL('m7').style.display='flex';
+  EL('a1').onclick = () => {
+    EL('m7corps').innerHTML = `<label class="lbl2">Titre du chant</label><input class="chp" id="aTitre">
+      <label class="lbl2">Paroles (ligne vide = nouvelle strophe ; [Chœur] entre crochets)</label>
+      <textarea class="chp" id="aTxt" rows="7"></textarea>
+      <div class="f" style="padding:8px 0 0"><button class="btn prim" id="aOk1">✅ Ajouter au recueil</button></div>`;
+    EL('aOk1').onclick = () => {
+      const t = EL('aTitre').value.trim(), x = EL('aTxt').value.trim(); if(!t||!x){toast('Titre et paroles requis');return;}
+      const R = recueilCourant(); const n = String(R.songs.length+1);
+      R.songs.push({num:n,titre:t,texte:x}); R.nb++;
+      (state.ajouts.chants=state.ajouts.chants||[]).push({recueil:R.id,num:n,titre:t,texte:x});
+      localStorage.setItem('m4_ajouts', JSON.stringify(state.ajouts));
+      ferme('m7'); construireZ4(); toast('🎵 Chant ajouté au recueil « '+R.nom+' »');
+    };
+  };
+  EL('a2').onclick = () => {
+    EL('m7corps').innerHTML = `<label class="lbl2">JSON de la Bible — format {livres:[{nom,chapitres}]}</label>
+      <textarea class="chp" id="aJson" rows="6" placeholder='{"livres":[{"nom":"Genèse","chapitres":[["v1","v2"]]}]}'></textarea>
+      <div class="f" style="padding:8px 0 0"><button class="btn prim" id="aOk2">✅ Ajouter cette Bible</button></div>`;
+    EL('aOk2').onclick = () => {
+      try{ const j = JSON.parse(EL('aJson').value); if(!j.livres) throw 0;
+        j.livres.forEach(L=>M4_BIBLE.livres.push({nom:L.nom+' ➕', chapitres:L.chapitres}));
+        (state.ajouts.bibles=state.ajouts.bibles||[]).push(j);
+        localStorage.setItem('m4_ajouts', JSON.stringify(state.ajouts));
+        ferme('m7'); toast('📖 Bible ajoutée (livres marqués ➕)');
+      }catch(e){ toast('⚠️ JSON invalide'); }
+    };
+  };
+  EL('a3').onclick = () => {
+    EL('m7corps').innerHTML = `<label class="lbl2">Traduction</label>
+      <div class="filtres" style="margin-bottom:6px"><span class="chip on" id="tV">🟢 VGR</span> <span class="chip" id="tS">🟡 Shekinah</span></div>
+      <label class="lbl2">Identifiant (ex : 65-0000X)</label><input class="chp" id="aId">
+      <label class="lbl2">Nom / titre de la brochure</label><input class="chp" id="aNom">
+      <label class="lbl2">Contenu : un paragraphe par ligne, « n°. texte »</label><textarea class="chp" id="aTxt" rows="6"></textarea>
+      <div class="f" style="padding:8px 0 0"><button class="btn prim" id="aOk3">✅ Ajouter la brochure</button></div>`;
+    let trad='VGR'; EL('tV').onclick=()=>{trad='VGR';EL('tV').classList.add('on');EL('tS').classList.remove('on');};
+    EL('tS').onclick=()=>{trad='SHEKINAH';EL('tS').classList.add('on');EL('tV').classList.remove('on');};
+    EL('aOk3').onclick = () => {
+      const id=EL('aId').value.trim(), nom=EL('aNom').value.trim();
+      const paras = EL('aTxt').value.split('\n').map((l,i)=>{const m=l.match(/^\s*(\d+)\s*[.)\-]\s*(.*)$/);return m?[ +m[1], m[2] ]:null;}).filter(Boolean);
+      if(!id||!nom||!paras.length){toast('Identifiant, titre et § requis');return;}
+      const entree = {id, titre:nom, vgr: trad==='VGR'?{fichier:'',nb_paras:paras.length}:null, shekinah: trad==='SHEKINAH'?{fichier:'',nb_paras:paras.length}:null, _paras:paras};
+      (state.ajouts.brochures=state.ajouts.brochures||[]).push(entree);
+      localStorage.setItem('m4_ajouts', JSON.stringify(state.ajouts));
+      ferme('m7'); state.selectedResourceType='brochure'; construireZ4(); toast('📄 Brochure ajoutée et classée');
+    };
+  };
+};
+/* exécuter les ajouts mémorisés au démarrage */
+(function reintegrerAjouts(){
+  (state.ajouts.chants||[]).forEach(c=>{
+    const R=M4_CHANTS.recueils.find(r=>r.id===c.recueil)||M4_CHANTS.recueils[0];
+    R.songs.push({num:c.num,titre:c.titre,texte:c.texte}); R.nb++;
+  });
+  (state.ajouts.bibles||[]).forEach(j=>j.livres.forEach(L=>M4_BIBLE.livres.push({nom:L.nom+' ➕', chapitres:L.chapitres})));
+})();
+/* brochures ajoutées à la main → livrées avec leurs paragraphes */
+const DEMO_BRO = [[1,"Nous sommes en train d’acquérir du matériel nouveau pour l’enregistrement."],[2,"Nous ne savons pas trop où nous serons d’un soir à l’autre. Ceci, c’est, je pense, le troisième déplacement en quatre soirs, et je pense que nous nous déplacerons encore demain soir…"],[3,"J’espère qu’un de ces jours, quand je reviendrai à Oakland, eh bien, nous pourrons peut-être prendre quelque chose comme cette salle-ci pendant une semaine ou deux, et là, nous pourrions avoir un vrai…"],[4,"Eh bien, je dirais ceci : nous passons juste un soir ou deux quelque part, puis nous allons cent cinquante kilomètres plus loin, et juste au moment où on saisit la chose…"],[5,"Donc, je pense qu’après mon retour du Canada, eh bien, avant que nous allions au Mexique, ou ailleurs, je pense que nous allons déterminer les endroits où y tenir un réveil…"],[6,"Un peu comme dans ma propre ville, à Jeffersonville, dans l’Indiana, eh bien, il n’y a rien là-bas, oh, dès que nous sommes dans la ville, des centaines de gens affluent de partout…"]];
+/* ================= NAVIGATEURS ▲▼ + CLAVIER ================= */
+function nav(d){
+  if(state.bro.id && state.bro.mode==='continuous'){
+    const c = document.querySelector('#bcont'); if(c && c._bouge) c._bouge(d* (Math.round(state.fontSize*.5*state.lineSpacing)+2)); return;
+  }
+  if(state.bro.id){
+    state.bro.pos = Math.max(0, Math.min(state.bro.paras.length-1, state.bro.pos + d));
+    if(state.bro.mode==='paragraph'){ broParagraphe(); }
+    preparerZ3(itemBro(state.bro.paras[state.bro.pos])); return;
+  }
+  if(state.selectedResourceType==='bible' && state.bible.livre>=0 && state.bible.chapitre>=0){
+    const L=M4_BIBLE.livres[state.bible.livre], C=L.chapitres[state.bible.chapitre];
+    const v = Math.max(0, Math.min(C.length-1, (state.bible.verset<0?0:state.bible.verset)+d));
+    state.bible.verset=v;
+    const it = {titre:refTxt()+':'+(v+1), texte:C[v], label:`📖 ${refTxt()}:${v+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:v}};
+    if(state.displayEnabled) projeter(it); else preparerZ3(it);
+    ouvrirVersets(state.bible.livre, state.bible.chapitre, v, false);
+    return;
+  }
+  if(state.chant.idx>=0){
+    const R=M4_CHANTS.recueils[state.chant.recueil]; const parties = partiesChant((state.edits[R.id+'-'+state.chant.idx])||R.songs[state.chant.idx].texte);
+    const k = Math.max(0, Math.min(parties.length-1, state.chant.pos + d));
+    state.chant.pos=k;
+    const mk={titre:`${R.songs[state.chant.idx].num} — ${R.songs[state.chant.idx].titre} · ${parties[k].tag}`, texte:parties[k].texte,
+      label:`🎵 ${R.songs[state.chant.idx].num} ${R.songs[state.chant.idx].titre} · ${parties[k].tag}`, snap:{kind:'chant',recueil:state.chant.recueil,idx:state.chant.idx,pos:k}};
+    if(state.displayEnabled) projeter(mk); else preparerZ3(mk);
+    EL('z5corps').querySelectorAll('.strophe').forEach((x,i)=>x.classList.toggle('sel', i===k));
+  }
+}
+EL('prev').onclick=()=>nav(-1); EL('next').onclick=()=>nav(1);
+document.addEventListener('keydown', e=>{
+  if(e.target.matches('input,textarea') ) return;
+  if(e.key==='ArrowDown'||e.key===' '){ e.preventDefault(); nav(1); }
+  if(e.key==='ArrowUp'){ e.preventDefault(); nav(-1); }
+  if(e.key==='Escape'){ state.displayEnabled=false; majBoutons(); rendreZ3(); toast('⏹ Affichage coupé — transparent'); }
+});
+/* ================= DÉMARRAGE ================= */
+majBoutons(); rendreZ3(); construireZ4();
+setTimeout(()=>{
+  const sp=EL('splash'); sp.style.opacity='0'; setTimeout(()=>{ sp.remove();
+    toast('🖥️ Projecteur détecté — connecté en mode transparent (modifiable en zone 8)');
+  },520);
+}, 2600);
+/* service worker + embarquement progressif en arrière-plan (hors-ligne) */
+if('serviceWorker' in navigator){ addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
+async function embarquerPartiellement(){
+  try{
+    const idx = (window.M4_BROCHURES.brochures||[]);
+    let fait=0; const total=Math.min(idx.length, 60);   // précache progressif, le reste à la demande + SW
+    for(const b of idx.slice(0,total)){
+      const trad = b.vgr ? 'vgr' : 'shekinah';
+      fetch(`data/brochures/${trad}-textes/${b.id}.json.gz`).catch(()=>{});
+      fait++; await new Promise(r=>setTimeout(r, 40));
+    }
+  }catch(e){}
+}
+addEventListener('load', ()=>setTimeout(embarquerPartiellement, 4000));
+</script>
+</body>
+</html>
