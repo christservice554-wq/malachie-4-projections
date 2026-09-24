@@ -1,4 +1,4 @@
-# 🕊️ Malachie 4 Projections — PROJET ACTUEL (v3)
+# 🕊️ Malachie 4 Projections — VERSION UNIQUE OFFICIELLE (v3.2)
 
 > **Application de gestion de projection du culte**, construite exactement selon votre cahier des charges (zones 1-8, croquis + dictées).
 > **Pour vous retrouver depuis n'importe quel compte** : ce dépôt = la référence unique (code + docs + données).
@@ -6,7 +6,7 @@
 ## ▶️ Utiliser / installer
 | Moyen | Adresse / commande |
 |---|---|
-| **Lien web installable** | https://christservice554-wq.github.io/malachie4-projet-actuel/app/index.html |
+| **Lien web installable** | https://christservice554-wq.github.io/malachie-4-projections/app/index.html |
 | **ZIP complet v3** | dans la **Release v3.0** de ce dépôt (`Malachie4-Projections-COMPLET-v3.zip`, ~57 Mo) |
 | **Fichier seul** | double-clic sur `app/index.html` (Bible + cantiques + brochures de démonstration fonctionnent ; textes de brochures complets = en http) |
 | **Logiciel PC** | `cd desktop && npm install && npm start` |
@@ -35,6 +35,6 @@ ZONE 8 : logo + Malachie 4 Projections      [🖥️ PROJECTION] [👁 AFFICHAGE
 ## 🧭 Les 3 dépôts du projet
 1. **malachie4-projections** — le projet d'origine (v1.3, sources de données, cahier initial)
 2. **malachie4-offline-app** — prototype v2 (ancien recueil v2)
-3. **malachie4-projet-actuel** ⭐ — **CE dépôt** (v3 finale selon votre cahier 8 zones)
+3. **malachie-4-projections** ⭐ — **CE dépôt** (v3 finale selon votre cahier 8 zones)
 
 *GPL-3.0 · LSG 1910 domaine public · Sermons © Voice Of God Recordings / Shekinah Publications — usage église non commercial.*
