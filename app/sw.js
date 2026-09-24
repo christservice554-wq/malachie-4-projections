@@ -1,10 +1,10 @@
 /* Service Worker — Malachie 4 Projections v3e
    Stratégie : pages HTML = RÉSEAU D'ABORD (mises à jour toujours reçues),
    données (Bible/chants/brochures/assets) = cache d'abord (hors-ligne garanti) */
-const CACHE = 'm4p-v3g';
+const CACHE = 'm4p-v3h';
 const SHELL = ['./', './index.html', './manifest.json',
   './assets/logo.png', './assets/logo-192.png', './assets/apple-touch-icon.png',
-  './data/bible.js', './data/chants.js', './data/brochures-index.js'];
+  './data/bible.js', './data/chants.js', './data/brochures-index.js', './assets/fonts/NotoSerif.ttf'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
