@@ -170,6 +170,20 @@ body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);colo
 .brocmd{position:absolute;right:6px;bottom:6px;display:flex;gap:5px;z-index:2}
 .brocmd button{border:1px solid var(--or2);background:#fff;border-radius:7px;padding:4px 12px;cursor:pointer;font-weight:800;font-size:.74rem;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 textarea.ed{width:100%;min-height:240px;font-family:inherit;font-size:.9rem;padding:8px;border:1px solid #cbb87e;border-radius:9px;resize:vertical}
+/* ============== FENÊTRE PUBLIQUE (?public=1) — 2ᵉ écran/projecteur ============== */
+#ecranPublic{display:none;position:fixed;inset:0;background:#1d2420;align-items:center;justify-content:center;text-align:center;z-index:60}
+body.public #ecranPublic{display:flex}
+body.public>*:not(#ecranPublic){display:none!important}
+#pub{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:3vh 4vw;overflow:hidden}
+#pub .titre{font-family:var(--police);font-weight:800;color:var(--or2);margin-bottom:.5em;font-size:.8em}
+body.public #pub.fond-charcoal .titre{color:var(--or)}
+#pub .texte{font-family:var(--police);font-size:8.5vmin;line-height:var(--interligne);font-weight:600;white-space:pre-line;max-width:100%}
+body.public #pub.fond-parchment{color:#3a2f14}
+body.public #pub.fond-charcoal{color:var(--parcho)}
+body.public #pub.fond-white{color:#222}
+#pub .pv-veill{color:#7d8f80}
+#pub .pv-veill img{width:11vmin;border-radius:50%;border:3px solid #b9a868;opacity:.75}
+#pub .pv-veill .cit{font-style:italic;margin-top:2vmin;font-size:3.4vmin}
 /* ============== MODALES ============== */
 .modal{position:fixed;inset:0;background:rgba(20,26,22,.82);display:none;align-items:center;justify-content:center;z-index:70;padding:12px}
 .modal .boite{background:var(--carte);max-width:480px;width:100%;border-radius:14px;border:3px solid var(--or);overflow:hidden}
@@ -202,6 +216,7 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
   <span class="etat" id="etat">…</span>
   <button class="zbtn on" id="bProj">🖥️ PROJECTION</button>
   <button class="zbtn" id="bAff">👁 AFFICHAGE</button>
+  <button class="zbtn" id="bPub" title="Ouvrir la fenêtre publique à glisser sur le projecteur (F11 = plein écran)">⛶ 2ᵉ écran</button>
 </header>
 
 <div id="grille">
@@ -285,6 +300,7 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
   </div>
 </div>
 
+<div id="ecranPublic"><div id="pub"></div></div>
 <div id="toast"></div>
 
 <!-- ========== ZONE 7 : AJOUT (modale du bouton ＋) ========== -->
@@ -335,6 +351,36 @@ const state = {
 };
 const EL = k => document.getElementById(k);
 const norm = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+/* ================= FENÊTRE PUBLIQUE / 2ᵉ ÉCRAN =================
+   Deux contextes : contrôleur (?public absent) et public (?public=1).
+   Synchronisation temps réel via BroadcastChannel (même origine). */
+const EN_PUBLIC = new URLSearchParams(location.search).get('public')==='1';
+let CANAL = null;
+if(EN_PUBLIC){
+  document.body.classList.add('public');
+}else if('BroadcastChannel' in window){
+  CANAL = new BroadcastChannel('m4p');
+}
+function rendrePublic(d){
+  const pub = EL('pub'); if(!pub) return;
+  if(!d.projectionConnected){ pub.style.background='#161616'; pub.className=''; pub.innerHTML='<div class="pv-veill"><div class="cit">(déconnecté)</div></div>'; return; }
+  if(d.displayEnabled && d.preview){
+    pub.style.background=''; pub.className='fond-'+d.background;
+    pub.innerHTML = `<div class="titre">${d.preview.titre||''}</div><div class="texte">${d.preview.texte}</div>`;
+  } else {
+    pub.style.background='#1d2420'; pub.className='';
+    pub.innerHTML = `<div class="pv-veill"><img src="./assets/logo.png" alt=""><div class="cit">« Voici, je vous enverrai Élie, le prophète »</div></div>`;
+  }
+}
+if(EN_PUBLIC && 'BroadcastChannel' in window){
+  const bc = new BroadcastChannel('m4p');
+  bc.onmessage = ev => rendrePublic(ev.data);
+}
+EL('bPub') && (EL('bPub').onclick = () => {
+  const w = window.open(location.pathname + '?public=1', 'm4public');
+  if(!w) toast('⚠️ Autorisez les fenêtres surgissantes puis réessayez');
+  else toast('⛶ Fenêtre publique ouverte — glissez-la sur le projecteur et F11');
+});
 function toast(m){const t=EL('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
 function ferme(id){EL(id).style.display='none';} window.ferme=ferme;
 
@@ -373,6 +419,11 @@ function rendreZ3(){
     st.textContent = '🖥 Affichage actif — veille';
     st.style.color = '#ffe9a8';
   }
+  /* synchro temps réel vers la fenêtre publique (2ᵉ écran) */
+  if(CANAL){ CANAL.postMessage({
+    projectionConnected: state.projectionConnected, displayEnabled: state.displayEnabled,
+    preview: state.preview, fontFamily: state.fontFamily, fontSize: state.fontSize,
+    lineSpacing: state.lineSpacing, background: state.background }); }
 }
 /* ================= ZONE 8 : COMMANDES ================= */
 function majBoutons(){
@@ -403,6 +454,17 @@ function projeter(item){                    // DOUBLE-CLIC : zone 3 + AFFICHAGE 
 function preparerZ3(item){                  // SIMPLE CLIC : préparé SANS activer l'affichage
   state.preview = item; rendreZ3();
   toast('… Préparé (transparent) : ' + item.label);
+}
+/* SYNCHRONISATION LECTURE (zone 5 <-> zone 3) : tout mouvement de lecture
+   dans la zone 5 est reflété IMMÉDIATEMENT dans la zone 3 (mode flottant) ;
+   l'historique n'est poussé qu'après 650 ms de calme (anti-rafale) */
+let _histTimer=null;
+function projeterSync(item){
+  state.preview=item; rendreZ3();
+  if(state.displayEnabled){
+    clearTimeout(_histTimer);
+    _histTimer=setTimeout(()=>histPush(item), 650);
+  }
 }
 function histPush(item){
   const cle = item.key || item.label;
@@ -672,6 +734,16 @@ function broContinuous(){
   function bouge(dy){
     y = Math.max(0, Math.min(lignesMax(), y + dy));        // ligne par ligne, borné
     state.bro.posY = y; applique();
+    /* synchro zone 3 : le § visible en tête suit la lecture à l'instant */
+    let best = 0;
+    flux.querySelectorAll('.brop').forEach((p,i)=>{ if(p.offsetTop-12<=y) best=i; });
+    state.bro.pos = best;
+    const cur = bro.paras[best];
+    if(cur) projeterSync(itemBro(cur));
+    const chip = document.querySelector('.bropanel .chnum.sel');
+    const nsel = document.querySelector(`.bropanel .chnum[data-i="${best}"]`);
+    if(chip) chip.classList.remove('sel');
+    if(nsel){ nsel.classList.add('sel'); nsel.scrollIntoView({block:'nearest'}); }
   }
   EL('bup').onclick=()=>bouge(-pas()); EL('bdn').onclick=()=>bouge(pas());
   cont.addEventListener('wheel', e=>{ e.preventDefault(); bouge(e.deltaY>0?pas():-pas()); }, {passive:false});
