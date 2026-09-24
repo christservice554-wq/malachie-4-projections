@@ -10,6 +10,7 @@
   "build": {
     "appId": "org.christservice.malachie4projections",
     "files": ["electron-main.js", "../app/**"],
-    "win": { "target": "portable" }
+    "win": { "target": "portable" },
+    "portable": { "artifactName": "Malachie4-Projections.exe" }
   }
 }
