@@ -177,7 +177,10 @@ body.public>*:not(#ecranPublic){display:none!important}
 #pub{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:3vh 4vw;overflow:hidden}
 #pub .titre{font-family:var(--police);font-weight:800;color:var(--or2);margin-bottom:.5em;font-size:.8em}
 body.public #pub.fond-charcoal .titre{color:var(--or)}
-#pub .texte{font-family:var(--police);font-size:8.5vmin;line-height:var(--interligne);font-weight:600;white-space:pre-line;max-width:100%}
+#pub .texte{width:100%;flex:1;display:flex;align-items:center;justify-content:center;
+  font-family:var(--police);font-size:8.5vmin;line-height:var(--interligne);font-weight:600;white-space:pre-line;max-width:100%}
+#pub .entete2{align-self:flex-start;text-align:left;font-family:Calibri,'Segoe UI',sans-serif;font-style:italic;font-weight:600;
+  font-size:3.1vmin;line-height:1.2;color:#c9a34e;margin-bottom:.5em;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.95}
 body.public #pub.fond-parchment{color:#3a2f14}
 body.public #pub.fond-charcoal{color:var(--parcho)}
 body.public #pub.fond-white{color:#222}
@@ -366,7 +369,8 @@ function rendrePublic(d){
   if(!d.projectionConnected){ pub.style.background='#161616'; pub.className=''; pub.innerHTML='<div class="pv-veill"><div class="cit">(déconnecté)</div></div>'; return; }
   if(d.displayEnabled && d.preview){
     pub.style.background=''; pub.className='fond-'+d.background;
-    pub.innerHTML = `<div class="titre">${d.preview.titre||''}</div><div class="texte">${d.preview.texte}</div>`;
+    pub.innerHTML = `${d.preview.entete?`<div class="entete2">${d.preview.entete}</div>`:''}<div class="texte">${d.preview.texte}</div>`;
+    requestAnimationFrame(()=>{ if(pub.scrollHeight > pub.clientHeight+6){ const t=pub.querySelector('.entete2'); if(t) t.style.display='none'; } });
   } else {
     pub.style.background='#1d2420'; pub.className='';
     pub.innerHTML = `<div class="pv-veill"><img src="./assets/logo.png" alt=""><div class="cit">« Voici, je vous enverrai Élie, le prophète »</div></div>`;
@@ -625,11 +629,11 @@ function ouvrirVersets(l,c,v,direct){
   EL('z5corps').querySelectorAll('.strophe').forEach(el=>{
     const i=+el.dataset.i;
     el.onclick=()=>{ EL('z5corps').querySelectorAll('.strophe').forEach(x=>x.classList.remove('sel')); el.classList.add('sel');
-      preparerZ3({key:'bi',titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}); };
-    el.ondblclick=()=>projeter({key:'bi',titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}});
+      preparerZ3({key:'bi',entete:`${L.nom} ${c+1}:${i+1} — Segond 1910`,titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}); };
+    el.ondblclick=()=>projeter({key:'bi',entete:`${L.nom} ${c+1}:${i+1} — Segond 1910`,titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}});
     garde(el,()=>reserver({cle:'b'+l+'c'+c+'v'+i,label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}));
   });
-  if(direct && v>=0) projeter({key:'bi',titre:refTxt()+':'+(v+1),texte:L.chapitres[c][v],label:`📖 ${refTxt()}:${v+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:v}});
+  if(direct && v>=0) projeter({key:'bi',entete:`${L.nom} ${c+1}:${v+1} — Segond 1910`,titre:refTxt()+':'+(v+1),texte:L.chapitres[c][v],label:`📖 ${refTxt()}:${v+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:v}});
 }
 /* ---- 4C. BROCHURES ---- */
 function z4Brochures(){
@@ -683,7 +687,8 @@ async function chargerBrochure(code, trad, titre, pos, mode, directe){
   if(direct){ const p = state.bro.paras[state.bro.pos]||state.bro.paras[0]; projeter(itemBro(p)); }
 }
 function itemBro(p){
-  return {key:'br'+state.bro.id+'§'+p[0], titre:`${state.bro.id} — ${state.bro.titre} (${state.bro.trad}) — §${p[0]}/${state.bro.paras.length}`,
+  const tit = String(state.bro.titre||'').length>44 ? String(state.bro.titre).slice(0,44)+'…' : (state.bro.titre||'');
+  return {key:'br'+state.bro.id+'§'+p[0], entete:`${state.bro.id} · ${tit} · ${state.bro.trad}`, titre:`${state.bro.id} — ${state.bro.titre} (${state.bro.trad}) — §${p[0]}/${state.bro.paras.length}`,
     texte:p[1], label:`📄 §${p[0]} · ${state.bro.id}`,
     snap:{kind:'brochure',id:state.bro.id,trad:state.bro.trad,titre:state.bro.titre,pos:state.bro.paras.indexOf(p),mode:state.bro.mode}};
 }
@@ -793,13 +798,13 @@ function ouvrirChant(ri, i, pos, directe){
     `<div class="strophe" data-i="${k}"><span class="tch ${/chœur|choeur|refrain/i.test(p.tag)?'choeur':''}">${p.tag}</span><div class="txt">${p.texte}</div></div>`).join('');
   EL('z5corps').querySelectorAll('.strophe').forEach(el=>{
     const k=+el.dataset.i;
-    const mk = ()=>({key:'ch'+R.id+i+k, titre:`${base.num} — ${base.titre} · ${parties[k].tag}`, texte:parties[k].texte,
+    const mk = ()=>({key:'ch'+R.id+i+k, entete:base.titre, titre:`${base.num} — ${base.titre} · ${parties[k].tag}`, texte:parties[k].texte,
       label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`, snap:{kind:'chant',recueil:ri,idx:i,pos:k}});
     el.onclick=()=>{ EL('z5corps').querySelectorAll('.strophe').forEach(x=>x.classList.remove('sel')); el.classList.add('sel'); state.chant.pos=k; preparerZ3(mk()); };
     el.ondblclick=()=>{ state.chant.pos=k; projeter(mk()); };
     garde(el,()=>{ state.chant.pos=k; reserver({cle:'chant-'+R.id+'-'+i+'-'+k,label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`,snap:{kind:'chant',recueil:ri,idx:i,pos:k}}); });
   });
-  if(directe){ const k = Math.min(state.chant.pos, parties.length-1); const mk0={key:'ch'+R.id+i+k,titre:`${base.num} — ${base.titre} · ${parties[k].tag}`,texte:parties[k].texte,label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`,snap:{kind:'chant',recueil:ri,idx:i,pos:k}}; projeter(mk0); }
+  if(directe){ const k = Math.min(state.chant.pos, parties.length-1); const mk0={key:'ch'+R.id+i+k,entete:base.titre,titre:`${base.num} — ${base.titre} · ${parties[k].tag}`,texte:parties[k].texte,label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`,snap:{kind:'chant',recueil:ri,idx:i,pos:k}}; projeter(mk0); }
 }
 function editerChant(R, i, base){
   const cle = R.id+'-'+i;
@@ -892,7 +897,7 @@ function nav(d){
     const L=M4_BIBLE.livres[state.bible.livre], C=L.chapitres[state.bible.chapitre];
     const v = Math.max(0, Math.min(C.length-1, (state.bible.verset<0?0:state.bible.verset)+d));
     state.bible.verset=v;
-    const it = {titre:refTxt()+':'+(v+1), texte:C[v], label:`📖 ${refTxt()}:${v+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:v}};
+    const it = {entete:`${L.nom} ${state.bible.chapitre+1}:${v+1} — Segond 1910`, titre:refTxt()+':'+(v+1), texte:C[v], label:`📖 ${refTxt()}:${v+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:v}};
     if(state.displayEnabled) projeter(it); else preparerZ3(it);
     ouvrirVersets(state.bible.livre, state.bible.chapitre, v, false);
     return;
@@ -901,7 +906,7 @@ function nav(d){
     const R=M4_CHANTS.recueils[state.chant.recueil]; const parties = partiesChant((state.edits[R.id+'-'+state.chant.idx])||R.songs[state.chant.idx].texte);
     const k = Math.max(0, Math.min(parties.length-1, state.chant.pos + d));
     state.chant.pos=k;
-    const mk={titre:`${R.songs[state.chant.idx].num} — ${R.songs[state.chant.idx].titre} · ${parties[k].tag}`, texte:parties[k].texte,
+    const mk={entete:R.songs[state.chant.idx].titre, titre:`${R.songs[state.chant.idx].num} — ${R.songs[state.chant.idx].titre} · ${parties[k].tag}`, texte:parties[k].texte,
       label:`🎵 ${R.songs[state.chant.idx].num} ${R.songs[state.chant.idx].titre} · ${parties[k].tag}`, snap:{kind:'chant',recueil:state.chant.recueil,idx:state.chant.idx,pos:k}};
     if(state.displayEnabled) projeter(mk); else preparerZ3(mk);
     EL('z5corps').querySelectorAll('.strophe').forEach((x,i)=>x.classList.toggle('sel', i===k));
@@ -914,6 +919,31 @@ document.addEventListener('keydown', e=>{
   if(e.key==='ArrowUp'){ e.preventDefault(); nav(-1); }
   if(e.key==='Escape'){ state.displayEnabled=false; majBoutons(); rendreZ3(); toast('⏹ Affichage coupé — transparent'); }
 });
+/* ================= REDIMENSIONNEMENT À LA CROISSANCE VOISINE =================
+   Règle de l'utilisateur : le carreau touché devient plus long/plus court ;
+   son voisin DIRECT prend (ou rend) l'écart ; les carreaux non concernés
+   restent à leur place, séparés, sans relation. */
+function reequilibrer(t){
+  if(!t.style.width && !t.style.height) return;     // figé seulement après un vrai geste
+  const rang = t.parentElement, freres = [...rang.children].filter(c=>c.classList.contains('tile'));
+  const i = freres.indexOf(t);
+  const voisin = freres[i+1] || freres[i-1] || null;
+  freres.forEach(c=>{ if(c!==voisin){ c.style.flex='none'; c.style.width=c.getBoundingClientRect().width+'px'; } });
+  if(voisin){ voisin.style.flex='1 1 0'; voisin.style.width=''; }
+  const grille = rang.parentElement;
+  if(grille && grille.id==='grille'){
+    const rangs = [...grille.children].filter(c=>c.classList.contains('rang'));
+    const j = rangs.indexOf(rang), autre = rangs[1-j];
+    rangs.forEach(r=>{ r.style.flex='none'; r.style.height=r.getBoundingClientRect().height+'px'; });
+    if(autre){ autre.style.flex='1 1 0'; autre.style.height=''; }
+  }
+}
+const _obs = new ResizeObserver(els=>{
+  for(const en of els){ const t=en.target;
+    if(t.classList.contains('tile') && !t._rok){ t._rok=true; requestAnimationFrame(()=>{ reequilibrer(t); t._rok=false; }); }
+  }
+});
+document.querySelectorAll('.tile').forEach(t=>_obs.observe(t));
 /* ================= DÉMARRAGE ================= */
 majBoutons(); rendreZ3(); construireZ4();
 setTimeout(()=>{
