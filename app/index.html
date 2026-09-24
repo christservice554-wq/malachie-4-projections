@@ -459,7 +459,6 @@ function garde(el, fn){
 EL('moins').onclick=()=>{ state.fontSize=Math.max(20,state.fontSize-4); majZ2(); };
 EL('plus').onclick =()=>{ state.fontSize=Math.min(56,state.fontSize+4); majZ2(); };
 function majZ2(){ document.documentElement.style.setProperty('--taille', state.fontSize+'px'); EL('taille').textContent=state.fontSize; rendreZ3(); if(state.bro.id&&state.bro.mode==='continuous') broContinuous(); }
-EL('taille').parentElement
 document.querySelectorAll('.police').forEach(p=>p.onclick=()=>{
   document.querySelectorAll('.police').forEach(x=>x.classList.remove('on')); p.classList.add('on');
   state.fontFamily=p.dataset.p; document.documentElement.style.setProperty('--police', state.fontFamily); rendreZ3(); if(state.bro.id) broCorps();
@@ -498,7 +497,10 @@ function z4Recueil(rechercheSeule){
   const f = norm(EL('z4rech').value);
   const R = recueilCourant();
   const trouves = R.songs.map((s,i)=>({s,i})).filter(({s})=>!f||norm(s.num+' '+s.titre+' '+s.texte).includes(f));
-  EL('z4liste').innerHTML = trouves.slice(0,300).map(({s,i})=>
+  const tot = M4_CHANTS.recueils.reduce((a,r)=>a+r.songs.length,0);
+  EL('z4liste').innerHTML = `<div style="padding:2px 2px 6px;font-weight:800;color:var(--vert);font-size:.72rem">
+      🎵 ${R.songs.length} chants dans « ${R.nom} » (${tot} chants au total dans les 2 recueils)${f?` · ${trouves.length} résultat(s)`:''}</div>`
+    + trouves.slice(0,300).map(({s,i})=>
     `<div class="rowi" data-i="${i}"><span class="badge ${R.id==='nouveau'?'bnv':'bhist'}">${R.id==='nouveau'?'NV':'A'}</span><b>${s.num}</b> — ${s.titre}</div>`).join('')
     || '<div class="vide">Aucun chant trouvé</div>';
   if(trouves.length>300) EL('z4liste').innerHTML += `<div class="vide">… +${trouves.length-300} (précisez la recherche)</div>`;
@@ -572,7 +574,10 @@ function z4Brochures(){
   const f = norm(EL('z4rech').value);
   const tous = (M4_BROCHURES.brochures||[]).concat(state.ajouts.brochures||[]);
   const trouves = tous.filter(b=>!f||norm(b.id+' '+b.titre).includes(f));
-  EL('z4liste').innerHTML = trouves.map((b,i)=>{
+  const doubles = tous.filter(b=>b.vgr && b.shekinah).length;
+  EL('z4liste').innerHTML = `<div style="padding:2px 2px 6px;font-weight:800;color:var(--vert);font-size:.72rem">
+      📄 ${tous.length} brochures complètes — ${doubles} en double traduction VGR+SKN · ${tous.length-doubles} en traduction unique
+      ${f?`<span style="color:var(--or2)"> · ${trouves.length} résultat(s)</span>`:''}</div>` + trouves.map((b,i)=>{
     const deux = b.vgr && b.shekinah;
     const badge = deux ? '<span class="badge bvgr">VGR</span><span class="badge bskn">SKN</span>'
                        : b.vgr ? '<span class="badge bvgr">VGR</span>' : '<span class="badge bskn">SKN</span>';
@@ -848,13 +853,16 @@ setTimeout(()=>{
 if('serviceWorker' in navigator){ addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
 async function embarquerPartiellement(){
   try{
-    const idx = (window.M4_BROCHURES.brochures||[]);
-    let fait=0; const total=Math.min(idx.length, 60);   // précache progressif, le reste à la demande + SW
-    for(const b of idx.slice(0,total)){
+    const idx = (window.M4_BROCHURES.brochures||[]);      // embarquement INTÉGRAL progressif (hors-ligne après)
+    let fait = 0;
+    for(const b of idx){
       const trad = b.vgr ? 'vgr' : 'shekinah';
       fetch(`data/brochures/${trad}-textes/${b.id}.json.gz`).catch(()=>{});
-      fait++; await new Promise(r=>setTimeout(r, 40));
+      fait++;
+      if(fait % 150 === 0) toast(`📦 Embarquement hors-ligne : ${fait}/${idx.length} brochures…`);
+      await new Promise(r=>setTimeout(r, 25));
     }
+    toast('✅ Embarquement terminé — tout fonctionne maintenant sans réseau');
   }catch(e){}
 }
 addEventListener('load', ()=>setTimeout(embarquerPartiellement, 4000));
