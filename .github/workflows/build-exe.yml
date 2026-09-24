@@ -1,0 +1,32 @@
+name: Construire le EXE Windows
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-exe.yml'
+      - 'desktop/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  exe-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installer et construire (electron + electron-builder portable)
+        run: |
+          cd desktop
+          npm install
+          npx electron-builder --win portable --x64 -p never
+      - name: Publier l'EXE dans la release v3.0
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem -Path desktop\dist -Filter *.exe -Recurse | Select-Object -First 1
+          gh release upload v3.0 $exe.FullName --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
