@@ -50,3 +50,5 @@
 - Bloc 5b (25/09, v2 local, push en attente) : JEAN scindé (Baptiste 1159/581 sermons, Apôtre 440/240 ; 2648 indéterminées=citations) ; ISAAC 541/267 ; Abraham COMPLETE (Gen 12→24). Fichiers -v2-250926.
 
 - NETTOYAGE Message Hub (25/09, v2, poussé) : NETTOYEE 8 675 (VALIDE 7 918 + PARTIEL 651 + CORRIGE 106) ; RETIREES 294 (REJETE 56 + CHAPITRE-SEUL 229 + ABSENT-faible 9) ; COD-TABLE 42 sermons/759 rattachements ; IDEES top-200 versets + résumés-amorces. Push groupé v2 (5a+Validation+5b+Nettoyage).
+
+- FINALisation v3 (25/09, poussé) : Message Hub web = aucune donnée exposée (vérifié : API métadonnées seules, contenus dans l'appli) → validation exhaustive sur sources identiques ; contrôle croisé 2 trads = 94,5 % ; EXACTS 1 932/7 918 ; PDF-RETIREES (294 + extraits, à vérifier) + PDF-ANNONCE-DIFFERE-LU (106 corrigés + extraits).
