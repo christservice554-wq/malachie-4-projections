@@ -11,8 +11,9 @@ thèmes, histoires, applis de référence. Envoyez ce lien à quelqu'un : il tro
 |---|---|
 | `Bibles/` | **Louis Segond** (31 102 versets), **Darby** (31 107), **Martin 1744** (31 103) — texte complet, 1 verset/ligne |
 | `Brochures/` | `INDEX-VGR.csv` (385) + `INDEX-SHEKINAH.csv` (1210) — code;titre;traduction;paragraphes;fichier |
-| `Themes/` | 10 PDF+TXT (Seconde Venue intro + parties I–VII, Nuée 1963, 7 Tonnerres) + anthologies **Enlèvement** (65-1204, 2 trads) et **Péché** (400 §) |
+| `Themes/` | 10 PDF+TXT (Seconde Venue intro + parties I–VII, Nuée 1963, 7 Tonnerres) + anthologies **Enlèvement** (65-1204, 2 trads) et **Péché** (400 §) + **Divinité** (960 citations vérifiées, 8 thèmes) |
 | `Histoires/` | 4 biographies TXT (**Surnaturelle**/Jorgensen 451 p. FR ✔, Trésor, Homme envoyé, Afrique) + Histoire de ma vie (55-0117, 59-0419A) + Écureuils + Ours + `RESUMES-HISTOIRES.md` |
+| `ETAT-TRAVAIL.md` | 🧭 Reprendre où on s'est arrêté (blocs archivés) |
 | `DEMANDE-IA.md` | **Cahier des charges** : la requête complète à donner à une IA (panneau Passage/Contexte + Histoires) |
 | `VERIFICATION-IA.md` | Preuves d'exploration : Malachie 4 = **430 § / 216 prédications** + échantillons + méthode |
 | `APPLIS.md` | Applis existantes qui relient versets↔passages (**Message Hub**, Le Message…) + liens |
