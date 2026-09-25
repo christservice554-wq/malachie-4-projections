@@ -62,3 +62,5 @@
 - v7 EXEMPLE (25/09, poussé) : nouveau modèle ANNÉE+CODE+§+EXTRAIT sur Hébreux (fiche MD + PDF groupé). Généraliser aux 50 livres après validation utilisateur.
 
 - v8 EXEMPLE LUC (25/09, poussé) : modèle Année+Moment+Prédication+§+Mots+Extrait centré, Darby+LSG, 10+10+10 échantillons ; portions strictes pondérées (996) ; synonymes auto ABANDONNÉS (4 essais bruités, sur dictée manuelle). Généraliser après validation.
+
+- v9 (25/09, poussé) : mots-preuves en GRAS + extraits centrés (Luc refait) ; FAMILLES DE CONCEPTS démo (13 versets, 325 §, preuve PHRASE ou 4+ mots/2 rares, ex. « Jésus ne change pas » = Héb 13:8) + CSV + PDF 17 p.
