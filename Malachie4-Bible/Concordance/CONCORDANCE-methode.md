@@ -40,3 +40,11 @@
 - `Concordance-VERSET-PARAGRAPHE.csv` : livre;chapitre;verset_de;verset_a;traduction;code;paragraphe.
 - `Concordance-QR-LISTE.txt` : les Q&R triées par densité de refs (COD en premier).
 - Sens inverse (citation→verset) : filtrer le CSV par code+§.
+
+## Validation (25/09/2026) — Message Hub + COD
+- Message Hub : API web = métadonnées seules (72 langues) ; contenus non exposés. Validation faite sur nos textes VGR+Shekinah (sources identiques), + échantillon.
+- Moteur : fenêtre ±2 § autour de chaque annonce × mots distinctifs du verset (Darby 31 104 versets, stopwords FR retirés). Seuil ≥3 mots (ou tout le verset si court).
+- Verdicts sur 8 969 : VALIDE 7 918 (88,3 %) · INACHEVÉ 651 · CHAPITRE-SEUL 229 · ABSENT-BIBLE 91 (+ hypothèses vérifiées : « 1 Jean 16:7 »→Jean 16:7, « Joël 2:38 »→Actes 2:38, « Actes 10:49 »→Actes 10:44/46/48 systématique, « Éph 1:25 »→Col 1:25, « 1 Cor 13:14 »→13:13) · REJETÉ 56 · CONFONDU 24 (3 confirmés ×2 trads : 65-1206 Zach 13:7/És 7:14, 65-1031M Gen 4:6/Héb 10:26, 65-0221E Ex 33:2/Héb 7:2 ; autres = listings, à vérifier).
+- CONTEXTE : 43 043 occurrences (verset parlé sans annonce, ≥2-3 mots distinctifs, top : voir PDF §9).
+- COD/Q&R : 784 refs (VALIDE 676, INACHEVÉ 67, ABSENTS 18, CHAP-SEUL 17, REJETÉ 4, CONFONDU 2) + 998 marqueurs questions + écritures rattachées (à relire).
+- Fichiers appli : VALIDATION-refs.csv/json (verdict 1..6), VALIDATION-contexte.csv, VALIDATION-confusions.csv, VALIDATION-inacheves.csv, VALIDATION-absents-hypotheses.csv, COD-questions-ecritures.csv, VALIDITE-CITATIONS-MessageHub-COD.pdf.

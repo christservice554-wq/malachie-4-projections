@@ -39,3 +39,14 @@
 - Zone : https://github.com/christservice554-wq/malachie-4-projections/tree/main/Malachie4-Bible
 - Packs : https://github.com/christservice554-wq/malachie-4-projections/releases/tag/v3.1
 - Source Uvira : https://www.scribd.com/document/945467792/La-Divinite-de-William-Marrion-Branham-Version-3
+
+- Bloc 5a : INDEX 85 personnages + 18 thèmes ; ABRAHAM complète (5 parties + Gen 12/14/18, Héb 7 ; manque Gen 22) ; JEAN mixte → scinder 5b (Baptiste vs apôtre).
+- RESTE 5b : Gen 22 Abraham, JEAN scindé, Paul/Pierre/David/Élie/Marie/Joseph/Sara/Daniel... ; puis Bloc 6 (Divinité+), Phase 2 (extérieurs : Luther, Martins, « l'autre » ?).
+
+- Bloc VALIDATION (25/09, ce push) : Message Hub autorisé (API = métadonnées seules → validation sur nos textes sources identiques) ; 8 969 refs vérifiées : 7 918 VALIDEES (88,3 %), 651 inachevées, 24 confondues (3 confirmées), 91 absentes (+hypothèses), 56 rejetées ; 43 043 contextes ; COD 784 refs + 998 questions ; PDF VALIDITE + CSV/JSON appli.
+
+- CONVENTION NOMS (25/09, sans jeton) : même dossier + suffixe -v2-250926 = nouveauté. Poussé=v1 ; tout le nouveau = v2 daté. Push en attente du jeton.
+
+- Bloc 5b (25/09, v2 local, push en attente) : JEAN scindé (Baptiste 1159/581 sermons, Apôtre 440/240 ; 2648 indéterminées=citations) ; ISAAC 541/267 ; Abraham COMPLETE (Gen 12→24). Fichiers -v2-250926.
+
+- NETTOYAGE Message Hub (25/09, v2, poussé) : NETTOYEE 8 675 (VALIDE 7 918 + PARTIEL 651 + CORRIGE 106) ; RETIREES 294 (REJETE 56 + CHAPITRE-SEUL 229 + ABSENT-faible 9) ; COD-TABLE 42 sermons/759 rattachements ; IDEES top-200 versets + résumés-amorces. Push groupé v2 (5a+Validation+5b+Nettoyage).
