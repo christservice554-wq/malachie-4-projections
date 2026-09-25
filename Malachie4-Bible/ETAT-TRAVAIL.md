@@ -56,3 +56,5 @@
 - v4 Lapsus+Portions+Concepts (25/09, poussé) : STOP 371 mots (fréquences sur 240 789 §) ; LAPSUS 262 (106 v3 + 156 stricts, on garde les 2 + mention) dont Mt12/Héb13:8 ×2 ; PORTIONS 3 776 (4+ mots) ; CONCEPTS 10 921 (2-3 mots) ; NETTOYEE-v4 9 093 ; RETIREES-v4 259 ; PDF-LAPSUS + PDF-PORTIONS-CONCEPTS.
 
 - v5 Fiches (25/09, poussé) : cadre LECTURE (340, §≤15 + marqueurs, non comptées) vs CONCEPT (8 753) ; 1 195 FICHES versets (50 livres, MD 2,4 Mo, s’ouvrent sur téléphone) + INDEX ; SERMONS-ECRITURES (modèle Message Hub en mieux). Ex. Jean 3:16 = 169 occ (41 EXACT, 40 POR, 60 CPT, 4 LECTURE exclues).
+
+- v6 verset-par-verset (25/09, poussé) : 2 744 chapitres résolus en versets lus (2 passes ±2/±5, 3+ mots rares) ; 149 plages éclatées ; NETTOYEE 13 406 (3 019 versets, 0 chapitre) ; RETIREES 1 820 (1 745 sans verset) ; Fiches v6 + SERMONS v6 régénérés.
