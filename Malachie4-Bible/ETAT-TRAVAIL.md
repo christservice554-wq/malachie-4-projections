@@ -52,3 +52,5 @@
 - NETTOYAGE Message Hub (25/09, v2, poussé) : NETTOYEE 8 675 (VALIDE 7 918 + PARTIEL 651 + CORRIGE 106) ; RETIREES 294 (REJETE 56 + CHAPITRE-SEUL 229 + ABSENT-faible 9) ; COD-TABLE 42 sermons/759 rattachements ; IDEES top-200 versets + résumés-amorces. Push groupé v2 (5a+Validation+5b+Nettoyage).
 
 - FINALisation v3 (25/09, poussé) : Message Hub web = aucune donnée exposée (vérifié : API métadonnées seules, contenus dans l'appli) → validation exhaustive sur sources identiques ; contrôle croisé 2 trads = 94,5 % ; EXACTS 1 932/7 918 ; PDF-RETIREES (294 + extraits, à vérifier) + PDF-ANNONCE-DIFFERE-LU (106 corrigés + extraits).
+
+- v4 Lapsus+Portions+Concepts (25/09, poussé) : STOP 371 mots (fréquences sur 240 789 §) ; LAPSUS 262 (106 v3 + 156 stricts, on garde les 2 + mention) dont Mt12/Héb13:8 ×2 ; PORTIONS 3 776 (4+ mots) ; CONCEPTS 10 921 (2-3 mots) ; NETTOYEE-v4 9 093 ; RETIREES-v4 259 ; PDF-LAPSUS + PDF-PORTIONS-CONCEPTS.
