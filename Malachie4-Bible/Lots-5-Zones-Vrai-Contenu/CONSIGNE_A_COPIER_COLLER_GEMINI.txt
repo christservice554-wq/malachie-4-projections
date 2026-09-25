@@ -1,0 +1,33 @@
+CONSIGNE À COPIER-COLLER DANS GEMINI FLASH - PHASE 1
+
+Copie ce texte et colle-le avec le fichier TXT que tu as téléchargé :
+
+---
+
+Objectif Phase 1 : Indexation Bible ↔ 1 700 brochures
+
+Je t'ai donné un fichier 100% texte avec :
+- PARTIE 1 : Bible LSG complète (66 livres)
+- PARTIE 2 : 1 212 brochures (1 595 avec doublons VGR+SHEKINAH) groupées 30 par fichier
+
+Tâche : Pour chaque paragraphe de brochure, identifie :
+
+1. CITATIONS INTÉGRALES (Versets exacts) : Repère chaque paragraphe où un verset biblique est cité mot à mot ou textuellement. Exemple Ap 5:1 "Puis je vis dans la main droite..."
+
+2. CITATIONS PARTIELLES / Extrait de versets : Repère chaque endroit où seule une partie d'un verset est intégrée directement dans une phrase. Exemple "Un livre écrit en dedans et en dehors, vous voyez ?"
+
+3. CONCEPTS ET IDÉES IDENTIQUES (Même sens en d'autres mots) : Repère tous les passages où la brochure développe exactement le même concept, même pensée ou même enseignement qu'un verset biblique, mais exprimé avec d'autres mots ou paraphrase. Exemple Ap 5:1 = Livre scellé = titre de propriété, brochure "c'est le titre de propriété qui avait été perdu"
+
+Format sortie pour chaque verset :
+- Verset : Ap 5:1
+- Texte Bible : "Puis je vis..."
+- Occurrences :
+  * Type: intégrale / partielle / concept_identique
+  * Brochure: 61-0611 §23
+  * Texte brochure
+  * Idée / Contexte exact
+
+Commence par Apocalypse 5:1, puis Genèse 1:1, Jean 3:16, et continue livre par livre. Donne-moi un tableau JSON.
+
+---
+
