@@ -1,4 +1,4 @@
-# 🧭 ÉTAT DU TRAVAIL — reprendre où on s'est arrêté (maj 25/09/2026, Bloc 1)
+# 🧭 ÉTAT DU TRAVAIL — reprendre où on s'est arrêté (maj 25/09/2026, Bloc 2)
 
 ## Règles actives (dictées par l'utilisateur)
 - Chaque découverte → résumé + poussée GitHub + lien. Travail par BLOCS archivés
@@ -7,13 +7,18 @@
 - L'utilisateur NE soutient PAS l'adoration de Branham (rappelé sur chaque recueil sensible).
 
 ## BLOC 1 — Divinité (doc Uvira v3, Scribd) : FAIT ✔ poussé
-- 10 citations lues → **7 VRAIES gardées**, 3 exclues (autre édition : 64-0629 §123,
-  62-1231 §117, 65-0426 §149-VGR — textes introuvables dans nos 2 traductions).
-- Anthologie : **960 citations / 8 thèmes** (120/thème, ordre chrono).
-- SUITE POSSIBLE : élargir T5/T6/T7 (2 000-4 400 § chacun) ; lire autres pages Scribd.
+- 10 citations lues → 7 VRAIES gardées, 3 exclues (autre édition).
+- Anthologie : 960 citations / 8 thèmes (120/thème, ordre chrono).
 - Fichiers : Themes/Divinite-ANTHOLOGIE.txt, Divinite-CITATIONS-VERIFIEES.csv, Divinite-SOURCE-UVIRA.md
 
-## BLOC 2 — Histoires Moïse/Noé/Néhémie/Malachie (NOS brochures uniquement) : À FAIRE
+## BLOC 2 — Histoires Moïse/Noé/Néhémie/Malachie (NOS brochures SKN) : FAIT ✔ poussé
+- MOÏSE : 912 sermons / 3 845 mentions — résumé 63-0714M §164-172 ✔
+- NOÉ : 468 sermons / 1 311 mentions — résumé 62-0531 §158-166 ✔
+- NÉHÉMIE : 1 mention → pas de récit (prudent, § à localiser si bloc 2b)
+- MALACHIE : 370 mentions = citations Mal 4, pas de biographie → renvoi VERIFICATION-IA
+- Fichiers : Histoires/Histoires-2-*.md + 4 extrait-*.txt
+- SUITE POSSIBLE (2b) : buisson/mer Rouge/arche/déluge, § Néhémie, élargir T5/T6/T7.
+
 ## BLOC 3 — Passage/Contexte : Apo 10:7 + Jean 3:16 (échantillons + méthode) : À FAIRE
 
 ## Liens
