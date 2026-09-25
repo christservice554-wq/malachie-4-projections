@@ -60,3 +60,5 @@
 - v6 verset-par-verset (25/09, poussé) : 2 744 chapitres résolus en versets lus (2 passes ±2/±5, 3+ mots rares) ; 149 plages éclatées ; NETTOYEE 13 406 (3 019 versets, 0 chapitre) ; RETIREES 1 820 (1 745 sans verset) ; Fiches v6 + SERMONS v6 régénérés.
 
 - v7 EXEMPLE (25/09, poussé) : nouveau modèle ANNÉE+CODE+§+EXTRAIT sur Hébreux (fiche MD + PDF groupé). Généraliser aux 50 livres après validation utilisateur.
+
+- v8 EXEMPLE LUC (25/09, poussé) : modèle Année+Moment+Prédication+§+Mots+Extrait centré, Darby+LSG, 10+10+10 échantillons ; portions strictes pondérées (996) ; synonymes auto ABANDONNÉS (4 essais bruités, sur dictée manuelle). Généraliser après validation.
