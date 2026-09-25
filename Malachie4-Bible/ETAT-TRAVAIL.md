@@ -1,4 +1,4 @@
-# 🧭 ÉTAT DU TRAVAIL — reprendre où on s'est arrêté (maj 25/09/2026, Bloc 3 ✔ TOUT POUSSÉ)
+# 🧭 ÉTAT DU TRAVAIL — reprendre où on s'est arrêté (maj 25/09/2026, Bloc 4 ✔)
 
 ## Règles actives (dictées par l'utilisateur)
 - Chaque découverte → résumé + poussée GitHub + lien. Travail par BLOCS archivés
@@ -22,10 +22,18 @@
 - Fichiers : Passage-Contexte/*.csv (500 P + 300 C chacun) + VERIFICATION-2-*.md
 - Message Hub : pas de base en ligne → vérif sur nos textes (même source), méthode similitude.
 
-## SUITES POSSIBLES (prochains blocs)
-2b : buisson/mer Rouge/arche/déluge, § Néhémie, élargir Divinité T5/T6/T7.
-4 : autres écritures Passage/Contexte (Luc 17:30, Zach 14:7, Mal 4:5-6 détaillé…).
-5 : histoires Moïse/Noé complètes + Daniel/Luther… avec liens CODE §N.
+
+## BLOC 4 — Concordance COMPLÈTE Bible↔brochures : FAIT ✔ poussé
+- **8969 refs uniques** (9744 brutes), **1198 versets distincts**, 1369 prédications.
+  TOP : Mal 4, Héb 13:8, Marc 16, Jean 5:19, Jean 14:12…
+- Q&R/COD : 41 prédications = 853 refs (réservoir dense, listées).
+- Fichiers : Concordance/Concordance-VERSET-PARAGRAPHE.csv + Concordance-QR-LISTE.txt + CONCORDANCE-methode.md
+- Limites : versets sans livre non résolus ; texte récité sans réf = chantier 2.
+
+## SUITES / BLOCS SUIVANTS
+## BLOC 5 — Personnages bibliques : INDEX complet + histoires complètes (morceaux + écritures/partie) : À FAIRE
+## BLOC 6 — Divinité : +citations Uvira (autres pages) + confession exacte : À FAIRE
+## PHASE 2 (plus tard) — personnages extérieurs : Luther, Martin de Tours, Colomban, Wesley… (+ « l'autre » à préciser)
 
 ## Liens
 - Zone : https://github.com/christservice554-wq/malachie-4-projections/tree/main/Malachie4-Bible

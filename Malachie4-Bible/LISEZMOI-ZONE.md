@@ -15,6 +15,7 @@ thèmes, histoires, applis de référence. Envoyez ce lien à quelqu'un : il tro
 | `Histoires/` | 4 biographies TXT (**Surnaturelle**/Jorgensen 451 p. FR ✔, Trésor, Homme envoyé, Afrique) + Histoire de ma vie (55-0117, 59-0419A) + Écureuils + Ours + `RESUMES-HISTOIRES.md` |
 | `ETAT-TRAVAIL.md` | 🧭 Reprendre où on s'est arrêté (blocs archivés) |
 | `Passage-Contexte/` | Apo 10:7 (149 P + 835 C) + Jean 3:16 (116 P + 3 525 C), CSV prêts-à-intégrer + `VERIFICATION-2` |
+| `Concordance/` | **8969 refs** Bible↔brochures (1198 versets) + Q&R/COD + méthode |
 | `DEMANDE-IA.md` | **Cahier des charges** : la requête complète à donner à une IA (panneau Passage/Contexte + Histoires) |
 | `VERIFICATION-IA.md` | Preuves d'exploration : Malachie 4 = **430 § / 216 prédications** + échantillons + méthode |
 | `APPLIS.md` | Applis existantes qui relient versets↔passages (**Message Hub**, Le Message…) + liens |
