@@ -110,6 +110,10 @@ body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);colo
 #ecran.fond-parchment{background:var(--parcho);color:#3a2f14}
 #ecran.fond-charcoal{background:#1d2420;color:var(--parcho)}
 #ecran.fond-white{background:#fff;color:#222}
+#ecran.fond-noir{background:#0a0a0c;color:#fff}
+#ecran.fond-nuit{background:#10243e;color:#f2f6ff}
+.fond-noir #contenu .entete,.fond-nuit #contenu .entete{color:#f1e6c8}
+.fond-noir #contenu .ref,.fond-nuit #contenu .ref,.fond-noir #contenu .refhd,.fond-nuit #contenu .refhd{color:#eeeeee}
 #ecran.transparent{background:repeating-linear-gradient(45deg,#202620,#202620 14px,#242c26 14px,#242c26 28px);color:#8fa890}
 #ecran.deconnecte{background:#161616;color:#777}
 .veill{color:#9c8c56;padding:14px}
@@ -127,6 +131,9 @@ body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);colo
   font-family:var(--police);font-size:calc(var(--taille)*.62);line-height:var(--interligne);
   font-weight:600;white-space:pre-line;max-width:100%;max-height:100%;overflow:hidden}
 #contenu .ref{margin-top:.5em;font-size:.62em;font-weight:800;color:var(--or2)}
+#contenu .refhd{position:absolute;top:6px;right:12px;max-width:48%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-family:Calibri,'Segoe UI',Arial,sans-serif;font-style:italic;font-weight:600;
+  font-size:calc(var(--taille)*.4);line-height:1.2;color:var(--or2);opacity:.95;z-index:2}
 .fond-charcoal #contenu .ref{color:var(--or)}
 /* ============== ZONE 4 ============== */
 .z4tetes{display:flex;gap:4px;padding:6px 7px;border-bottom:1px solid #e0d2ac;background:#f7f0dd;flex:none}
@@ -190,6 +197,12 @@ body.public #pub.fond-charcoal .titre{color:var(--or)}
 body.public #pub.fond-parchment{color:#3a2f14}
 body.public #pub.fond-charcoal{color:var(--parcho)}
 body.public #pub.fond-white{color:#222}
+body.public #pub.fond-noir{color:#fff}
+body.public #pub.fond-nuit{color:#f2f6ff}
+#pub .refhd2{position:absolute;top:8px;right:16px;max-width:45%;text-align:right;font-family:Calibri,'Segoe UI',sans-serif;font-style:italic;font-weight:600;
+  font-size:3.1vmin;line-height:1.2;color:#c9a34e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.95;z-index:2}
+#pub .refpub{position:absolute;bottom:3vh;left:0;right:0;text-align:center;font-family:Calibri,'Segoe UI',sans-serif;font-weight:600;font-size:2.4vmin;color:var(--or2)}
+#pub.fond-noir .entete2,#pub.fond-nuit .entete2,#pub.fond-noir .refhd2,#pub.fond-nuit .refhd2,#pub.fond-noir .refpub,#pub.fond-nuit .refpub{color:#eeeeee}
 #pub .pv-veill{color:#7d8f80}
 #pub .pv-veill img{width:11vmin;border-radius:50%;border:3px solid #b9a868;opacity:.75}
 #pub .pv-veill .cit{font-style:italic;margin-top:2vmin;font-size:3.4vmin}
@@ -262,6 +275,8 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
             <div class="fond parchment on-sel" data-f="parchment">Parchemin</div>
             <div class="fond charcoal" data-f="charcoal">Charbon</div>
             <div class="fond white" data-f="white">Blanc</div>
+            <div class="fond noir" data-f="noir" style="background:#0a0a0c;color:#fff">Noir</div>
+            <div class="fond nuit" data-f="nuit" style="background:#10243e;color:#eee">Nuit</div>
           </div>
         </div>
       </div></div>
@@ -376,8 +391,8 @@ function rendrePublic(d){
   if(!d.projectionConnected){ pub.style.background='#161616'; pub.className=''; pub.innerHTML='<div class="pv-veill"><div class="cit">(déconnecté)</div></div>'; return; }
   if(d.displayEnabled && d.preview){
     pub.style.background=''; pub.className='fond-'+d.background;
-    pub.innerHTML = `${d.preview.entete?`<div class="entete2">${d.preview.entete}</div>`:''}<div class="texte">${d.preview.texte}</div>`;
-    requestAnimationFrame(()=>{ if(pub.scrollHeight > pub.clientHeight+6){ const t=pub.querySelector('.entete2'); if(t) t.style.display='none'; } });
+    pub.innerHTML = `${d.preview.entete?`<div class="entete2">${d.preview.entete}</div>`:''}${d.preview.refhd?`<div class="refhd2">${d.preview.refhd}</div>`:''}<div class="texte">${d.preview.texte}</div>${d.preview.ref?`<div class="refpub">${d.preview.ref}</div>`:''}`;
+    requestAnimationFrame(()=>{ if(pub.scrollHeight > pub.clientHeight+6){ const t=pub.querySelector('.entete2'), r=pub.querySelector('.refhd2'); if(t) t.style.display='none'; if(r) r.style.display='none'; } });
   } else {
     pub.style.background='#1d2420'; pub.className='';
     pub.innerHTML = `<div class="pv-veill"><img src="./assets/logo.png" alt=""><div class="cit">« Voici, je vous enverrai Élie, le prophète »</div></div>`;
@@ -418,10 +433,10 @@ function rendreZ3(){
   }
   e.classList.add('fond-'+state.background);
   if(state.preview){
-    e.innerHTML = `<div id="contenu">${state.preview.entete?`<div class="entete">${state.preview.entete}</div>`:''}
+    e.innerHTML = `<div id="contenu">${state.preview.entete?`<div class="entete">${state.preview.entete}</div>`:''}${state.preview.refhd?`<div class="refhd">${state.preview.refhd}</div>`:''}
       <div class="texte">${state.preview.texte}</div>
       ${state.preview.ref?`<div class="ref">${state.preview.ref}</div>`:''}</div>`;
-    requestAnimationFrame(()=>{ const c=EL('contenu'); if(c && c.scrollHeight > c.clientHeight+6){ const hd=c.querySelector('.entete'); if(hd) hd.style.display='none'; } });
+    requestAnimationFrame(()=>{ const c=EL('contenu'); if(c && c.scrollHeight > c.clientHeight+6){ const hd=c.querySelector('.entete'), rh=c.querySelector('.refhd'); if(hd) hd.style.display='none'; if(rh) rh.style.display='none'; } });
     st.textContent = '🟢 PUBLIC — affiché à l\u2019église';
     st.style.color = '#9fe0a9';
   } else {
@@ -649,11 +664,11 @@ function ouvrirVersets(l,c,v,direct){
   EL('z5corps').querySelectorAll('.strophe').forEach(el=>{
     const i=+el.dataset.i;
     el.onclick=()=>{ EL('z5corps').querySelectorAll('.strophe').forEach(x=>x.classList.remove('sel')); el.classList.add('sel');
-      preparerZ3({key:'bi',entete:`${L.nom} ${c+1}:${i+1} — Segond 1910`,titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}); };
-    el.ondblclick=()=>projeter({key:'bi',entete:`${L.nom} ${c+1}:${i+1} — Segond 1910`,titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}});
+      preparerZ3({key:'bi',refhd:`${L.nom} ${c+1}:${i+1}`, ref:'Segond 1910',titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}); };
+    el.ondblclick=()=>projeter({key:'bi',refhd:`${L.nom} ${c+1}:${i+1}`, ref:'Segond 1910',titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}});
     garde(el,()=>reserver({cle:'b'+l+'c'+c+'v'+i,label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}));
   });
-  if(direct && v>=0) projeter({key:'bi',entete:`${L.nom} ${c+1}:${v+1} — Segond 1910`,titre:refTxt()+':'+(v+1),texte:L.chapitres[c][v],label:`📖 ${refTxt()}:${v+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:v}});
+  if(direct && v>=0) projeter({key:'bi',refhd:`${L.nom} ${c+1}:${v+1}`, ref:'Segond 1910',titre:refTxt()+':'+(v+1),texte:L.chapitres[c][v],label:`📖 ${refTxt()}:${v+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:v}});
 }
 /* ---- 4C. BROCHURES ---- */
 function z4Brochures(){
@@ -938,7 +953,7 @@ function nav(d){
     const L=M4_BIBLE.livres[state.bible.livre], C=L.chapitres[state.bible.chapitre];
     const v = Math.max(0, Math.min(C.length-1, (state.bible.verset<0?0:state.bible.verset)+d));
     state.bible.verset=v;
-    const it = {entete:`${L.nom} ${state.bible.chapitre+1}:${v+1} — Segond 1910`, titre:refTxt()+':'+(v+1), texte:C[v], label:`📖 ${refTxt()}:${v+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:v}};
+    const it = {refhd:`${L.nom} ${state.bible.chapitre+1}:${v+1}`, ref:'Segond 1910', titre:refTxt()+':'+(v+1), texte:C[v], label:`📖 ${refTxt()}:${v+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:v}};
     if(state.displayEnabled) projeter(it); else preparerZ3(it);
     ouvrirVersets(state.bible.livre, state.bible.chapitre, v, false);
     return;
@@ -967,7 +982,7 @@ EL('z5corps').addEventListener('scroll', ()=>{
   if(state.selectedResourceType==='bible' && state.bible.livre>=0 && i!==state.bible.verset){
     const L=M4_BIBLE.livres[state.bible.livre], C=L.chapitres[state.bible.chapitre];
     state.bible.verset=i;
-    projeterSync({entete:`${L.nom} ${state.bible.chapitre+1}:${i+1} — Segond 1910`, titre:refTxt()+':'+(i+1), texte:C[i],
+    projeterSync({refhd:`${L.nom} ${state.bible.chapitre+1}:${i+1}`, ref:'Segond 1910', titre:refTxt()+':'+(i+1), texte:C[i],
       label:`📖 ${refTxt()}:${i+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:i}});
   } else if(!state.bro.id && state.chant.idx>=0 && i!==state.chant.pos){
     const R=M4_CHANTS.recueils[state.chant.recueil];
