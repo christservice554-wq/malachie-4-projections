@@ -14,6 +14,7 @@ thèmes, histoires, applis de référence. Envoyez ce lien à quelqu'un : il tro
 | `Themes/` | 10 PDF+TXT (Seconde Venue intro + parties I–VII, Nuée 1963, 7 Tonnerres) + anthologies **Enlèvement** (65-1204, 2 trads) et **Péché** (400 §) + **Divinité** (960 citations vérifiées, 8 thèmes) |
 | `Histoires/` | 4 biographies TXT (**Surnaturelle**/Jorgensen 451 p. FR ✔, Trésor, Homme envoyé, Afrique) + Histoire de ma vie (55-0117, 59-0419A) + Écureuils + Ours + `RESUMES-HISTOIRES.md` |
 | `ETAT-TRAVAIL.md` | 🧭 Reprendre où on s'est arrêté (blocs archivés) |
+| `Passage-Contexte/` | Apo 10:7 (149 P + 835 C) + Jean 3:16 (116 P + 3 525 C), CSV prêts-à-intégrer + `VERIFICATION-2` |
 | `DEMANDE-IA.md` | **Cahier des charges** : la requête complète à donner à une IA (panneau Passage/Contexte + Histoires) |
 | `VERIFICATION-IA.md` | Preuves d'exploration : Malachie 4 = **430 § / 216 prédications** + échantillons + méthode |
 | `APPLIS.md` | Applis existantes qui relient versets↔passages (**Message Hub**, Le Message…) + liens |
