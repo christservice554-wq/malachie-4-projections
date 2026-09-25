@@ -54,3 +54,5 @@
 - FINALisation v3 (25/09, poussé) : Message Hub web = aucune donnée exposée (vérifié : API métadonnées seules, contenus dans l'appli) → validation exhaustive sur sources identiques ; contrôle croisé 2 trads = 94,5 % ; EXACTS 1 932/7 918 ; PDF-RETIREES (294 + extraits, à vérifier) + PDF-ANNONCE-DIFFERE-LU (106 corrigés + extraits).
 
 - v4 Lapsus+Portions+Concepts (25/09, poussé) : STOP 371 mots (fréquences sur 240 789 §) ; LAPSUS 262 (106 v3 + 156 stricts, on garde les 2 + mention) dont Mt12/Héb13:8 ×2 ; PORTIONS 3 776 (4+ mots) ; CONCEPTS 10 921 (2-3 mots) ; NETTOYEE-v4 9 093 ; RETIREES-v4 259 ; PDF-LAPSUS + PDF-PORTIONS-CONCEPTS.
+
+- v5 Fiches (25/09, poussé) : cadre LECTURE (340, §≤15 + marqueurs, non comptées) vs CONCEPT (8 753) ; 1 195 FICHES versets (50 livres, MD 2,4 Mo, s’ouvrent sur téléphone) + INDEX ; SERMONS-ECRITURES (modèle Message Hub en mieux). Ex. Jean 3:16 = 169 occ (41 EXACT, 40 POR, 60 CPT, 4 LECTURE exclues).
