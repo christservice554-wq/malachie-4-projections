@@ -63,3 +63,31 @@ Splash du modèle d'origine (logo pulsant + « Élie, le prophète » + barre �
 
 ## 8. Choix validés (points §15 des documents)
 Nom = **Malachie 4 Projections** · logo = portrait officiel · 3ᵉ fond = **blanc** · polices = **Georgia / Calibri / Verdana** · stockage = **JSON embarqué JS + .json.gz servis** · cible = **web (PWA installable) + ordinateur (Electron)** · **hors-ligne = oui** · pas de compte.
+
+## 9. Version 3 — v3.7 (25/09/2026, notes + captures)
+- **Modèle VideoPsalm** : la projection part TOUTE SEULE sur le 2ᵉ écran en plein écran (mémorisé après la 1ʳᵉ activation ⛶ ; le logiciel EXE le fait sans aucun clic quand 2 écrans sont branchés) ; l'écran public ne montre QUE le contenu (sombre pur quand transparent).
+- **Splash 5 s + cercle de progression RÉEL** : logo + « Élie, le prophète » + % et compteur de fichiers ; TOUT (Bible, recueils, 1 212 brochures VGR+Shekinah) est installé/stocké dans l'appareil → 100 % hors-ligne ensuite, zéro latence au basculement.
+- **Zooms indépendants** : zone 2 = zone de travail ; boutons « A−/A+ écran » (zone 3) = projection seule. Marges de projection réglables (▦ : étroit/normal/large).
+- **Molette** : ne fait que défiler les panneaux de travail (zones 4/5) — ne change JAMAIS la projection. Projection : double-clic, flèches/Espace, boutons ▲▼ (ligne par ligne pour les brochures).
+- **Fonds de projection** : Charbon / Noir (défaut) / Nuit / Bleu — parchemin et blanc RETIRÉS (projecteur à surface blanche).
+- **Brochures** : mode paragraphe RETIRÉ — projection TOUJOURS en texte continu (numéros § dorés, marges 2-3 lignes, ligne par ligne) ; zone 5 = paragraphes (travail) avec § latéraux, tête de projection SURLIGNÉE EN JAUNE, 1 clic = positionner, double-clic = afficher.
+- **Zone 3** : nouveau bouton ⏮ Retour (ramène la dernière projection : écran + zone 5 à la position exacte).
+- **Écritures** : nouveau style « Capture » (comme les captures : numéros de versets ROUGES, espacés) par défaut ; choix dans un boîtier compact (＋) : Capture, Sermon, Georgia, Calibri, Verdana.
+- **Logiciel** : Windows en premier (portable Malachie4-Projections-3.exe + installateur Setup-3.exe, icône officielle) + Linux AppImage + Mac DMG, fabriqués automatiquement par GitHub Actions dans la release v3.1.
+
+## 9b. Correctif vitesse — v3.8 (25/09/2026, même Version 3)
+- Recherche (recueil/brochures/Bible) : **index normalisé pré-calculé** au démarrage + saisie anti-rafale 120 ms + recherche Bible en direct → **zéro latence** à chaque lettre.
+- Brochures : **mémoire (25 dernières) + stockage rapide permanent (IndexedDB) + pré-chargement automatique** en arrière-plan avec reprise ; indicateur « ⚡ …% instantané » ; 1er passage unique ~0,2-1 s puis instantané.
+- **Simulation VITESSE** (`simulation-vitesse.html` + `?testvitesse=1`) : test automatique mesuré (recherches + 3 ouvertures), résultats dans l'app et dans le bandeau.
+
+## 9c. Forteresse + vitesse/précision — v3.9 (25/09/2026, même Version 3)
+- **Plein écran verrouillé** : public = contenu seul (curseur caché, sélection/menus bloqués, plein écran re-demandé si sorti) ; Échap/triple-clic côté public = couper ; fermeture auto du 2ᵉ écran (PROJECTION off / fermeture app / ⛶ interrupteur) ; Electron : always-on-top + kiosque.
+- **Précision** : ET multi-mots partout, titres/numéros d'abord (cantiques), **recherche plein-texte des 31 102 versets** dès 3 lettres (index versets au démarrage).
+- **Vitesse** : projection continue non reconstruite à chaque ligne (scroll seul, zone 3 + public) ; stockage persisté (`persist()`).
+- Tailles mesurées : app 58 Mo · transfert 54 Mo · PWA max ~220 Mo (cache 58 + rapide 160) · EXE ~155-170 Mo (portable) / ~110-135 Mo (setup).
+
+## 9d. Imports + turbo + zone Liens — v3.10 (25/09/2026, même Version 3)
+- **Zone 7** : import **PDF (lecteur embarqué, hors-ligne), TXT, JSON** pour chant / livre Bible (format `# Livre` + `Chapitre N` + `v. texte`) / brochure (`n. texte` ou blocs) ; stockage permanent volumineux (IndexedDB, repli local) ; **🗂️ Mes ajouts** (voir/supprimer/sauvegarder JSON/restaurer) ; classement avec les autres (➕/PERSO).
+- **Turbo sûr** : pas de reconstruction quand le contenu est identique (chant/chapitre/brochure), rafales clavier ≤ 25 ms, `contain:content` sur les tuiles → aucun risque pour l'app ni l'ordinateur (moins de travail, pas plus).
+- **Splash** : secondes + % + compteur (`📦 Installation : 800/1595 · 50% · 12s`, total 1ʳᵉ fois ~54 Mo ≈ 30 s en 4G).
+- **Zone 🔗 Liens dans l'app** : tous les liens (ouvrir/copier) + installer téléphone/PC + 2ᵉ écran super efficace ; **réparation auto** du 2ᵉ écran toutes les 10 s.

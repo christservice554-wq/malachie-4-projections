@@ -3,25 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=6, user-scalable=yes">
-<title>Simulation Windows — Malachie 4 Projections</title>
+<title>Simulation VITESSE — Malachie 4 Projections (Version 3)</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{background:#0b1e33;font-family:"Segoe UI",Tahoma,Arial,sans-serif;overflow:auto}
-  /* ---- barre de commande de la simulation (fixe) ---- */
   #hud{position:fixed;top:0;left:0;right:0;z-index:99;background:rgba(8,15,26,.96);color:#e8eef5;
     display:flex;align-items:center;gap:6px;padding:7px 9px;font-size:13px;box-shadow:0 2px 10px rgba(0,0,0,.5);flex-wrap:wrap}
   #hud b{font-size:13px}
   #hud .sp{flex:1}
-  #hud button{}#hud button,#hud a.lk{border:1px solid #3a5f85;background:#123049;color:#fff;border-radius:7px;
+  #hud button,#hud a.lk{border:1px solid #3a5f85;background:#123049;color:#fff;border-radius:7px;
     padding:6px 10px;font-size:12.5px;cursor:pointer;font-weight:700;text-decoration:none}
   #hud button:hover,#hud a.lk:hover{background:#1b4570}
+  #hud button.go{border-color:#d9a441;background:#5a4413}
   #hud .pct{min-width:46px;text-align:center;font-weight:800;color:#8fd0ff}
-  /* ---- espace scrollable : le « bureau Windows » ---- */
+  #chrono{flex-basis:100%;font-size:12px;color:#ffd98a;font-weight:600}
+  #chrono b{color:#9fe0a9}
   #spacer{position:relative}
   #bureau{position:absolute;left:0;top:0;transform-origin:0 0;
     background:radial-gradient(ellipse at 30% 20%, #2e6fb8 0%, #17457c 45%, #0e2d55 100%)}
-  /* fenêtre Windows */
   .fenetre{position:absolute;background:#fff;border:1px solid #0a2b52;border-radius:7px 7px 4px 4px;
     box-shadow:0 10px 34px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden}
   .titrebarre{flex:none;height:32px;display:flex;align-items:center;gap:9px;padding:0 8px;
@@ -31,7 +31,6 @@
   .titrebarre .tb{width:30px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#cfe0f0;cursor:default}
   .titrebarre .tb:last-child{background:#c42b1c;color:#fff}
   iframe{flex:1;border:none;background:#efe9d9}
-  /* barre des tâches Windows */
   #taskbar{position:absolute;left:0;right:0;height:46px;bottom:0;background:rgba(10,22,34,.96);
     display:flex;align-items:center;gap:6px;padding:0 10px;border-top:1px solid #26445f;z-index:5}
   #demarrer{height:34px;padding:0 13px;display:flex;align-items:center;gap:7px;border:none;border-radius:5px;
@@ -40,13 +39,11 @@
     background:#15324e;border-radius:5px;border-bottom:3px solid #54a9e8}
   .icone img{width:22px;height:22px;border-radius:50%}
   #heure{margin-left:auto;color:#dfe9f3;font-size:11.5px;text-align:right;line-height:1.25}
-  /* menu démarrer factice */
-  #menuDem{display:none;position:absolute;left:8px;bottom:46px;width:270px;background:#0f2336;border:1px solid #2a4d6e;
+  #menuDem{display:none;position:absolute;left:8px;bottom:46px;width:290px;background:#0f2336;border:1px solid #2a4d6e;
     border-radius:8px 8px 0 0;color:#e6eef6;padding:10px;z-index:6}
   #menuDem .l{display:flex;gap:9px;align-items:center;padding:9px 8px;border-radius:6px;font-size:13px}
   #menuDem .l:hover{background:#173854}
   #menuDem small{color:#7fa3c2}
-  /* bandeau conseil téléphone */
   #conseil{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:98;background:#c9a34e;color:#2b1e00;
     padding:9px 16px;border-radius:22px;font-weight:800;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.4);max-width:92%;
     text-align:center}
@@ -55,27 +52,27 @@
 <body>
 
 <div id="hud">
-  <b>🖥️ Simulation « Windows » — Malachie 4 Projections</b>
+  <b>⏱️ Simulation « VITESSE » — Malachie 4 Projections (Version 3)</b>
   <span class="sp"></span>
   <button id="zmoins">Zoom −</button>
   <span class="pct" id="pct">100%</span>
   <button id="zplus">Zoom +</button>
   <button id="tout">📐 Tout voir</button>
-  <a class="lk" href="./app/index.html" target="_blank" rel="noopener">↗ Ouvrir l'app en plein onglet</a>
+  <button id="retest" class="go" title="Relancer le test de vitesse dans l'application">⏱️ Re-tester</button>
+  <a class="lk" href="./app/index.html?testvitesse=1" target="_blank" rel="noopener">↗ Ouvrir l'app en plein onglet</a>
+  <div id="chrono">⏱️ L'application démarre et se teste TOUTE SEULE… (recherche + ouverture brochures, temps réels)</div>
 </div>
 
 <div id="spacer">
   <div id="bureau">
-    <!-- fenêtre de l'application -->
     <div class="fenetre" id="fenetre">
       <div class="titrebarre">
         <img src="./app/assets/logo-192.png" alt="">
-        Malachie 4 Projections — application de projection du culte (vraie version complète en ligne)
+        Malachie 4 Projections v3.8 — TEST DE VITESSE automatique (vraie application)
         <span class="actions"><span class="tb">—</span><span class="tb">▢</span><span class="tb">✕</span></span>
       </div>
-      <iframe id="cadreApp" src="./app/index.html" title="Malachie 4 Projections"></iframe>
+      <iframe id="cadreApp" src="./app/index.html?testvitesse=1" title="Malachie 4 Projections"></iframe>
     </div>
-    <!-- barre des tâches -->
     <div id="taskbar">
       <button id="demarrer">🪟 Démarrer</button>
       <button class="icone" title="Malachie 4 Projections (en cours)"><img src="./app/assets/logo-192.png" alt=""></button>
@@ -84,28 +81,25 @@
     </div>
     <div id="menuDem">
       <div class="l"><img src="./app/assets/logo-192.png" style="width:24px;border-radius:50%" alt="">
-        <div><b>Malachie 4 Projections</b><br><small>application épinglée — en cours d'exécution</small></div></div>
-      <div class="l">📄 Malachie4-Projections-COMPLET-v3.1.zip <small>(dans la Release du dépôt)</small></div>
+        <div><b>Malachie 4 Projections v3.8</b><br><small>recherche instantanée · brochures instantanées</small></div></div>
+      <div class="l">⏱️ Test auto : recherche (cantiques/brochures/Bible) + 3 ouvertures de brochures</div>
       <div class="l">🖥️ Projecteur : détecté automatiquement par l'app (mode transparent)</div>
       <div class="l">⚙️ Paramètres <small>(factices dans cette simulation)</small></div>
     </div>
   </div>
 </div>
 
-<div id="conseil">☝️ Glissez avec les doigts pour explorer TOUT l'écran d'ordinateur (gauche-droite, haut-bas) · 📐 « Tout voir » réduit · à l'horizontale c'est plus confortable</div>
+<div id="conseil">☝️ Glissez avec les doigts pour explorer l'écran d'ordinateur · Le panneau ⏱️ dans l'app montre les temps mesurés · Touchez vous-même : recherche + brochures = instantané</div>
 
 <script>
-/* ================= TAILLE DE L'ORDINATEUR SIMULÉ ================= */
-var L = 1500, H = 950;                 // vieille taille plein écran d'un vrai PC
-var ecran = 48;                        // barre de tâches
+var L = 1500, H = 950;
+var ecran = 48;
 var marge = 18;
 var echelle = 1;
-/* placement de la fenêtre de l'app */
 var f = document.getElementById('fenetre');
 f.style.left = marge+'px'; f.style.top = marge+'px';
 f.style.width = (L - 2*marge)+'px';
 f.style.height = (H - ecran - 2*marge)+'px';
-/* bureau */
 var bureau = document.getElementById('bureau'), spacer = document.getElementById('spacer');
 function applique(){
   bureau.style.width = L+'px'; bureau.style.height = H+'px';
@@ -118,16 +112,13 @@ function zoom(d){ echelle = Math.min(2, Math.max(0.2, echelle + d)); applique();
 document.getElementById('zmoins').onclick = function(){ zoom(-0.15); };
 document.getElementById('zplus').onclick  = function(){ zoom(0.15); };
 document.getElementById('tout').onclick   = function(){
-  /* réduit pour que tout l'écran d'ordinateur tienne dans la largeur du téléphone */
   echelle = Math.max(0.2, Math.min(2, (window.innerWidth-4) / L));
   applique(); window.scrollTo(0,0);
 };
 applique();
-/* au départ : une échelle raisonnable si petit écran */
 if (window.innerWidth < L*0.6){
   echelle = Math.max(0.34, Math.min(0.62, window.innerWidth / 1000)); applique();
 }
-/* heure façon Windows */
 function majHeure(){
   var d = new Date();
   var z = function(n){ return (n<10?'0':'')+n; };
@@ -136,11 +127,22 @@ function majHeure(){
     z(d.getDate())+'/'+z(d.getMonth()+1)+'/'+d.getFullYear();
 }
 majHeure(); setInterval(majHeure, 10000);
-/* menu démarrer */
 var menu = document.getElementById('menuDem');
 document.getElementById('demarrer').onclick = function(){ menu.style.display = (menu.style.display==='block'?'none':'block'); };
-/* conseil disparaît */
-setTimeout(function(){ document.getElementById('conseil').style.display='none'; }, 12000);
+setTimeout(function(){ document.getElementById('conseil').style.display='none'; }, 14000);
+/* résultats du test envoyés par l'application */
+window.addEventListener('message', function(e){
+  if(!e || !e.data || e.data.m4!=='vitesse' || !e.data.lignes) return;
+  var ok = true, txt = [];
+  e.data.lignes.forEach(function(l){ if(!l[2]) ok = false; txt.push(l[0]+' : '+l[1]); });
+  document.getElementById('chrono').innerHTML =
+    (ok ? '🟢 <b>TEST RÉUSSI</b> — ' : '🟠 <b>TEST (1er passage)</b> — ') + txt.join(' · ');
+});
+document.getElementById('retest').onclick = function(){
+  document.getElementById('chrono').textContent = '⏱️ Nouveau test en cours dans l\u2019application…';
+  var c = document.getElementById('cadreApp');
+  try{ c.contentWindow.postMessage({m4:'test-vitesse'}, '*'); }catch(_){}
+};
 </script>
 </body>
 </html>

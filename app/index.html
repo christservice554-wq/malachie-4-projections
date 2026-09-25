@@ -28,10 +28,12 @@ body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);colo
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(217,164,65,.55)}50%{box-shadow:0 0 0 16px rgba(217,164,65,0)}}
 #splash h1{color:#fff;margin:14px 0 4px;font-size:26px}
 #splash .verset{color:#c9a34e;font-style:italic;margin-bottom:14px;font-size:15px}
-#splash .chargement{color:#bcd6c6;font-size:14px}
-#splash .barre{width:210px;height:6px;border-radius:4px;background:rgba(255,255,255,.15);margin-top:9px;overflow:hidden}
-#splash .barre i{display:block;height:100%;width:0;background:#d9a441;animation:charge 2.4s ease forwards}
-@keyframes charge{to{width:100%}}
+#splash .chargement{color:#bcd6c6;font-size:14px;min-height:20px}
+#splash .cercle{position:relative;width:104px;height:104px;margin-top:12px}
+#splash .cercle svg{width:104px;height:104px;transform:rotate(-90deg)}
+#splash .cfond{fill:none;stroke:rgba(255,255,255,.15);stroke-width:10}
+#splash .cprog{fill:none;stroke:#d9a441;stroke-width:10;stroke-linecap:round;stroke-dasharray:326.7;stroke-dashoffset:326.7;transition:stroke-dashoffset .25s}
+#splash .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px}
 /* ============== ZONE 8 — BANDE SUPÉRIEURE ============== */
 #z8{display:flex;align-items:center;gap:10px;background:var(--vert);color:#fff;border-radius:12px;padding:6px 14px;flex:none}
 #z8 img{width:36px;height:36px;border-radius:50%;border:2px solid var(--or)}
@@ -51,7 +53,7 @@ body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);colo
 .rang.h1>.tile:nth-child(1){flex:2}.rang.h1>.tile:nth-child(2){flex:1}.rang.h1>.tile:nth-child(3){flex:2}
 .rang.h2>.tile:nth-child(1){flex:3}.rang.h2>.tile:nth-child(2){flex:4}.rang.h2>.tile:nth-child(3){flex:3}
 .tile{background:var(--carte);border:2px solid var(--bord);border-radius:12px;display:flex;flex-direction:column;
-  min-width:206px;min-height:0;position:relative;overflow:hidden}
+  min-width:206px;min-height:0;position:relative;overflow:hidden;contain:content}
 .tile .in{display:flex;flex-direction:column;flex:1;min-height:0;overflow:auto}
 .tile{resize:both;}                       /* redimensionnement manuel (coin) */
 .tile::-webkit-resizer{background:transparent}
@@ -76,7 +78,7 @@ body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);colo
 .rowi:hover{border-color:var(--or)}
 .rowi.sel{border:2px solid var(--or2);background:#fff8e6}
 .badge{display:inline-block;font-size:.58rem;font-weight:800;border-radius:5px;padding:1px 6px;color:#fff;margin-right:5px;vertical-align:middle}
-.bnv{background:#2e6b4f}.bhist{background:#7a5c1e}.bvgr{background:#2e6b4f}.bskn{background:#a5740a}
+.bnv{background:#2e6b4f}.bhist{background:#7a5c1e}.bvgr{background:#2e6b4f}.bskn{background:#a5740a}.bperso{background:#6a3fa0}
 .mini{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid #e0d5b8;border-radius:8px;padding:5px 7px;margin-bottom:5px;font-size:.76rem}
 .mini .lbl{flex:1;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mini .x{border:none;background:var(--danger);color:#fff;width:18px;height:18px;border-radius:6px;cursor:pointer;font-weight:800;flex:none}
@@ -100,16 +102,39 @@ body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);colo
 .inter .chip{flex:1;text-align:center}
 .fonds{display:flex;gap:6px}
 .fond{flex:1;border-radius:8px;padding:9px 4px;text-align:center;cursor:pointer;border:2px solid var(--or);font-size:.7rem;font-weight:800}
-.fond.parchment{background:var(--parcho);color:#4a3a12}
 .fond.charcoal{background:#232b25;color:var(--parcho)}
-.fond.white{background:#fff;color:#333}
+/* ============== VERSION 3 : Bible style capture, paragraphes, projection continue ============== */
+.verset-n{color:#c0392b;font-weight:800;margin-right:6px}
+#z5corps .strophe .txt{line-height:1.5}
+.par{border:1px solid #e0d5b8;background:#fff;border-radius:9px;padding:8px 10px;margin-bottom:8px;cursor:pointer;user-select:none;font-size:.92rem;line-height:1.5}
+.par:hover{border-color:var(--or)}
+.par .pn{color:var(--or2);font-weight:800;margin-right:6px}
+.par.cur{background:#fff3b0;border:2px solid #b8860b}
+#contenu .texte.cont{display:block;text-align:left;align-items:flex-start;justify-content:flex-start;overflow-y:auto;scrollbar-width:none;font-size:calc(var(--taille)*.5*var(--ptaille,1))}
+#contenu .texte.cont::-webkit-scrollbar{display:none}
+#contenu .texte.cont .pc{margin:0 0 .8em}
+#contenu .texte.cont .pnum{color:#e8c86a;font-weight:800;margin-right:.4em}
+#contenu.pm0{padding:1em 1em .6em}#contenu.pm1{padding:2.6em 1.2em 2em}#contenu.pm2{padding:4em 1.6em 3em}
+#ecran.fond-bleu{background:#2456a8;color:#fff}
+.fond-bleu #contenu .entete,.fond-bleu #contenu .ref{color:#ffe9a8}
+#pub.fond-charcoal{background:#1d2420}#pub.fond-noir{background:#0a0a0c}#pub.fond-nuit{background:#10243e}#pub.fond-bleu{background:#2456a8}
+#pub .texte.cont{display:block;text-align:left;overflow-y:auto;scrollbar-width:none;font-size:calc(8.5vmin*var(--ptaille,1))}
+#pub .texte.cont::-webkit-scrollbar{display:none}
+#pub .texte.cont .pc{margin:0 0 .8em}
+#pub .texte.cont .pnum{color:#e8c86a;font-weight:800;margin-right:.4em}
+#pub.pm0{padding:2vh 4vw 1vh}#pub.pm1{padding:9vh 5vw 6vh}#pub.pm2{padding:14vh 8vw 9vh}
+body.public #pub.fond-bleu{color:#fff}
+#pub.fond-bleu .entete2,#pub.fond-bleu .refhd2,#pub.fond-bleu .refpub{color:#ffe9a8}
+.pied{flex-wrap:wrap}
+#fsGo{display:none;position:fixed;inset:0;z-index:65;background:#0a0a0c;color:#fff;align-items:center;justify-content:center;text-align:center;font-size:5vmin;font-weight:800;padding:6vmin;cursor:pointer}
+body.public,body.public #ecranPublic,body.public #pub{cursor:none!important;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+body.public #fsGo{cursor:pointer}
+
 /* ============== ZONE 3 — MINI-ÉCRAN ============== */
 #z3 .in{overflow:hidden}
 #ecran{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;
   border-radius:0;transition:.25s;min-height:0;overflow:hidden}
-#ecran.fond-parchment{background:var(--parcho);color:#3a2f14}
 #ecran.fond-charcoal{background:#1d2420;color:var(--parcho)}
-#ecran.fond-white{background:#fff;color:#222}
 #ecran.fond-noir{background:#0a0a0c;color:#fff}
 #ecran.fond-nuit{background:#10243e;color:#f2f6ff}
 .fond-noir #contenu .entete,.fond-nuit #contenu .entete{color:#f1e6c8}
@@ -128,7 +153,7 @@ body{font-family:"Segoe UI",Verdana,Arial,sans-serif;background:var(--fond);colo
   font-size:calc(var(--taille)*.4);line-height:1.2;color:var(--or2);opacity:.95;z-index:2}
 .fond-charcoal #contenu .entete{color:var(--or)}
 #contenu .texte{flex:1;display:flex;align-items:center;justify-content:center;
-  font-family:var(--police);font-size:calc(var(--taille)*.62);line-height:var(--interligne);
+  font-family:var(--police);font-size:calc(var(--taille)*.62*var(--ptaille,1));line-height:var(--interligne);
   font-weight:600;white-space:pre-line;max-width:100%;max-height:100%;overflow:hidden}
 #contenu .ref{margin-top:.5em;font-size:.62em;font-weight:800;color:var(--or2)}
 #contenu .refhd{position:absolute;top:6px;right:12px;max-width:48%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -191,12 +216,10 @@ body.public>*:not(#ecranPublic){display:none!important}
 #pub .titre{font-family:var(--police);font-weight:800;color:var(--or2);margin-bottom:.5em;font-size:.8em}
 body.public #pub.fond-charcoal .titre{color:var(--or)}
 #pub .texte{width:100%;flex:1;display:flex;align-items:center;justify-content:center;
-  font-family:var(--police);font-size:8.5vmin;line-height:var(--interligne);font-weight:600;white-space:pre-line;max-width:100%}
+  font-family:var(--police);font-size:calc(8.5vmin*var(--ptaille,1));line-height:var(--interligne);font-weight:600;white-space:pre-line;max-width:100%}
 #pub .entete2{position:absolute;top:8px;left:16px;right:16px;text-align:left;font-family:Calibri,'Segoe UI',sans-serif;font-style:italic;font-weight:600;
   font-size:3.1vmin;line-height:1.2;color:#c9a34e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.95;z-index:2}
-body.public #pub.fond-parchment{color:#3a2f14}
 body.public #pub.fond-charcoal{color:var(--parcho)}
-body.public #pub.fond-white{color:#222}
 body.public #pub.fond-noir{color:#fff}
 body.public #pub.fond-nuit{color:#f2f6ff}
 #pub .refhd2{position:absolute;top:8px;right:16px;max-width:45%;text-align:right;font-family:Calibri,'Segoe UI',sans-serif;font-style:italic;font-weight:600;
@@ -226,19 +249,20 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
   <img class="logo" src="./assets/logo.png" alt="Malachie 4 Projections">
   <h1>Malachie 4 Projections</h1>
   <div class="verset">« Voici, je vous enverrai Élie, le prophète » — Malachie 4:5</div>
-  <div class="chargement">🕊️ Ouverture…</div>
-  <div class="barre"><i></i></div>
+  <div class="cercle"><svg viewBox="0 0 120 120"><circle class="cfond" cx="60" cy="60" r="52"/><circle class="cprog" id="cercleProg" cx="60" cy="60" r="52"/></svg><div class="pct" id="splashPct">0%</div></div>
+  <div class="chargement" id="splashMsg">🕊️ Ouverture…</div>
 </div>
 
 <!-- ========== ZONE 8 ========== -->
 <header id="z8">
   <img src="./assets/logo.png" alt="logo">
-  <div class="nom">Malachie 4 Projections<small>réglage &amp; projection du culte · hors-ligne</small></div>
+  <div class="nom">Malachie 4 Projections<small>Version 3 (v3.10) · projection auto plein écran · hors-ligne</small></div>
   <span class="sp"></span>
   <span class="etat" id="etat">…</span>
   <button class="zbtn on" id="bProj">🖥️ PROJECTION</button>
   <button class="zbtn" id="bAff">👁 AFFICHAGE</button>
   <button class="zbtn" id="bPub" title="Ouvrir la fenêtre publique à glisser sur le projecteur (F11 = plein écran)">⛶ 2ᵉ écran</button>
+  <button class="zbtn" id="bLiens" title="Tous les liens + mode d'emploi d'installation">🔗 Liens</button>
 </header>
 
 <div id="grille">
@@ -259,24 +283,18 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
         <div class="z2grp"><small>TAILLE DU TEXTE</small>
           <div class="z2row"><button class="btn" id="moins">A−</button><b id="taille">32</b><button class="btn" id="plus">A+</button></div>
         </div>
-        <div class="z2grp"><small>POLICE (3 proposées, visibles)</small>
-          <div class="polices">
-            <button class="police" data-p="Georgia,'Times New Roman',serif" style="font-family:Georgia,serif">Georgia — élégante livre</button>
-            <button class="police" data-p="Calibri,'Segoe UI',Arial,sans-serif" style="font-family:Calibri,'Segoe UI',Arial,sans-serif">Calibri — moderne ronde</button>
-            <button class="police" data-p="Verdana,Geneva,sans-serif" style="font-family:Verdana,sans-serif">Verdana — très lisible</button>
-            <button class="police on" data-p="Sermon,Cambria,'Noto Serif',Georgia,serif" style="font-family:Sermon,Cambria,'Noto Serif',Georgia,serif">Sermon — écriture des brochures</button>
-          </div>
+        <div class="z2grp"><small>ÉCRITURE (style capture par défaut)</small>
+          <div class="z2row"><button class="btn" id="policeVoir" style="flex:1;width:auto;height:auto;padding:8px" title="Voir l'écriture actuelle">✒️ Capture</button><button class="btn prim" id="policePlus" title="Choisir une autre écriture" style="font-size:1rem">＋</button></div>
         </div>
         <div class="z2grp"><small>INTERLIGNE</small>
           <div class="inter"><span class="chip on" data-i="1.3">Normal</span><span class="chip" data-i="1.55">Moyen</span><span class="chip" data-i="1.85">Grand</span></div>
         </div>
-        <div class="z2grp"><small>ARRIÈRE-PLAN (défaut : parchemin)</small>
+        <div class="z2grp"><small>ARRIÈRE-PLAN (défaut : noir)</small>
           <div class="fonds">
-            <div class="fond parchment on-sel" data-f="parchment">Parchemin</div>
             <div class="fond charcoal" data-f="charcoal">Charbon</div>
-            <div class="fond white" data-f="white">Blanc</div>
-            <div class="fond noir" data-f="noir" style="background:#0a0a0c;color:#fff">Noir</div>
+            <div class="fond noir on-sel" data-f="noir" style="background:#0a0a0c;color:#fff">Noir</div>
             <div class="fond nuit" data-f="nuit" style="background:#10243e;color:#eee">Nuit</div>
+            <div class="fond bleu" data-f="bleu" style="background:#2456a8;color:#fff">Bleu</div>
           </div>
         </div>
       </div></div>
@@ -286,7 +304,7 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
       <div class="tete"><span class="num">3</span><b>Mini-écran</b><span class="inf">= ce que l'église voit</span></div>
       <div class="in">
         <div id="ecran" class="transparent"></div>
-        <div class="pied"><button id="prev">▲ Précédent</button><button id="next">Suivant ▼</button></div>
+        <div class="pied"><button id="prev" title="Précédent dans la lecture">▲</button><button id="next" title="Suivant dans la lecture">▼</button><button id="retour" title="Ramener la dernière projection (écran + zone 5, là où on s'était arrêté)">⏮ Retour</button><button id="pzoomM" title="Rétrécir l'écriture de l'ÉCRAN DE PROJECTION seul">A− écran</button><button id="pzoomP" title="Agrandir l'écriture de l'ÉCRAN DE PROJECTION seul">A+ écran</button><button id="pmarge" title="Changer les marges de l'écran de projection">▦ Marges</button></div>
       </div>
     </section>
   </div>
@@ -303,7 +321,7 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
         <button class="plus" id="bPlus" title="Zone 7 — Ajouter">＋</button>
       </div>
       <div id="z4corps">
-        <input class="rech" id="z4rech" placeholder="🔍 Rechercher… (saisie automatique)">
+        <input class="rech" id="z4rech" placeholder="🔍 Rechercher… (plusieurs mots = tous requis)">
         <div id="z4sous"></div>
         <div id="z4liste"></div>
       </div>
@@ -326,6 +344,7 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
 </div>
 
 <div id="ecranPublic"><div id="pub"></div></div>
+<div id="fsGo">👆 Touchez ici pour le PLEIN ÉCRAN de projection</div>
 <div id="toast"></div>
 
 <!-- ========== ZONE 7 : AJOUT (modale du bouton ＋) ========== -->
@@ -344,12 +363,24 @@ input.chp,textarea.chp{width:100%;border:1px solid #cbb87e;border-radius:8px;pad
   </div></div>
 </div></div>
 
+<!-- TOUS LES LIENS + MODE D'EMPLOI (dans l'app) -->
+<div class="modal" id="mLiens"><div class="boite" style="max-width:560px">
+  <div class="h">🔗 Liens + Installer <button class="btn" onclick="ferme('mLiens')">✕</button></div>
+  <div class="c" id="mLiensCorps"></div>
+</div></div>
+
+<!-- choix de l'écriture (boîtier compact) -->
+<div class="modal" id="mPol"><div class="boite">
+  <div class="h">✒️ Choisir l'écriture <button class="btn" onclick="ferme('mPol')">✕</button></div>
+  <div class="c"><div class="polices" id="listePolices"></div></div>
+</div></div>
+
 <script src="./data/bible.js"></script>
 <script src="./data/chants.js"></script>
 <script src="./data/brochures-index.js"></script>
 <script>
 /* ==================================================================
-   MALACHIE 4 PROJECTIONS — code source v3 (cahier des charges zones 1-8)
+   MALACHIE 4 PROJECTIONS — code source v3.10 « Version 3 + imports & turbo » (zones 1-8 + imports PDF/TXT/JSON + turbo sûr + zone Liens)
    État global documenté (cf. CAHIER_DES_CHARGES.md §États techniques)
 ================================================================== */
 const state = {
@@ -358,21 +389,26 @@ const state = {
   selectedResourceType: 'recueil',// recueil | bible | brochure
   selectedResourceId: null,
   preview: null,                  // {key,label,html} contenu en zone 3
-  fontFamily: "Sermon,Cambria,'Noto Serif',Georgia,serif",
+  fontFamily: "Sermon,Cambria,'Noto Serif',Georgia,serif",  // « Capture » par défaut (v3)
+  fontName: 'Capture',
   fontSize: 32,
   lineSpacing: 1.3,
-  background: 'parchment',        // parchment | charcoal | white
-  lecture: 'paragraph',           // brochure : paragraph | continuous
+  background: 'noir',             // charcoal | noir | nuit | bleu (v3 : parchemin/blanc retirés)
+  projTaille: 1,                  // zoom de l'ÉCRAN DE PROJECTION seul (v3)
+  projMarge: 1,                   // 0 étroit · 1 normal · 2 large (v3)
+  lecture: 'continuous',          // brochure : projection TOUJOURS continue (v3)
   readingPosition: 0,
   historyItems: [],               // zone 6
   reserveItems: [],               // zone 1
+  projStack: [],                  // pile des projections (bouton ⏮ Retour v3)
   // navigation interne
   recueilId: 'nouveau',
   bible: {livre:-1, chapitre:-1, verset:-1},
   chant: {recueil:0, idx:-1, pos:0},
-  bro: {id:null, trad:null, paras:[], pos:0, mode:'paragraph'},
+  bro: {id:null, trad:null, paras:[], pos:0, mode:'continuous', head:0, scrollY:0, htmlCont:null},
   edits: JSON.parse(localStorage.getItem('m4_edits')||'{}'),
-  ajouts: JSON.parse(localStorage.getItem('m4_ajouts')||'{"chants":[],"bibles":[],"brochures":[]}')
+  ajouts: JSON.parse(localStorage.getItem('m4_ajouts')||'{"chants":[],"bibles":[],"brochures":[]}'),
+  ajoutsMem: {brochures:[]}       // v3.10 : brochures ajoutées (stockage volumineux)
 };
 const EL = k => document.getElementById(k);
 const norm = s => (s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
@@ -383,29 +419,122 @@ const EN_PUBLIC = new URLSearchParams(location.search).get('public')==='1';
 let CANAL = null;
 if(EN_PUBLIC){
   document.body.classList.add('public');
+  /* v3 : plein écran automatique (style VideoPsalm) + un toucher = plein écran */
+  const veutFS = new URLSearchParams(location.search).get('fs')==='1';
+  function passeFS(){ try{ const p=document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen(); if(p&&p.catch) p.catch(()=>montrerFsGo()); }catch(_){ montrerFsGo(); } }
+  function montrerFsGo(){ const g=document.getElementById('fsGo'); if(g && !document.fullscreenElement){ g.style.display='flex'; g.onclick=()=>{ g.style.display='none'; passeFS(); }; } }
+  document.addEventListener('click', ()=>{ if(!document.fullscreenElement) passeFS(); });
+  document.addEventListener('pointerdown', ()=>{ const g=document.getElementById('fsGo'); if(g) g.style.display='none'; });
+  if(veutFS) setTimeout(passeFS, 600);
+  /* v3.9 : FORTERESSE — rien ne dérange le public : pas de curseur, pas de menus,
+     plein écran re-demandé s'il sort, Échap/triple-clic = couper l'affichage (rien d'autre) */
+  document.addEventListener('contextmenu', e=>e.preventDefault());
+  document.addEventListener('fullscreenchange', ()=>{ if(!document.fullscreenElement) montrerFsGo(); });
+  let _clics=0, _clicT=null;
+  const couper=()=>{ try{ new BroadcastChannel('m4p').postMessage({m4:'couper'}); }catch(_){} };
+  document.addEventListener('click', ()=>{ _clics++; clearTimeout(_clicT); _clicT=setTimeout(()=>_clics=0, 600); if(_clics>=3){ _clics=0; couper(); } });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') couper(); });
 }else if('BroadcastChannel' in window){
   CANAL = new BroadcastChannel('m4p');
+  CANAL.onmessage = ev => { if(ev&&ev.data&&ev.data.m4==='couper'){ state.displayEnabled=false; majBoutons(); rendreZ3(); toast('⏹ Affichage coupé (depuis le projecteur) — transparent'); } };
 }
+let WIN_PUB=null;   // v3.9 : référence de la fenêtre publique (fermeture auto)
+addEventListener('beforeunload', ()=>{ try{ if(WIN_PUB&&!WIN_PUB.closed) WIN_PUB.close(); }catch(_){} });
 function rendrePublic(d){
   const pub = EL('pub'); if(!pub) return;
-  if(!d.projectionConnected){ pub.style.background='#161616'; pub.className=''; pub.innerHTML='<div class="pv-veill"><div class="cit">(déconnecté)</div></div>'; return; }
+  document.documentElement.style.setProperty('--ptaille', d.projTaille||1);
+  if(d.fontFamily) document.documentElement.style.setProperty('--police', d.fontFamily);
+  if(d.lineSpacing) document.documentElement.style.setProperty('--interligne', d.lineSpacing);
+  if(!d.projectionConnected){ pub.style.background='#0a0a0c'; pub.className=''; pub.innerHTML=''; return; }
   if(d.displayEnabled && d.preview){
-    pub.style.background=''; pub.className='fond-'+d.background;
-    pub.innerHTML = `${d.preview.entete?`<div class="entete2">${d.preview.entete}</div>`:''}${d.preview.refhd?`<div class="refhd2">${d.preview.refhd}</div>`:''}<div class="texte">${d.preview.texte}</div>${d.preview.ref?`<div class="refpub">${d.preview.ref}</div>`:''}`;
+    pub.style.background='';
+    pub.className='fond-'+d.background+' pm'+(d.projMarge==null?1:d.projMarge);
+    const p=d.preview;
+    if(p.kind==='brocont'){
+      const deja=pub.querySelector('.texte.cont');
+      const sig=p.key+'#'+p.texte.length;
+      if(deja && pub._contSig===sig){
+        const mx=deja.scrollHeight-deja.clientHeight; deja.scrollTop=(d.projScrollFrac||0)*Math.max(0,mx);
+      } else {
+        pub.innerHTML = `${p.entete?`<div class="entete2">${p.entete}</div>`:''}<div class="texte cont">${p.texte}</div>`;
+        const t=pub.querySelector('.texte');
+        if(t){ const mx=t.scrollHeight-t.clientHeight; t.scrollTop=(d.projScrollFrac||0)*Math.max(0,mx); }
+        pub._contSig=sig;
+      }
+    } else {
+      pub._contSig=null;
+      pub.innerHTML = `${p.entete?`<div class="entete2">${p.entete}</div>`:''}${p.refhd?`<div class="refhd2">${p.refhd}</div>`:''}<div class="texte">${p.texte}</div>${p.ref?`<div class="refpub">${p.ref}</div>`:''}`;
+    }
     requestAnimationFrame(()=>{ if(pub.scrollHeight > pub.clientHeight+6){ const t=pub.querySelector('.entete2'), r=pub.querySelector('.refhd2'); if(t) t.style.display='none'; if(r) r.style.display='none'; } });
   } else {
-    pub.style.background='#1d2420'; pub.className='';
-    pub.innerHTML = `<div class="pv-veill"><img src="./assets/logo.png" alt=""><div class="cit">« Voici, je vous enverrai Élie, le prophète »</div></div>`;
+    /* v3 : transparent = écran sombre pur, RIEN d'autre (style VideoPsalm) */
+    pub.style.background='#0a0a0c'; pub.className=''; pub.innerHTML='';
   }
 }
 if(EN_PUBLIC && 'BroadcastChannel' in window){
   const bc = new BroadcastChannel('m4p');
   bc.onmessage = ev => rendrePublic(ev.data);
 }
-EL('bPub') && (EL('bPub').onclick = () => {
-  const w = window.open(location.pathname + '?public=1', 'm4public');
-  if(!w) toast('⚠️ Autorisez les fenêtres surgissantes puis réessayez');
-  else toast('⛶ Fenêtre publique ouverte — glissez-la sur le projecteur et F11');
+EL('bPub') && (EL('bPub').onclick = async () => {
+  try{ if(WIN_PUB && !WIN_PUB.closed){ WIN_PUB.close(); WIN_PUB=null; toast('⏹ Fenêtre de projection fermée'); return; } }catch(_){ WIN_PUB=null; }
+  try{ localStorage.setItem('m4_public_auto','1'); }catch(_){}
+  const w = window.open(location.pathname + '?public=1&fs=1', 'm4public');
+  WIN_PUB = w;
+  if(!w){ toast('⚠️ Autorisez les fenêtres surgissantes (toujours autoriser) puis réessayez'); return; }
+  /* v3 : envoi direct sur le 2ᵉ écran si le navigateur le permet */
+  try{
+    if(window.getScreenDetails){
+      const sd = await window.getScreenDetails();
+      const ext = sd.screens.find(s=>!s.isPrimary) || sd.screens[1];
+      if(ext){ w.moveTo(ext.availLeft||0, ext.availTop||0); w.resizeTo(ext.availWidth||1280, ext.availHeight||720); }
+    }
+  }catch(_){}
+  toast('⛶ Projection ouverte — plein écran auto, mémorisée au prochain démarrage');
+});
+/* v3 : au démarrage, si déjà autorisé une fois, la projection repart TOUTE SEULE */
+function tentativeAutoPublic(){
+  if(EN_PUBLIC) return;
+  if(/Electron/.test(navigator.userAgent)) return;   // le logiciel gère sa 2ᵉ fenêtre lui-même
+  let auto=false; try{ auto = localStorage.getItem('m4_public_auto')==='1'; }catch(_){}
+  if(!auto) return;
+  const w = window.open(location.pathname + '?public=1&fs=1', 'm4public');
+  WIN_PUB = w;
+  if(w){ toast('⛶ Projection reconnectée automatiquement en plein écran'); }
+  else{ toast('⚠️ Activez « toujours autoriser les fenêtres surgissantes » pour l\u2019auto-projection, ou touchez ⛶ 2ᵉ écran'); }
+}
+/* v3.10 : TOUS LES LIENS + MODE D'EMPLOI — directement dans l'app (zone 🔗) */
+const LIENS_V3=[
+ ['📱💻 App web installable (hors-ligne)','https://christservice554-wq.github.io/malachie-4-projections/app/index.html'],
+ ['🪟 Simulation Windows (tester sur téléphone)','https://christservice554-wq.github.io/malachie-4-projections/simulation-windows.html'],
+ ['⏱️ Simulation VITESSE (test auto)','https://christservice554-wq.github.io/malachie-4-projections/simulation-vitesse.html'],
+ ['🖥️ Logiciel Windows portable (sans installation)','https://github.com/christservice554-wq/malachie-4-projections/releases/download/v3.1/Malachie4-Projections-3.exe'],
+ ['🖥️ Installateur Windows (vrai logiciel installé)','https://github.com/christservice554-wq/malachie-4-projections/releases/download/v3.1/Malachie4-Projections-Setup-3.exe'],
+ ['📦 ZIP complet v3.1','https://github.com/christservice554-wq/malachie-4-projections/releases/download/v3.1/Malachie4-Projections-COMPLET-v3.1.zip'],
+ ['🐧 Linux (AppImage)','https://github.com/christservice554-wq/malachie-4-projections/releases/download/v3.1/Malachie4-Projections-3.AppImage'],
+ ['🍎 Mac (DMG)','https://github.com/christservice554-wq/malachie-4-projections/releases/download/v3.1/Malachie4-Projections-3.dmg'],
+ ['📂 Dépôt (code source)','https://github.com/christservice554-wq/malachie-4-projections'],
+ ['🎁 Toutes les releases','https://github.com/christservice554-wq/malachie-4-projections/releases']
+];
+function copierLien(u){
+  const ok=()=>toast('🔗 Lien copié');
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(ok).catch(()=>prompt('Copiez le lien :',u));
+  else prompt('Copiez le lien :',u);
+}
+EL('bLiens') && (EL('bLiens').onclick=()=>{
+  EL('mLiensCorps').innerHTML =
+   `<div class="vide" style="font-style:normal;font-weight:800;color:var(--vert)">Dépôt : christservice554-wq / malachie-4-projections (Version 3 · v3.10)</div>
+    <div class="lbl2">📲 INSTALLER SUR TÉLÉPHONE (Chrome)</div>
+    <div style="font-size:.8rem">1. Ouvrez le lien « App web » → 2. ⋮ → <b>Ajouter à l'écran d'accueil</b> → 3. 1ʳᵉ ouverture en ligne (le cercle installe tout) → <b>ensuite sans internet pour toujours</b>.</div>
+    <div class="lbl2">💻 INSTALLER LE LOGICIEL SUR ORDINATEUR (Windows)</div>
+    <div style="font-size:.8rem"><b>Portable (3)</b> : téléchargez → double-clic → ça tourne (clé USB OK, rien ne s'installe).<br><b>Installateur (3b)</b> : téléchargez → Suivant → Installer → icône Bureau + menu Démarrer.<br>⚠️ SmartScreen « Éditeur inconnu » → <i>Informations complémentaires → Exécuter quand même</i> (1ʳᵉ fois seulement).</div>
+    <div class="lbl2">🖥️ SECOND ÉCRAN — SUPER EFFICACE</div>
+    <div style="font-size:.8rem">1. HDMI branché → <b>Win+P → Étendre</b> → 2. <b>⛶ 2ᵉ écran</b> (1ʳᵉ fois : « toujours autoriser ») → plein écran <b>tout seul</b> → 3. aux suivantes : <b>repart tout seul</b> (+ réparation auto toutes les 10 s).<br>Pilotez du 1er écran : double-clic = visible · Échap = transparent · ↑↓ = ligne par ligne · A± écran · ⏮ Retour. Couper PROJECTION ou fermer = le 2ᵉ écran <b>se ferme tout seul</b>.</div>
+    <div class="lbl2">🔗 TOUS LES LIENS (toucher = ouvrir · 📋 = copier)</div>` +
+    LIENS_V3.map(l=>`<div class="mini"><span class="lbl" data-u="${l[1]}" title="Ouvrir">${l[0]}</span><button class="btn" data-u="${l[1]}" style="flex:none">📋</button></div>`).join('') +
+    `<div class="vide">⏳ Liens « releases » actifs dès la publication v3.1 (sinon : erreur 404).</div>`;
+  EL('mLiensCorps').querySelectorAll('.lbl').forEach(x=>x.onclick=()=>window.open(x.dataset.u,'_blank'));
+  EL('mLiensCorps').querySelectorAll('.btn').forEach(x=>x.onclick=()=>copierLien(x.dataset.u));
+  EL('mLiens').style.display='flex';
 });
 function toast(m){const t=EL('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2400);}
 function ferme(id){EL(id).style.display='none';} window.ferme=ferme;
@@ -414,6 +543,17 @@ function ferme(id){EL(id).style.display='none';} window.ferme=ferme;
    Règle : publicVisible = projectionConnected && displayEnabled
    - Projection seule : écran connecté mais TRANSPARENT
    - Affichage ON     : fond parchemin (par défaut) + texte centré et borné */
+/* v3 : synchro temps réel vers la fenêtre publique (position de lecture en FRACTION : exacte sur tous les écrans) */
+function synchroPublique(){
+  if(!CANAL) return;
+  let frac=0;
+  try{ const tz=document.querySelector('#contenu .texte.cont'); if(tz&&tz.scrollHeight>tz.clientHeight+2) frac=tz.scrollTop/(tz.scrollHeight-tz.clientHeight); }catch(_){}
+  CANAL.postMessage({
+    projectionConnected: state.projectionConnected, displayEnabled: state.displayEnabled,
+    preview: state.preview, fontFamily: state.fontFamily, fontSize: state.fontSize,
+    lineSpacing: state.lineSpacing, background: state.background,
+    projTaille: state.projTaille, projMarge: state.projMarge, projScrollFrac: frac });
+}
 function rendreZ3(){
   const e = EL('ecran'), st = EL('etat');
   e.className = '';
@@ -421,7 +561,7 @@ function rendreZ3(){
     e.classList.add('deconnecte');
     e.innerHTML = '<div class="veill" style="color:#777">🖥️<div class="cit" style="font-style:normal">Projection désactivée.<br>Le deuxième écran est déconnecté.<br>Réactivez-la dans la barre du haut (zone 8).</div></div>';
     st.textContent = '⛔ Rien n\u2019est envoyé au public';
-    st.style.color = '#f1b0a8'; return;
+    st.style.color = '#f1b0a8'; synchroPublique(); return;
   }
   if(!state.displayEnabled){
     e.classList.add('transparent');
@@ -429,14 +569,33 @@ function rendreZ3(){
       <div class="cit">« Voici, je vous enverrai Élie, le prophète »</div>
       <div class="bdg">TRANSPARENT · CONNECTÉ · PAS D'AFFICHAGE</div></div>`;
     st.textContent = state.preview ? '👁 Connecté — contenu prêt, transparent' : '🖥 Connecté — transparent';
-    st.style.color = '#cfe6b9'; return;
+    st.style.color = '#cfe6b9'; synchroPublique(); return;
   }
+  document.documentElement.style.setProperty('--ptaille', state.projTaille);
   e.classList.add('fond-'+state.background);
   if(state.preview){
-    e.innerHTML = `<div id="contenu">${state.preview.entete?`<div class="entete">${state.preview.entete}</div>`:''}${state.preview.refhd?`<div class="refhd">${state.preview.refhd}</div>`:''}
-      <div class="texte">${state.preview.texte}</div>
-      ${state.preview.ref?`<div class="ref">${state.preview.ref}</div>`:''}</div>`;
-    requestAnimationFrame(()=>{ const c=EL('contenu'); if(c && c.scrollHeight > c.clientHeight+6){ const hd=c.querySelector('.entete'), rh=c.querySelector('.refhd'); if(hd) hd.style.display='none'; if(rh) rh.style.display='none'; } });
+    const p = state.preview;
+    if(p.kind==='brocont'){
+      /* v3.9 : même brochure = on NE reconstruit PAS (scroll seul) → clavier instantané */
+      const deja = e.querySelector('#contenu .texte.cont');
+      const sig = p.key+'#'+p.texte.length;
+      if(deja && state._contSig===sig){
+        const c0=EL('contenu'); if(c0) c0.className='pm'+state.projMarge;
+        deja.scrollTop = state.bro.scrollY||0;
+        requestAnimationFrame(()=>majTeteProj());
+      } else {
+        e.innerHTML = `<div id="contenu" class="pm${state.projMarge}">${p.entete?`<div class="entete">${p.entete}</div>`:''}<div class="texte cont">${p.texte}</div></div>`;
+        const t = e.querySelector('#contenu .texte'); if(t) t.scrollTop = state.bro.scrollY||0;
+        state._contSig=sig;
+        requestAnimationFrame(()=>majTeteProj());
+      }
+    } else {
+      state._contSig=null;
+      e.innerHTML = `<div id="contenu" class="pm${state.projMarge}">${p.entete?`<div class="entete">${p.entete}</div>`:''}${p.refhd?`<div class="refhd">${p.refhd}</div>`:''}
+        <div class="texte">${p.texte}</div>
+        ${p.ref?`<div class="ref">${p.ref}</div>`:''}</div>`;
+      requestAnimationFrame(()=>{ const c=EL('contenu'); if(c && c.scrollHeight > c.clientHeight+6){ const hd=c.querySelector('.entete'), rh=c.querySelector('.refhd'); if(rh) rh.style.display='none'; if(hd) hd.style.display='none'; } });
+    }
     st.textContent = '🟢 PUBLIC — affiché à l\u2019église';
     st.style.color = '#9fe0a9';
   } else {
@@ -446,11 +605,7 @@ function rendreZ3(){
     st.textContent = '🖥 Affichage actif — veille';
     st.style.color = '#ffe9a8';
   }
-  /* synchro temps réel vers la fenêtre publique (2ᵉ écran) */
-  if(CANAL){ CANAL.postMessage({
-    projectionConnected: state.projectionConnected, displayEnabled: state.displayEnabled,
-    preview: state.preview, fontFamily: state.fontFamily, fontSize: state.fontSize,
-    lineSpacing: state.lineSpacing, background: state.background }); }
+  synchroPublique();
 }
 /* ================= ZONE 8 : COMMANDES ================= */
 function majBoutons(){
@@ -460,7 +615,7 @@ function majBoutons(){
 }
 EL('bProj').onclick = () => {
   state.projectionConnected = !state.projectionConnected;
-  if(!state.projectionConnected) state.displayEnabled = false; // déconnecté -> rien n'est envoyé
+  if(!state.projectionConnected){ state.displayEnabled = false; try{ if(WIN_PUB&&!WIN_PUB.closed) WIN_PUB.close(); }catch(_){} WIN_PUB=null; }  // v3.9 : couper = fermer le 2ᵉ écran
   majBoutons(); rendreZ3();
   toast(state.projectionConnected ? '🖥 Projecteur reconnecté — mode transparent' : '⛔ Projection désactivée — église déconnectée');
 };
@@ -472,6 +627,13 @@ EL('bAff').onclick = () => {
 };
 /* ================= PROJECTION D'UN CONTENU ================= */
 function projeter(item){                    // DOUBLE-CLIC : zone 3 + AFFICHAGE auto
+  /* v3 : mémoriser la projection remplacée pour le bouton ⏮ Retour */
+  try{
+    const a=state.preview;
+    if(a && (a.label!==item.label || String(a.texte).slice(0,60)!==String(item.texte).slice(0,60))){
+      state.projStack.push(a); if(state.projStack.length>30) state.projStack.shift();
+    }
+  }catch(_){}
   state.preview = item;
   state.displayEnabled = true;
   majBoutons(); rendreZ3();
@@ -559,14 +721,32 @@ function garde(el, fn){
 /* ================= ZONE 2 : PARAMÈTRES ================= */
 EL('moins').onclick=()=>{ state.fontSize=Math.max(20,state.fontSize-4); majZ2(); };
 EL('plus').onclick =()=>{ state.fontSize=Math.min(56,state.fontSize+4); majZ2(); };
-function majZ2(){ document.documentElement.style.setProperty('--taille', state.fontSize+'px'); EL('taille').textContent=state.fontSize; rendreZ3(); if(state.bro.id&&state.bro.mode==='continuous') broContinuous(); }
-document.querySelectorAll('.police').forEach(p=>p.onclick=()=>{
-  document.querySelectorAll('.police').forEach(x=>x.classList.remove('on')); p.classList.add('on');
-  state.fontFamily=p.dataset.p; document.documentElement.style.setProperty('--police', state.fontFamily); rendreZ3(); if(state.bro.id) broCorps();
-});
+function majZ2(){ document.documentElement.style.setProperty('--taille', state.fontSize+'px'); EL('taille').textContent=state.fontSize; rendreZ3(); }
+/* v3 : écritures dans un boîtier compact (＋) — « Capture » (style des captures) par défaut */
+const POLICES=[
+  {nom:'Capture',  css:"Sermon,Cambria,'Noto Serif',Georgia,serif", note:'style des captures — versets rouges espacés'},
+  {nom:'Sermon',   css:"Sermon,Cambria,'Noto Serif',Georgia,serif", note:'écriture des brochures'},
+  {nom:'Georgia',  css:"Georgia,'Times New Roman',serif", note:'élégante livre'},
+  {nom:'Calibri',  css:"Calibri,'Segoe UI',Arial,sans-serif", note:'moderne ronde'},
+  {nom:'Verdana',  css:"Verdana,Geneva,sans-serif", note:'très lisible'}
+];
+function choisirPolice(nom){
+  const p = POLICES.find(x=>x.nom===nom) || POLICES[0];
+  state.fontFamily=p.css; state.fontName=p.nom;
+  document.documentElement.style.setProperty('--police', state.fontFamily);
+  EL('policeVoir').textContent='✒️ '+p.nom;
+  affichePolices(); rendreZ3(); if(state.bro.id) broCorps();
+}
+function affichePolices(){
+  EL('listePolices').innerHTML = POLICES.map(p=>
+    `<button class="police ${p.nom===state.fontName?'on':''}" data-n="${p.nom}" style="font-family:${p.css}">${p.nom} — ${p.note}</button>`).join('');
+  EL('listePolices').querySelectorAll('.police').forEach(b=>b.onclick=()=>{ choisirPolice(b.dataset.n); ferme('mPol'); });
+}
+EL('policeVoir').onclick=()=>{ affichePolices(); EL('mPol').style.display='flex'; };
+EL('policePlus').onclick=()=>{ affichePolices(); EL('mPol').style.display='flex'; };
 document.querySelectorAll('.inter .chip').forEach(c=>c.onclick=()=>{
   document.querySelectorAll('.inter .chip').forEach(x=>x.classList.remove('on')); c.classList.add('on');
-  state.lineSpacing=+c.dataset.i; document.documentElement.style.setProperty('--interligne', c.dataset.i); rendreZ3(); if(state.bro.id&&state.bro.mode==='continuous') broContinuous();
+  state.lineSpacing=+c.dataset.i; document.documentElement.style.setProperty('--interligne', c.dataset.i); rendreZ3();
 });
 document.querySelectorAll('.fond').forEach(f=>f.onclick=()=>{
   document.querySelectorAll('.fond').forEach(x=>x.classList.remove('on-sel')); f.classList.add('on-sel');
@@ -580,12 +760,20 @@ document.querySelectorAll('.fam').forEach(b=>b.onclick=()=>{
   EL('z4rech').value=''; EL('z4rech').focus();         // saisie automatique
   construireZ4();
 });
-EL('z4rech').oninput = () => construireZ4(true);
+let _rchT=null;
+EL('z4rech').oninput = () => { clearTimeout(_rchT); _rchT=setTimeout(()=>construireZ4(true), 120); };  // v3.8 : anti-rafale
 function construireZ4(rechercheSeule){
   const t = state.selectedResourceType;
   if(t==='recueil') z4Recueil(rechercheSeule);
-  if(t==='bible')   { if(!rechercheSeule) bibleAccueil(); }
+  if(t==='bible')   { if(!rechercheSeule) bibleAccueil(); else bibleNiveau(); }  // v3.8 : recherche Bible en direct
   if(t==='brochure') z4Brochures();
+}
+/* v3 : la zone 5 ne mélange JAMAIS les contenus — chaque famille nettoie en arrivant */
+function nettoyerZ5(){
+  state.bro={id:null,trad:null,paras:[],pos:0,mode:'continuous',head:0,scrollY:0,htmlCont:null};
+  state.chant={recueil:(state.chant&&state.chant.recueil)||0,idx:-1,pos:0};
+  state.bible={livre:-1,chapitre:-1,verset:-1};
+  EL('z5corps').innerHTML=''; EL('z5nom').innerHTML='';
 }
 /* ---- 4A. RECUEIL ---- */
 function recueilCourant(){ return M4_CHANTS.recueils.find(r=>r.id===state.recueilId); }
@@ -597,7 +785,18 @@ function z4Recueil(rechercheSeule){
   }
   const f = norm(EL('z4rech').value);
   const R = recueilCourant();
-  const trouves = R.songs.map((s,i)=>({s,i})).filter(({s})=>!f||norm(s.num+' '+s.titre+' '+s.texte).includes(f));
+  const mots = f ? f.split(/\s+/).filter(Boolean) : [];
+  const trouves = [];
+  { const S=R.songs;  // v3.9 : plusieurs mots = TOUS requis (ET) + titres/numéros d'abord (précision)
+    for(let i=0;i<S.length;i++){ const s=S[i];
+      if(!mots.length){ trouves.push({s,i,sc:0}); continue; }
+      const n=(s._n||(s._n=norm(s.num+' '+s.titre+' '+s.texte)));
+      let ok=true; for(const w of mots){ if(!n.includes(w)){ ok=false; break; } }
+      if(!ok) continue;
+      const tt=(s._t||(s._t=norm(s.num+' '+s.titre)));
+      let sc=0; for(const w of mots){ if(tt.includes(w)) sc++; }
+      trouves.push({s,i,sc}); }
+    if(mots.length) trouves.sort((a,b)=>b.sc-a.sc); }
   const tot = M4_CHANTS.recueils.reduce((a,r)=>a+r.songs.length,0);
   EL('z4liste').innerHTML = `<div style="padding:2px 2px 6px;font-weight:800;color:var(--vert);font-size:.72rem">
       🎵 ${R.songs.length} chants dans « ${R.nom} » (${tot} chants au total dans les 2 recueils)${f?` · ${trouves.length} résultat(s)`:''}</div>`
@@ -618,8 +817,33 @@ function bibleAccueil(){ state.bible={livre:-1,chapitre:-1,verset:-1}; bibleNive
 function bibleNiveau(){
   const b = state.bible;
   const f = norm(EL('z4rech').value);
+  /* v3.9 : 3 lettres ou + = recherche DANS les versets de toute la Bible (31 102 versets) */
+  if(f.length>=3){
+    const mots=f.split(/\s+/).filter(Boolean);
+    const res=[];
+    const LV=M4_BIBLE.livres;
+    for(let li=0;li<LV.length&&res.length<100;li++){ const L=LV[li];
+      for(let ci=0;ci<L.chapitres.length&&res.length<100;ci++){ const C=L.chapitres[ci];
+        if(!C._n) C._n=C.map(v=>norm(v));
+        for(let vi=0;vi<C.length&&res.length<100;vi++){
+          let ok=true; for(const w of mots){ if(!C._n[vi].includes(w)){ ok=false; break; } }
+          if(ok) res.push([li,ci,vi]);
+        }
+      }
+    }
+    EL('z4liste').innerHTML = `<div style="padding:2px 2px 6px;font-weight:800;color:var(--vert);font-size:.72rem">📖 ${res.length}${res.length>=100?'+':''} verset(s) — 1 clic = ouvrir · double-clic = afficher</div>` +
+      (res.map(r=>{ const L=M4_BIBLE.livres[r[0]]; const txt=L.chapitres[r[1]][r[2]];
+        return `<div class="rowi" data-l="${r[0]}" data-c="${r[1]}" data-v="${r[2]}"><b>${L.nom} ${r[1]+1}:${r[2]+1}</b> — ${String(txt).slice(0,90)}${txt.length>90?'…':''}</div>`; }).join('') || '<div class="vide">Aucun verset trouvé</div>');
+    EL('z4liste').querySelectorAll('.rowi').forEach(x=>{
+      const l=+x.dataset.l, c=+x.dataset.c, v=+x.dataset.v;
+      x.onclick=()=>{ state.bible={livre:l,chapitre:c,verset:v}; ouvrirVersets(l,c,v,false); };
+      x.ondblclick=()=>{ state.bible={livre:l,chapitre:c,verset:v}; ouvrirVersets(l,c,v,true); };
+      garde(x,()=>reserver({cle:'b'+l+'c'+c+'v'+v,label:`📖 ${M4_BIBLE.livres[l].nom} ${c+1}:${v+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:v}}));
+    });
+    return;
+  }
   let livres = M4_BIBLE.livres.map((l,i)=>({l,i}));
-  if(f) livres = livres.filter(({l})=>norm(l.nom).includes(f));
+  if(f) livres = livres.filter(({l})=>(l._n||(l._n=norm(l.nom))).includes(f));  // v3.8 : index pré-calculé
   const colL = `<div class="bcol ${b.livre>=0?'shrink':''}" id="bL"><h6>${b.livre>=0?'Livre':'66 livres'}</h6>
     <div class="livres ${b.livre>=0?'':'c2'}">${livres.map(({l,i})=>
       `<div class="livre ${i===b.livre?'sel':''}" data-i="${i}" title="${l.nom}">${b.livre>=0? (ABREV[l.nom]||l.nom.slice(0,3)) : l.nom}</div>`).join('')}</div></div>`;
@@ -656,11 +880,17 @@ function versetItem(v,direct){
     snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:v}};
 }
 function ouvrirVersets(l,c,v,direct){
-  state.selectedResourceType='bible'; state.bible={livre:l,chapitre:c,verset:v};
   const L=M4_BIBLE.livres[l], C=L.chapitres[c];
+  state.bible={livre:l,chapitre:c,verset:v};
+  const _ck='bi'+l+':'+c+':'+C.length;   // v3.10 : même chapitre = pas de reconstruction
+  if(state._z5k===_ck && EL('z5corps').querySelector('.strophe')){
+    EL('z5corps').querySelectorAll('.strophe').forEach(x=>x.classList.toggle('sel',+x.dataset.i===v));
+  } else {
+  state._z5k=_ck;
+  nettoyerZ5(); state.selectedResourceType='bible'; state.bible={livre:l,chapitre:c,verset:v};
   EL('z5nom').innerHTML = `📖 <b>${L.nom} ${c+1}</b> — ${C.length} versets <span class="vide" style="padding:0 8px">(1 clic = préparer · double-clic = afficher)</span>`;
   EL('z5corps').innerHTML = C.map((t,i)=>
-    `<div class="strophe ${i===v?'sel':''}" data-i="${i}"><div class="txt"><b style="color:var(--or2)">${i+1}.</b> ${t}</div></div>`).join('');
+    `<div class="strophe ${i===v?'sel':''}" data-i="${i}"><div class="txt"><span class="verset-n">${i+1}</span>${t}</div></div>`).join('');
   EL('z5corps').querySelectorAll('.strophe').forEach(el=>{
     const i=+el.dataset.i;
     el.onclick=()=>{ EL('z5corps').querySelectorAll('.strophe').forEach(x=>x.classList.remove('sel')); el.classList.add('sel');
@@ -668,21 +898,28 @@ function ouvrirVersets(l,c,v,direct){
     el.ondblclick=()=>projeter({key:'bi',refhd:`${L.nom} ${c+1}:${i+1}`, ref:'Segond 1910',titre:refTxt()+':'+(i+1),texte:L.chapitres[c][i],label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}});
     garde(el,()=>reserver({cle:'b'+l+'c'+c+'v'+i,label:`📖 ${refTxt()}:${i+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:i}}));
   });
+  }
   if(direct && v>=0) projeter({key:'bi',refhd:`${L.nom} ${c+1}:${v+1}`, ref:'Segond 1910',titre:refTxt()+':'+(v+1),texte:L.chapitres[c][v],label:`📖 ${refTxt()}:${v+1}`,snap:{kind:'bible',livre:l,chapitre:c,verset:v}});
 }
 /* ---- 4C. BROCHURES ---- */
 function z4Brochures(){
   const f = norm(EL('z4rech').value);
-  const tous = (M4_BROCHURES.brochures||[]).concat(state.ajouts.brochures||[]);
-  const trouves = tous.filter(b=>!f||norm(b.id+' '+b.titre).includes(f));
+  const tous = (M4_BROCHURES.brochures||[]).concat(state.ajouts.brochures||[]).concat(state.ajoutsMem.brochures||[]);
+  const motsB = f ? f.split(/\s+/).filter(Boolean) : [];
+  const trouves = tous.filter(b=>{  // v3.9 : ET multi-mots
+    if(!motsB.length) return true;
+    const n=(b._n||(b._n=norm(b.id+' '+b.titre)));
+    for(const w of motsB){ if(!n.includes(w)) return false; }
+    return true;
+  });
   const doubles = tous.filter(b=>b.vgr && b.shekinah).length;
   EL('z4liste').innerHTML = `<div style="padding:2px 2px 6px;font-weight:800;color:var(--vert);font-size:.72rem">
-      📄 ${tous.length} brochures complètes — ${doubles} en double traduction VGR+SKN · ${tous.length-doubles} en traduction unique
+      📄 ${tous.length} brochures complètes${PRECH_TOT?` · ⚡ ${Math.round(100*PRECH_OK/PRECH_TOT)}% instantané`:''} — ${doubles} en double traduction VGR+SKN · ${tous.length-doubles} en traduction unique
       ${f?`<span style="color:var(--or2)"> · ${trouves.length} résultat(s)</span>`:''}</div>` + trouves.map((b,i)=>{
     const deux = b.vgr && b.shekinah;
     const badge = deux ? '<span class="badge bvgr">VGR</span><span class="badge bskn">SKN</span>'
                        : b.vgr ? '<span class="badge bvgr">VGR</span>' : '<span class="badge bskn">SKN</span>';
-    return `<div class="rowi" data-i="${i}"><b>${b.id}</b> ${badge} — ${b.titre}</div>`;
+    return `<div class="rowi" data-i="${i}"><b>${b.id}</b> ${badge}${b._paras?'<span class="badge bperso">PERSO</span>':''} — ${b.titre}</div>`;
   }).join('') || '<div class="vide">Aucune brochure trouvée</div>';
   EL('z4liste').querySelectorAll('.rowi').forEach((r,idx)=>{
     const b = trouves[idx];
@@ -690,141 +927,328 @@ function z4Brochures(){
       EL('z4liste').querySelectorAll('.rowi').forEach(x=>x.classList.remove('sel')); r.classList.add('sel');
       if(b.vgr && b.shekinah){                                        // deux traductions -> choix demandé
         EL('mvsT').textContent = `${b.id} « ${b.titre} » — choisir la traduction`;
-        EL('mvsV').onclick = () => { ferme('mvs'); chargerBrochure(b.id,'VGR',b.titre,0,'paragraph',false); };
-        EL('mvsS').onclick = () => { ferme('mvs'); chargerBrochure(b.id,'SHEKINAH',b.titre,0,'paragraph',false); };
+        EL('mvsV').onclick = () => { ferme('mvs'); chargerBrochure(b.id,'VGR',b.titre,0,'continuous',false); };
+        EL('mvsS').onclick = () => { ferme('mvs'); chargerBrochure(b.id,'SHEKINAH',b.titre,0,'continuous',false); };
         EL('mvs').style.display='flex';
       } else {
-        chargerBrochure(b.id, b.vgr?'VGR':'SHEKINAH', b.titre, 0, 'paragraph', false);
+        chargerBrochure(b.id, b.vgr?'VGR':'SHEKINAH', b.titre, 0, 'continuous', false);
       }
     };
-    garde(r, ()=>reserver({cle:'bro-'+b.id, label:`📄 ${b.id} ${b.titre}`, snap:{kind:'brochure',id:b.id,trad:b.vgr?'VGR':'SHEKINAH',titre:b.titre,pos:0,mode:'paragraph'}}));
+    garde(r, ()=>reserver({cle:'bro-'+b.id, label:`📄 ${b.id} ${b.titre}`, snap:{kind:'brochure',id:b.id,trad:b.vgr?'VGR':'SHEKINAH',titre:b.titre,pos:0,mode:'continuous'}}));
   });
 }
 /* téléchargement du texte d'une brochure (gzip -> DecompressionStream) + repli démo */
 async function chargerBrochure(code, trad, titre, pos, mode, directe){
-  mode = mode || state.bro.mode || 'paragraph';
+  nettoyerZ5(); state.selectedResourceType='brochure';
   EL('z5nom').innerHTML = `⏳ Chargement de « ${titre||code} » (${trad})…`;
-  let data = null;
-  const chemin = `data/brochures/${trad==='VGR'?'vgr':'shekinah'}-textes/${code}.json.gz`;
-  try {
-    const r = await fetch(chemin);
-    if(!r.ok) throw 0;
-    const flux = r.body.pipeThrough(new DecompressionStream('gzip'));
-    data = JSON.parse(await new Response(flux).text());
-  } catch(e) {
-    if(code==='47-0412'){                                        // repli hors-ligne démo
-      data = {id:code, titre, trad, paras: DEMO_BRO};
-      toast('⚠️ Texte distant inaccessible (hors-serveur) — extrait démo de 47-0412 affiché');
-    } else { EL('z5nom').innerHTML = '⚠️ Brochure inaccessible (servez l\u2019app en http, ou tout-embarquer nécessaire)'; return; }
+  /* v3 : brochures ajoutées à la main (zone 7) livrées avec leurs paragraphes */
+  const ajout=(state.ajouts.brochures||[]).concat(state.ajoutsMem.brochures||[]).find(x=>x.id===code&&x._paras);
+  let data = ajout ? {id:code, titre:titre||ajout.titre, trad, paras:ajout._paras} : null;
+  if(!data){
+    EL('z5corps').innerHTML = '<div class="vide">⏳ Ouverture…</div>';
+    try { data = await chargerDonneesBrochure(code, trad); }  // v3.8 : mémoire → stockage rapide → cache
+    catch(e) {
+      if(code==='47-0412'){                                        // repli hors-ligne démo
+        data = {id:code, titre, trad, paras: DEMO_BRO};
+        toast('⚠️ Texte distant inaccessible (hors-serveur) — extrait démo de 47-0412 affiché');
+      } else { EL('z5nom').innerHTML = '⚠️ Brochure inaccessible (ouvrez une fois en ligne pour tout embarquer)'; return; }
+    }
   }
-  state.bro = {id:code, trad, paras:data.paras, pos:pos||0, mode, titre:data.titre||titre||code};
+  /* v3 : projection TOUJOURS continue — la zone 5 garde les paragraphes (travail) */
+  state.bro = {id:code, trad, paras:data.paras, pos:pos||0, mode:'continuous', head:pos||0, scrollY:0, htmlCont:null, titre:data.titre||titre||code};
   broEntete(); broCorps();
-  if(direct){ const p = state.bro.paras[state.bro.pos]||state.bro.paras[0]; projeter(itemBro(p)); }
+  const item = broContItem();
+  if(directe) projeter(item); else preparerZ3(item);
+  requestAnimationFrame(()=>allerPara(state.bro.head||0));
 }
-function itemBro(p){
-  const tit = String(state.bro.titre||'').length>44 ? String(state.bro.titre).slice(0,44)+'…' : (state.bro.titre||'');
-  return {key:'br'+state.bro.id+'§'+p[0], entete:`${state.bro.id} · ${tit} · ${state.bro.trad}`, titre:`${state.bro.id} — ${state.bro.titre} (${state.bro.trad}) — §${p[0]}/${state.bro.paras.length}`,
-    texte:p[1], label:`📄 §${p[0]} · ${state.bro.id}`,
-    snap:{kind:'brochure',id:state.bro.id,trad:state.bro.trad,titre:state.bro.titre,pos:state.bro.paras.indexOf(p),mode:state.bro.mode}};
+/* ================= v3.8 : VITESSE — index + stockage rapide + pré-chargement auto =================
+   Pourquoi c'était lent ? 1) la recherche re-lisait TOUT le texte à chaque lettre tapée ;
+   2) chaque brochure était décompressée + analysée à chaque ouverture.
+   Correction : 1) index de recherche pré-calculé au démarrage (une seule fois) ;
+   2) brochures déjà lues gardées en mémoire (25 dernières) + en stockage rapide permanent
+   (IndexedDB) ; 3) un pré-chargement AUTOMATIQUE passe tout en revue en arrière-plan
+   (reprise là où ça s'était arrêté) → après le 1er passage, ouverture quasi-instantanée. */
+const MEM_BRO=new Map();
+function memBroGet(k){ if(!MEM_BRO.has(k)) return null; const v=MEM_BRO.get(k); MEM_BRO.delete(k); MEM_BRO.set(k,v); return v; }
+function memBroSet(k,v){ MEM_BRO.set(k,v); if(MEM_BRO.size>25){ MEM_BRO.delete(MEM_BRO.keys().next().value); } }
+let _idb=null;
+function idbOuvrir(){ return new Promise(res=>{ if(_idb) return res(_idb); if(!('indexedDB' in window)) return res(null);
+  try{ const rq=indexedDB.open('m4p-brochures',1);
+    rq.onupgradeneeded=()=>{ try{ rq.result.createObjectStore('bro'); }catch(_){} };
+    rq.onsuccess=()=>{ _idb=rq.result; res(_idb); };
+    rq.onerror=()=>res(null); rq.onblocked=()=>res(null);
+  }catch(_){ res(null); } }); }
+function idbLire(k){ return idbOuvrir().then(db=>new Promise(res=>{ if(!db) return res(null);
+  try{ const tx=db.transaction('bro','readonly').objectStore('bro').get(k); tx.onsuccess=()=>res(tx.result||null); tx.onerror=()=>res(null); }catch(_){ res(null); } })); }
+function idbEcrire(k,v){ idbOuvrir().then(db=>{ if(!db) return; try{ db.transaction('bro','readwrite').objectStore('bro').put(v,k); }catch(_){} }); }
+async function decoderBrochure(code, trad){
+  const chemin=`data/brochures/${trad==='VGR'?'vgr':'shekinah'}-textes/${code}.json.gz`;
+  const r=await fetch(chemin); if(!r.ok) throw 0;
+  const flux=r.body.pipeThrough(new DecompressionStream('gzip'));
+  return JSON.parse(await new Response(flux).text());
+}
+async function chargerDonneesBrochure(code, trad){
+  const k=trad+':'+code;
+  const m=memBroGet(k); if(m) return m;                       // 1) mémoire : immédiat
+  const d=await idbLire(k);                                    // 2) stockage rapide : quelques ms
+  if(d&&d.paras){ memBroSet(k,d); return d; }
+  const frais=await decoderBrochure(code,trad);                // 3) 1er passage : décompression une fois
+  const obj={id:code,titre:frais.titre,trad,paras:frais.paras};
+  memBroSet(k,obj); idbEcrire(k,obj);
+  return obj;
+}
+/* v3.10 : AJOUTS (zone 7) — gros contenus en stockage permanent (IndexedDB), repli local */
+function idbAjt(){ return new Promise(res=>{ if(!('indexedDB' in window)) return res(null);
+  try{ const rq=indexedDB.open('m4p-ajouts',1);
+    rq.onupgradeneeded=()=>{ try{ rq.result.createObjectStore('ajouts',{keyPath:'k'}); }catch(_){} };
+    rq.onsuccess=()=>res(rq.result); rq.onerror=()=>res(null); rq.onblocked=()=>res(null);
+  }catch(_){ res(null); } }); }
+async function ajtSauver(entree){
+  const db=await idbAjt();
+  if(db){ await new Promise(res=>{ try{ const tx=db.transaction('ajouts','readwrite').objectStore('ajouts').put(entree); tx.onsuccess=()=>res(1); tx.onerror=()=>res(0); }catch(_){ res(0); } }); }
+  else { try{ const leg=JSON.parse(localStorage.getItem('m4_ajouts_file')||'[]'); leg.push(entree); localStorage.setItem('m4_ajouts_file', JSON.stringify(leg)); }catch(_){ toast('⚠️ Stockage plein — ajout trop gros pour cet appareil'); } }
+}
+async function ajtLister(){
+  const db=await idbAjt(); let arr=[];
+  if(db){ arr=await new Promise(res=>{ try{ const tx=db.transaction('ajouts','readonly').objectStore('ajouts').getAll(); tx.onsuccess=()=>res(tx.result||[]); tx.onerror=()=>res([]); }catch(_){ res([]); } }); }
+  try{ arr=arr.concat(JSON.parse(localStorage.getItem('m4_ajouts_file')||'[]')); }catch(_){}
+  return arr;
+}
+async function ajtSupprimer(k){
+  const db=await idbAjt();
+  if(db){ await new Promise(res=>{ try{ const tx=db.transaction('ajouts','readwrite').objectStore('ajouts').delete(k); tx.onsuccess=()=>res(1); tx.onerror=()=>res(0); }catch(_){ res(0); } }); }
+  try{ localStorage.setItem('m4_ajouts_file', JSON.stringify((JSON.parse(localStorage.getItem('m4_ajouts_file')||'[]')).filter(x=>x.k!==k))); }catch(_){}
+}
+/* v3.10 : lecture de fichiers (TXT / JSON / PDF) pour la zone 7 */
+function chargerPdfJs(){ return new Promise(res=>{
+  if(window.pdfjsLib) return res(true);
+  const s=document.createElement('script'); s.src='./assets/pdfjs/pdf.min.js';
+  s.onload=()=>res(true); s.onerror=()=>res(false); document.head.appendChild(s);
+}); }
+async function lireFichierAjout(file){
+  const nom=(file.name||'').toLowerCase();
+  if(nom.endsWith('.pdf')){
+    const ok=await chargerPdfJs();
+    if(!ok||!window.pdfjsLib) throw 'pdf-manquant';
+    try{ window.pdfjsLib.GlobalWorkerOptions.workerSrc='./assets/pdfjs/pdf.worker.min.js'; }catch(_){}
+    const buf=new Uint8Array(await file.arrayBuffer());
+    let doc=null;
+    try{ doc=await window.pdfjsLib.getDocument({data:buf}).promise; }
+    catch(e){ doc=await window.pdfjsLib.getDocument({data:buf, disableWorker:true}).promise; }
+    const pages=[];
+    for(let p=1;p<=Math.min(doc.numPages,400);p++){
+      const pg=await doc.getPage(p); const tc=await pg.getTextContent();
+      pages.push(tc.items.map(it=>it.str||'').join('\n'));
+    }
+    return {texte:pages.join('\n\n'), pages:doc.numPages};
+  }
+  const txt=await file.text();
+  if(nom.endsWith('.json')) return {json:JSON.parse(txt)};
+  return {texte:txt};
+}
+function parseChantFichier(txt, nomFichier){
+  const lignes=String(txt||'').replace(/\r/g,'').split('\n');
+  let titre=(nomFichier||'').replace(/\.[^.]+$/,'');
+  let corps=String(txt||'').trim();
+  if(lignes.length>1 && lignes[0].trim().length<80 && lignes[1].trim()===''){ titre=lignes[0].trim(); corps=lignes.slice(2).join('\n').trim(); }
+  return {titre:titre||'Chant ajouté', texte:corps};
+}
+function parseBrochureFichier(txt){
+  const brut=String(txt||'').replace(/\r/g,'');
+  let paras=[];
+  brut.split('\n').forEach(l=>{ const m=l.match(/^\s*(\d{1,4})\s*[.)\-:]\s*(.+)$/); if(m&&m[2].trim()) paras.push([+m[1], m[2].trim()]); });
+  if(paras.length<3){
+    paras=[]; brut.split(/\n\s*\n/).map(b=>b.replace(/\n+/g,' ').trim()).filter(Boolean).forEach((b,i)=>paras.push([i+1,b]));
+  }
+  return paras;
+}
+function parseBibleFichier(txt){
+  /* v3.10 : format toléré — « # Livre » puis « Chapitre N » puis « 1. verset »… */
+  const brut=String(txt||'').replace(/\r/g,'');
+  const livres=[]; let cur=null, chap=[];
+  brut.split('\n').forEach(l=>{
+    let m=l.match(/^\s*#\s+(.+)$/); if(m){ if(cur){ if(chap.length) cur.chapitres.push(chap); if(cur.chapitres.length) livres.push(cur); } cur={nom:m[1].trim(), chapitres:[]}; chap=[]; return; }
+    m=l.match(/^\s*(?:==\s*)?[Cc]hapitre\s+(\d+)/); if(m){ if(!cur) cur={nom:'Livre ajouté', chapitres:[]}; if(chap.length) cur.chapitres.push(chap); chap=[]; return; }
+    m=l.match(/^\s*(\d{1,3})\s*[.)\-:]\s*(.+)$/); if(m&&cur){ chap.push(m[2].trim()); return; }
+  });
+  if(cur){ if(chap.length) cur.chapitres.push(chap); if(cur.chapitres.length) livres.push(cur); }
+  return {livres};
+}
+async function preparerIndexRecherche(){
+  /* v3.8 : l'index de recherche se calcule UNE fois au démarrage (par morceaux, sans bloquer) */
+  try{
+    const recs=(window.M4_CHANTS&&window.M4_CHANTS.recueils)||[];
+    for(const R of recs){ for(let i=0;i<R.songs.length;i++){ const s=R.songs[i]; if(!s._n) s._n=norm(s.num+' '+s.titre+' '+s.texte); if(i%400===399) await attendre(0); } }
+    const br=(window.M4_BROCHURES&&window.M4_BROCHURES.brochures)||[];
+    for(let i=0;i<br.length;i++){ const b=br[i]; if(!b._n) b._n=norm(b.id+' '+b.titre); if(i%400===399) await attendre(0); }
+    const lv=(window.M4_BIBLE&&window.M4_BIBLE.livres)||[];
+    lv.forEach(l=>{ if(!l._n) l._n=norm(l.nom); });
+    let cv=0;  // v3.9 : index des 31 102 versets (recherche plein-texte dans toute la Bible)
+    for(const L of lv){ for(const C of L.chapitres){ if(!C._n) C._n=C.map(v=>norm(v)); if(++cv%60===0) await attendre(0); } }
+  }catch(_){}
+}
+let PRECH_OK=0, PRECH_TOT=0;
+async function prechargerFond(){
+  /* v3.8 : TOUT devient instantané TOUT SEUL — passe progressive en arrière-plan, reprise auto */
+  try{
+    if(!('indexedDB' in window)) return;
+    const db0=await idbOuvrir(); if(!db0) return;
+    await attendre(2500);
+    const idx=(window.M4_BROCHURES&&window.M4_BROCHURES.brochures)||[];
+    const cles=[]; idx.forEach(b=>{ if(b.vgr) cles.push(['VGR',b.id]); if(b.shekinah) cles.push(['SHEKINAH',b.id]); });
+    PRECH_TOT=cles.length;
+    let depart=0; try{ depart=+localStorage.getItem('m4_prech')||0; }catch(_){}
+    for(let i=depart;i<cles.length;i++){
+      const k=cles[i][0]+':'+cles[i][1];
+      const d=await idbLire(k);
+      if(!(d&&d.paras)){ try{ const frais=await decoderBrochure(cles[i][1],cles[i][0]); idbEcrire(k,{id:cles[i][1],titre:frais.titre,trad:cles[i][0],paras:frais.paras}); }catch(_){} }
+      PRECH_OK=i+1;
+      if(i%20===19){ try{ localStorage.setItem('m4_prech',String(i+1)); }catch(_){} await attendre(30); }
+    }
+    try{ localStorage.setItem('m4_prech',String(cles.length)); }catch(_){}
+  }catch(_){}
+}
+/* v3.8 : MODE TEST DE VITESSE (?testvitesse=1) — mesures réelles affichées + envoyées au parent */
+async function testVitesse(){
+  const lignes=[];
+  try{
+    let t0=performance.now(), n=0;
+    const R=(window.M4_CHANTS.recueils||[])[0];
+    for(const q of ['amour','gloire','jesus','alleluia','paix']){ const f=norm(q); for(let i=0;i<R.songs.length;i++){ if((R.songs[i]._n||'').includes(f)) n++; } }
+    let ms=performance.now()-t0; lignes.push(['🔍 Recherche cantiques (5 requêtes)', Math.round(ms)+' ms · '+n+' trouvés', ms<600]);
+    t0=performance.now(); n=0;
+    const B=(window.M4_BROCHURES.brochures||[]);
+    for(const q of ['foi','aigle','tonnerre','adoption','seau']){ const f=norm(q); for(let i=0;i<B.length;i++){ if((B[i]._n||'').includes(f)) n++; } }
+    ms=performance.now()-t0; lignes.push(['🔍 Recherche brochures (5 requêtes)', Math.round(ms)+' ms · '+n+' trouvées', ms<300]);
+    t0=performance.now(); n=0;
+    const LV=(window.M4_BIBLE.livres||[]);
+    for(const q of ['jean','psaumes','genese']){ const f=norm(q); for(let i=0;i<LV.length;i++){ if((LV[i]._n||'').includes(f)) n++; } }
+    ms=performance.now()-t0; lignes.push(['🔍 Recherche Bible (3 requêtes)', Math.round(ms)+' ms', ms<100]);
+    t0=performance.now(); n=0;
+    { const R2=(window.M4_CHANTS.recueils||[])[0]; const mw=['amour','gloire'];
+      for(let i=0;i<R2.songs.length;i++){ const nn=R2.songs[i]._n||''; let ok=true; for(const w of mw){ if(!nn.includes(w)){ ok=false; break; } } if(ok) n++; } }
+    ms=performance.now()-t0; lignes.push(['🎯 Précision (2 mots : « amour gloire »)', Math.round(ms)+' ms · '+n+' exacts', ms<200]);
+    const cands=[];
+    for(const b of B){ if(b.vgr) cands.push(['VGR',b.id]); if(b.shekinah) cands.push(['SHEKINAH',b.id]); if(cands.length>=10) break; }
+    let faits=0;
+    for(const c of cands){ if(faits>=3) break;
+      try{ MEM_BRO.delete(c[0]+':'+c[1]);
+        const t1=performance.now(); const d=await chargerDonneesBrochure(c[1],c[0]); const m2=performance.now()-t1;
+        lignes.push([`📄 Ouverture ${c[1]} (${c[0]})`, Math.round(m2)+' ms · '+(d.paras||[]).length+' §', m2<1500]); faits++;
+      }catch(e){}
+    }
+    if(!faits) lignes.push(['📄 Ouverture brochures','aucun fichier accessible',false]);
+  }catch(e){ lignes.push(['⏱️ Test','interrompu',false]); }
+  let panneau=document.getElementById('testVit');
+  if(!panneau){ panneau=document.createElement('div'); panneau.id='testVit'; document.body.appendChild(panneau); }
+  const toutOk=lignes.every(l=>l[2]);
+  panneau.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><b>⏱️ TEST DE VITESSE ${toutOk?'🟢':'🟠'}</b><button id="testVitX" style="border:1px solid #c9a34e;background:#fff;border-radius:7px;padding:2px 10px;font-weight:800;cursor:pointer">✕</button></div>`+
+    lignes.map(l=>`<div style="display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-top:1px dashed #d9cba4;font-size:12px"><span>${l[0]}</span><b style="color:${l[2]?'#2e6b4f':'#a5740a'}">${l[1]} ${l[2]?'✔':'(1er passage)'}</b></div>`).join('')+
+    `<div style="font-size:11px;color:#6b7d6f;margin-top:6px">2ᵉ passage = quasi-instantané (mémoire + stockage rapide). Bouton ⏱️ Re-tester dans la simulation.</div>`;
+  panneau.style.cssText='position:fixed;top:64px;right:10px;z-index:75;background:#fffdf7;border:3px solid #c9a34e;border-radius:12px;padding:10px 12px;width:340px;max-width:92vw;box-shadow:0 8px 26px rgba(0,0,0,.35);font-family:"Segoe UI",Arial,sans-serif;color:#21352a';
+  document.getElementById('testVitX').onclick=()=>panneau.remove();
+  try{ parent.postMessage({m4:'vitesse', lignes}, '*'); }catch(_){}
+}
+addEventListener('message', e=>{ if(e&&e.data&&e.data.m4==='test-vitesse') testVitesse(); });
+/* v3 : la projection d'une brochure = UN TEXTE CONTINU (numéros visibles, couleur distincte) */
+function broHtmlCont(){
+  if(state.bro.htmlCont) return state.bro.htmlCont;
+  const ech = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  state.bro.htmlCont = state.bro.paras.map((p,i)=>`<p class="pc" data-i="${i}"><span class="pnum">§${p[0]}</span>${ech(p[1])}</p>`).join('');
+  return state.bro.htmlCont;
+}
+function broContItem(){
+  const b=state.bro;
+  const tit = String(b.titre||'').length>44 ? String(b.titre).slice(0,44)+'…' : (b.titre||'');
+  const cur = b.paras[b.head]||b.paras[0]||[0,''];
+  return {key:'brcont'+b.id+b.trad, kind:'brocont', entete:`${b.id} · ${tit} · ${b.trad}`,
+    titre:`${b.id} — ${b.titre} (${b.trad})`, texte:broHtmlCont(), label:`📄 §${cur[0]}+ · ${b.id}`,
+    snap:{kind:'brochure',id:b.id,trad:b.trad,titre:b.titre,pos:b.head,mode:'continuous'}};
+}
+/* v3 : amener la projection sur un paragraphe (tête de projection) */
+function allerPara(i, dbl){
+  const b=state.bro; if(!b.id||!b.paras.length) return;
+  b.head=Math.max(0,Math.min(b.paras.length-1,i)); b.pos=b.head;
+  state.preview=broContItem(); rendreZ3();
+  requestAnimationFrame(()=>{
+    const t=document.querySelector('#contenu .texte.cont'); if(!t) return;
+    const el=t.querySelector(`.pc[data-i="${b.head}"]`);
+    if(el){ const r0=t.getBoundingClientRect(), r1=el.getBoundingClientRect();
+      b.scrollY = Math.max(0, t.scrollTop + (r1.top - r0.top) - Math.round(t.clientHeight*0.12)); }
+    else b.scrollY=0;
+    if(dbl){ state.displayEnabled=true; majBoutons(); projeter(state.preview); }
+    else rendreZ3();
+    surlignerTete();
+  });
+}
+/* v3 : pas d'UNE LIGNE de projection (flèches clavier / Espace / boutons ▲▼) */
+function ligneProj(){
+  const t=document.querySelector('#contenu .texte.cont');
+  if(t){ const lh=parseFloat(getComputedStyle(t).lineHeight); if(lh>4) return Math.round(lh); }
+  return Math.max(18, Math.round(state.fontSize*.5*state.lineSpacing*state.projTaille));
+}
+function bougeProj(dlignes){
+  const b=state.bro; if(!b.id||!b.paras.length) return;
+  const t=document.querySelector('#contenu .texte.cont');
+  const mx = t ? Math.max(0, t.scrollHeight - t.clientHeight) : 999999;
+  b.scrollY=Math.max(0,Math.min(mx,(b.scrollY||0)+dlignes*ligneProj()));
+  projeterSync(broContItem());
+  requestAnimationFrame(()=>{ const t2=document.querySelector('#contenu .texte.cont'); if(t2) t2.scrollTop=b.scrollY; majTeteProj(); });
+}
+/* v3 : retrouver le § en tête de projection (mesuré sur la zone 3) + surligner en zone 5 */
+function majTeteProj(){
+  const b=state.bro; if(!b.id) return;
+  const t=document.querySelector('#contenu .texte.cont'); if(!t) return;
+  const haut=t.getBoundingClientRect().top;
+  let best=b.head;
+  t.querySelectorAll('.pc').forEach(el=>{ if(el.getBoundingClientRect().top <= haut+8) best=+el.dataset.i; });
+  if(best!==b.head){ b.head=best; b.pos=best; }
+  surlignerTete();
+}
+function surlignerTete(){
+  const b=state.bro; if(!b.id) return;
+  document.querySelectorAll('#z5corps .par').forEach(el=>el.classList.toggle('cur', +el.dataset.i===b.head));
+  document.querySelectorAll('.bropanel .chnum').forEach(el=>el.classList.toggle('sel', +el.dataset.i===b.head));
+  const s=document.querySelector('.bropanel .chnum.sel'); if(s) s.scrollIntoView({block:'nearest'});
+  const cur=document.querySelector('#z5corps .par.cur'); if(cur) cur.scrollIntoView({block:'nearest'});
 }
 function broEntete(){
   EL('z5nom').innerHTML = `📄 <b>${state.bro.id} « ${state.bro.titre} »</b>
     <span class="badge ${state.bro.trad==='VGR'?'bvgr':'bskn'}">${state.bro.trad}</span>
-    <span class="tabs">
-      <button class="tab ${state.bro.mode==='paragraph'?'on':''}" id="tabP">§ Par paragraphe</button>
-      <button class="tab ${state.bro.mode==='continuous'?'on':''}" id="tabC">↕ Lecture continue</button>
-    </span>`;
-  EL('tabP').onclick=()=>{ state.bro.mode='paragraph'; broEntete(); broCorps(); };
-  EL('tabC').onclick=()=>{ state.bro.mode='continuous'; broEntete(); broCorps(); };
+    <span class="vide" style="padding:0 8px">↕ projection continue · 1 clic = positionner · double-clic = afficher</span>`;
 }
-function broCorps(){
-  if(state.bro.mode==='continuous') broContinuous(); else broParagraphe();
-}
-function broParagraphe(){
-  const bro = state.bro, cur = bro.paras[bro.pos]||bro.paras[0];
-  EL('z5corps').innerHTML = `<div class="brozone">
-    <div class="bropanel"><div class="chnums">${bro.paras.map((p,i)=>
-      `<div class="chnum ${i===bro.pos?'sel':''}" data-i="${i}">${p[0]}</div>`).join('')}</div></div>
-    <div class="brostexte" id="brox"></div></div>`;
-  const zone = EL('brox');
-  zone.innerHTML = `<b style="color:var(--or2)">§${cur[0]}</b> — ${cur[1]}<br>
-    <div style="margin-top:10px" class="vide">1 clic sur un § = préparé · double-clic = affiché au public · maintien long = réserve</div>`;
-  EL('z5corps').querySelectorAll('.bropanel .chnum').forEach(c=>{
-    c.onclick=()=>{ state.bro.pos=+c.dataset.i; broParagraphe(); scrollSel(); preparerZ3(itemBro(state.bro.paras[state.bro.pos])); };
-    c.ondblclick=()=>{ state.bro.pos=+c.dataset.i; broParagraphe(); projeter(itemBro(state.bro.paras[state.bro.pos])); };
-    garde(c,()=>{ state.bro.pos=+c.dataset.i; reserver({cle:'br§'+state.bro.id+'p'+state.bro.pos,label:`📄 §${state.bro.paras[state.bro.pos][0]} · ${state.bro.id}`,snap:{kind:'brochure',id:state.bro.id,trad:state.bro.trad,titre:state.bro.titre,pos:state.bro.pos,mode:'paragraph'}}); });
-  });
-  function scrollSel(){ const s=EL('z5corps').querySelector('.bropanel .chnum.sel'); if(s) s.scrollIntoView({block:'nearest'}); }
-  scrollSel();
-  preparerZ3(itemBro(cur));
-  const bx = EL('brox');
-  if(bx) bx.addEventListener('scroll', ()=>{
-    const cible = EL('contenu'); if(!cible) return;
-    const t = cible.querySelector('.texte'); if(!t) return;
-    const frac = bx.scrollHeight > bx.clientHeight ? bx.scrollTop/(bx.scrollHeight-bx.clientHeight) : 0;
-    const depasse = Math.max(0, t.scrollHeight - cible.clientHeight);
-    t.style.transition = 'transform .12s';
-    t.style.transform = 'translateY(' + (-Math.round(frac*depasse)) + 'px)';
-  }, {passive:true});
-}
-function broContinuous(){
+function broCorps(){ broParagraphes(); }
+function broParagraphes(){
+  /* v3 : zone 5 = paragraphes (travail) — la MOLETTE y défile librement SANS toucher la projection */
   const bro = state.bro;
+  const _ck='br'+bro.id+':'+bro.trad+':'+bro.paras.length;   // v3.10 : même brochure = pas de reconstruction
+  if(state._z5k===_ck && EL('brox')){ surlignerTete(); return; }
+  state._z5k=_ck;
+  const ech = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
   EL('z5corps').innerHTML = `<div class="brozone">
     <div class="bropanel"><div class="chnums">${bro.paras.map((p,i)=>
-      `<div class="chnum ${i===bro.pos?'sel':''}" data-i="${i}">${p[0]}</div>`).join('')}</div></div>
-    <div class="brocont" id="bcont"><div class="flux" id="bflux">${bro.paras.map((p,i)=>
-      `<p class="brop" data-i="${i}"><span class="pn">${p[0]}</span>${p[1]}</p>`).join('')}</div>
-      <div class="brocmd"><button id="bup">⌃ Monter</button><button id="bdn">⌄ Descendre</button></div></div></div>`;
-  const flux = EL('bflux'), cont = EL('bcont');
-  let lignesMax = () => Math.max(0, flux.scrollHeight - cont.clientHeight + 20);
-  let y = Math.min(state.bro.posY||0, lignesMax());
-  const pas = () => Math.round(state.fontSize*.5*state.lineSpacing)+2;
-  function applique(){ flux.style.transform = `translateY(${-y}px)`; }
-  function bouge(dy){
-    y = Math.max(0, Math.min(lignesMax(), y + dy));        // ligne par ligne, borné
-    state.bro.posY = y; applique();
-    /* synchro zone 3 : le § visible en tête suit la lecture à l'instant */
-    let best = 0;
-    flux.querySelectorAll('.brop').forEach((p,i)=>{ if(p.offsetTop-12<=y) best=i; });
-    state.bro.pos = best;
-    const cur = bro.paras[best];
-    if(cur) projeterSync(itemBro(cur));
-    const chip = document.querySelector('.bropanel .chnum.sel');
-    const nsel = document.querySelector(`.bropanel .chnum[data-i="${best}"]`);
-    if(chip) chip.classList.remove('sel');
-    if(nsel){ nsel.classList.add('sel'); nsel.scrollIntoView({block:'nearest'}); }
-  }
-  EL('bup').onclick=()=>bouge(-pas()); EL('bdn').onclick=()=>bouge(pas());
-  cont.addEventListener('wheel', e=>{ e.preventDefault(); bouge(e.deltaY>0?pas():-pas()); }, {passive:false});
-  /* poussée au doigt (téléphone) : quand je monte ça monte, quand je descends ça descend */
-  cont.style.touchAction='none'; cont.style.cursor='grab';
-  let gy=null;
-  cont.addEventListener('touchstart', e=>{ gy=e.changedTouches[0].clientY; }, {passive:true});
-  cont.addEventListener('touchmove', e=>{ if(gy===null) return; const c=e.changedTouches[0]; bouge((gy-c.clientY)*0.6); gy=c.clientY; }, {passive:true});
-  cont.addEventListener('touchend', ()=>gy=null);
-  cont.addEventListener('touchcancel', ()=>gy=null);
-  /* glisser à la souris (ordinateur) + molette + flèches clavier (déjà actifs) */
-  let gm=false, gy2=0;
-  cont.addEventListener('mousedown', e=>{ gm=true; gy2=e.clientY; cont.style.cursor='grabbing'; });
-  window.addEventListener('mousemove', e=>{ if(!gm) return; bouge((gy2-e.clientY)*0.7); gy2=e.clientY; });
-  window.addEventListener('mouseup', ()=>{ if(gm){ gm=false; cont.style.cursor='grab'; } });
-  cont._bouge = bouge;
-  applique();
+      `<div class="chnum ${i===bro.head?'sel':''}" data-i="${i}">${p[0]}</div>`).join('')}</div></div>
+    <div class="brostexte" id="brox" style="font-size:15px">${bro.paras.map((p,i)=>
+      `<div class="par ${i===bro.head?'cur':''}" data-i="${i}"><span class="pn">§${p[0]}</span>${ech(p[1])}</div>`).join('')}</div></div>`;
+  const saut = (i,dbl)=>{
+    allerPara(i,dbl);
+    if(!dbl){ const pp=bro.paras[Math.max(0,Math.min(bro.paras.length-1,i))]; if(pp) toast('… Tête de projection : §'+pp[0]); }
+  };
   EL('z5corps').querySelectorAll('.bropanel .chnum').forEach(c=>{
-    c.onclick=()=>{
-      state.bro.pos=+c.dataset.i;
-      const para = EL('bflux').querySelector(`.brop[data-i="${state.bro.pos}"]`);
-      if(para){ y = Math.max(0, Math.min(lignesMax(), para.offsetTop-10)); state.bro.posY=y; applique(); }
-      preparerZ3(itemBro(bro.paras[state.bro.pos]));
-    };
-    c.ondblclick=()=>{ state.bro.pos=+c.dataset.i; projeter(itemBro(bro.paras[state.bro.pos])); };
+    const i=+c.dataset.i;
+    c.onclick=()=>saut(i,false);
+    c.ondblclick=()=>saut(i,true);
+    garde(c,()=>reserver({cle:'br§'+bro.id+'p'+i,label:`📄 §${bro.paras[i][0]} · ${bro.id}`,snap:{kind:'brochure',id:bro.id,trad:bro.trad,titre:bro.titre,pos:i,mode:'continuous'}}));
   });
-  EL('bflux').querySelectorAll('.brop').forEach(p=>{
-    p.style.cursor='pointer';
-    p.ondblclick=()=>{ state.bro.pos=+p.dataset.i; projeter(itemBro(bro.paras[state.bro.pos])); };
-    garde(p,()=>{ state.bro.pos=+p.dataset.i; preparerZ3(itemBro(bro.paras[state.bro.pos])); });
+  EL('z5corps').querySelectorAll('#brox .par').forEach(el=>{
+    const i=+el.dataset.i;
+    el.onclick=()=>saut(i,false);
+    el.ondblclick=()=>saut(i,true);
+    garde(el,()=>reserver({cle:'br§'+bro.id+'p'+i,label:`📄 §${bro.paras[i][0]} · ${bro.id}`,snap:{kind:'brochure',id:bro.id,trad:bro.trad,titre:bro.titre,pos:i,mode:'continuous'}}));
   });
+  surlignerTete();
 }
+/* v3 : lecture unique — zone 5 = paragraphes (broParagraphes), projection = texte continu (broContItem). */
 /* ---- 4D. CHANT : zone 5 (titre, strophes séparées, édition) ---- */
 function partiesChant(texte){
   const blocs = texte.split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean);
@@ -845,8 +1269,15 @@ function partiesChant(texte){
 function ouvrirChant(ri, i, pos, directe){
   const R = M4_CHANTS.recueils[ri]; const base = R.songs[i];
   const txt = (state.edits[R.id+'-'+i]) || base.texte;
-  state.chant = {recueil:ri, idx:i, pos:pos||0};
   const parties = partiesChant(txt);
+  state.chant = {recueil:ri, idx:i, pos:pos||0};
+  const _ck='ch'+ri+':'+i+':'+txt.length;   // v3.10 : contenu identique = pas de reconstruction
+  if(state._z5k===_ck && EL('z5corps').querySelector('.strophe')){
+    EL('z5corps').querySelectorAll('.strophe').forEach((x,k)=>x.classList.toggle('sel',k===state.chant.pos));
+  } else {
+  state._z5k=_ck;
+  nettoyerZ5(); state.selectedResourceType='recueil';
+  state.chant = {recueil:ri, idx:i, pos:pos||0};
   EL('z5nom').innerHTML = `🎵 <b>${base.num} — ${base.titre}</b> <span class="badge ${R.id==='nouveau'?'bnv':'bhist'}">${R.nom}</span>
     <button class="btn prim" id="bEdit">✎ Modifier</button>`;
   EL('bEdit').onclick = () => editerChant(R, i, base);
@@ -860,6 +1291,7 @@ function ouvrirChant(ri, i, pos, directe){
     el.ondblclick=()=>{ state.chant.pos=k; projeter(mk()); };
     garde(el,()=>{ state.chant.pos=k; reserver({cle:'chant-'+R.id+'-'+i+'-'+k,label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`,snap:{kind:'chant',recueil:ri,idx:i,pos:k}}); });
   });
+  }
   if(directe){ const k = Math.min(state.chant.pos, parties.length-1); const mk0={key:'ch'+R.id+i+k,entete:base.titre,titre:`${base.num} — ${base.titre} · ${parties[k].tag}`,texte:parties[k].texte,label:`🎵 ${base.num} ${base.titre} · ${parties[k].tag}`,snap:{kind:'chant',recueil:ri,idx:i,pos:k}}; projeter(mk0); }
 }
 function editerChant(R, i, base){
@@ -868,7 +1300,7 @@ function editerChant(R, i, base){
     <textarea class="chp ed" id="edTxt">${(state.edits[cle]||base.texte)}</textarea>
     <div style="display:flex;gap:6px;margin-top:8px"><button class="btn prim" id="edOk">✅ OK — enregistrer</button><button class="btn" id="edNo">Annuler</button></div>`;
   EL('edOk').onclick = () => {
-    state.edits[cle] = EL('edTxt').value;
+    state.edits[cle] = EL('edTxt').value; state._z5k=null;
     localStorage.setItem('m4_edits', JSON.stringify(state.edits));
     toast('✅ Modifié — cette version est maintenant utilisée');
     ouvrirChant(R.songs?state.chant.recueil:R===undefined?0:M4_CHANTS.recueils.indexOf(R), i, 0, false);
@@ -880,52 +1312,110 @@ EL('bPlus').onclick = () => {
   EL('m7corps').innerHTML = `<div class="choix">
     <button id="a1">🎵 Ajouter un chant (recueil)</button>
     <button id="a2">📖 Ajouter une Bible (JSON)</button>
-    <button id="a3">📄 Ajouter une brochure</button></div>`;
+    <button id="a3">📄 Ajouter une brochure</button>
+    <button id="a4">🗂️ Mes ajouts (voir · supprimer · sauvegarder)</button></div>`;
   EL('m7').style.display='flex';
+  EL('a4').onclick = async () => {
+    const arr = await ajtLister();
+    const leg = (state.ajouts.chants||[]).length + (state.ajouts.bibles||[]).length + (state.ajouts.brochures||[]).length;
+    EL('m7corps').innerHTML = `<div class="vide">🗂️ ${arr.length} ajout(s) volumineux + ${leg} ancien(s) — classés avec les autres, marqués ➕/PERSO.</div>` +
+      (arr.map(a=>`<div class="mini"><span class="lbl">${a.type==='chant'?'🎵':a.type==='bible'?'📖':'📄'} ${(a.titre||a.id||a.k||'')}</span><button class="x" data-k="${a.k}">×</button></div>`).join('') || '<div class="vide">Aucun ajout volumineux pour l\u2019instant.</div>') +
+      `<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><button class="btn prim" id="aExp">💾 Sauvegarder (JSON)</button><button class="btn" id="aImpB">📥 Restaurer (JSON)</button><input type="file" id="aImpF" accept=".json,application/json" style="display:none"></div>`;
+    EL('m7corps').querySelectorAll('.x').forEach(x=>x.onclick=async()=>{
+      if(!confirm('Supprimer cet ajout ?')) return;
+      await ajtSupprimer(x.dataset.k); toast('🗑️ Ajout supprimé (rechargez pour l\u2019enlever des listes)'); EL('a4').onclick();
+    });
+    EL('aExp').onclick=()=>{
+      const blob=new Blob([JSON.stringify(arr)],{type:'application/json'});
+      const u=document.createElement('a'); u.href=URL.createObjectURL(blob); u.download='malachie4-mes-ajouts.json'; u.click();
+      setTimeout(()=>URL.revokeObjectURL(u.href),4000); toast('💾 Sauvegarde téléchargée');
+    };
+    EL('aImpB').onclick=()=>EL('aImpF').click();
+    EL('aImpF').onchange=async e=>{
+      try{ const j=JSON.parse(await e.target.files[0].text()); let n=0;
+        for(const a of (Array.isArray(j)?j:[])){ if(a&&a.k&&a.type){ await ajtSauver(a); n++; } }
+        toast(n?`📥 ${n} ajout(s) restauré(s) — rechargez l\u2019app`:'⚠️ Fichier vide');
+      }catch(_){ toast('⚠️ Fichier invalide'); }
+    };
+  };
   EL('a1').onclick = () => {
-    EL('m7corps').innerHTML = `<label class="lbl2">Titre du chant</label><input class="chp" id="aTitre">
+    EL('m7corps').innerHTML = `<label class="lbl2">📂 Ou lire depuis un fichier (TXT, JSON ou PDF — titre et paroles se remplissent seuls)</label>
+      <div style="display:flex;gap:6px;margin-bottom:6px"><input type="file" id="aFil1" accept=".txt,.json,.pdf,text/plain,application/json,application/pdf" style="flex:1"><button class="btn" id="aLir1">📥 Lire</button></div>
+      <label class="lbl2">Titre du chant</label><input class="chp" id="aTitre">
       <label class="lbl2">Paroles (ligne vide = nouvelle strophe ; [Chœur] entre crochets)</label>
       <textarea class="chp" id="aTxt" rows="7"></textarea>
       <div class="f" style="padding:8px 0 0"><button class="btn prim" id="aOk1">✅ Ajouter au recueil</button></div>`;
-    EL('aOk1').onclick = () => {
+    EL('aLir1').onclick = async () => {
+      const fi=EL('aFil1'); if(!fi.files||!fi.files[0]){ toast('Choisissez d\u2019abord un fichier'); return; }
+      try{ const r=await lireFichierAjout(fi.files[0]);
+        if(r.json){ const j=r.json; EL('aTitre').value=j.titre||j.title||fi.files[0].name; EL('aTxt').value=j.texte||j.text||JSON.stringify(j); }
+        else { const p=parseChantFichier(r.texte, fi.files[0].name); EL('aTitre').value=p.titre; EL('aTxt').value=p.texte; }
+        toast('📥 Fichier lu — vérifiez puis ✅ Ajouter');
+      }catch(e){ toast(e==='pdf-manquant'?'⚠️ Lecture PDF indisponible ici — utilisez un TXT':'⚠️ Fichier illisible'); }
+    };
+    EL('aOk1').onclick = async () => {
       const t = EL('aTitre').value.trim(), x = EL('aTxt').value.trim(); if(!t||!x){toast('Titre et paroles requis');return;}
       const R = recueilCourant(); const n = String(R.songs.length+1);
       R.songs.push({num:n,titre:t,texte:x}); R.nb++;
-      (state.ajouts.chants=state.ajouts.chants||[]).push({recueil:R.id,num:n,titre:t,texte:x});
-      localStorage.setItem('m4_ajouts', JSON.stringify(state.ajouts));
-      ferme('m7'); construireZ4(); toast('🎵 Chant ajouté au recueil « '+R.nom+' »');
+      await ajtSauver({k:'chant:'+Date.now(), type:'chant', recueil:R.id, num:n, titre:t, texte:x});
+      ferme('m7'); construireZ4(); toast('🎵 Chant ajouté au recueil « '+R.nom+' » (mémorisé)');
     };
   };
   EL('a2').onclick = () => {
-    EL('m7corps').innerHTML = `<label class="lbl2">JSON de la Bible — format {livres:[{nom,chapitres}]}</label>
-      <textarea class="chp" id="aJson" rows="6" placeholder='{"livres":[{"nom":"Genèse","chapitres":[["v1","v2"]]}]}'></textarea>
+    EL('m7corps').innerHTML = `<label class="lbl2">📂 Fichier (JSON, TXT ou PDF) — ou collez le texte ci-dessous</label>
+      <div style="display:flex;gap:6px;margin-bottom:6px"><input type="file" id="aFil2" accept=".txt,.json,.pdf,text/plain,application/json,application/pdf" style="flex:1"><button class="btn" id="aLir2">📥 Lire</button></div>
+      <label class="lbl2">Format accepté : JSON {livres:[{nom,chapitres}]} OU texte : « # Livre » puis « Chapitre N » puis « 1. verset »…</label>
+      <textarea class="chp" id="aJson" rows="6" placeholder="# Mon livre&#10;Chapitre 1&#10;1. Premier verset&#10;2. Deuxième verset"></textarea>
       <div class="f" style="padding:8px 0 0"><button class="btn prim" id="aOk2">✅ Ajouter cette Bible</button></div>`;
-    EL('aOk2').onclick = () => {
-      try{ const j = JSON.parse(EL('aJson').value); if(!j.livres) throw 0;
-        j.livres.forEach(L=>M4_BIBLE.livres.push({nom:L.nom+' ➕', chapitres:L.chapitres}));
-        (state.ajouts.bibles=state.ajouts.bibles||[]).push(j);
-        localStorage.setItem('m4_ajouts', JSON.stringify(state.ajouts));
-        ferme('m7'); toast('📖 Bible ajoutée (livres marqués ➕)');
-      }catch(e){ toast('⚠️ JSON invalide'); }
+    EL('aLir2').onclick = async () => {
+      const fi=EL('aFil2'); if(!fi.files||!fi.files[0]){ toast('Choisissez d\u2019abord un fichier'); return; }
+      try{ const r=await lireFichierAjout(fi.files[0]);
+        EL('aJson').value = r.json ? JSON.stringify(r.json) : r.texte;
+        toast('📥 Fichier lu — vérifiez puis ✅ Ajouter');
+      }catch(e){ toast(e==='pdf-manquant'?'⚠️ Lecture PDF indisponible ici — utilisez un TXT':'⚠️ Fichier illisible'); }
+    };
+    EL('aOk2').onclick = async () => {
+      const brut=EL('aJson').value.trim(); if(!brut){ toast('Texte requis'); return; }
+      let j=null; try{ j=JSON.parse(brut); if(!j.livres) j=null; }catch(_){}
+      if(!j){ j=parseBibleFichier(brut); }
+      if(!j.livres||!j.livres.length){ toast('⚠️ Format non reconnu (voir l\u2019aide ci-dessus)'); return; }
+      j.livres.forEach(L=>M4_BIBLE.livres.push({nom:L.nom+' ➕', chapitres:L.chapitres}));
+      await ajtSauver({k:'bible:'+Date.now(), type:'bible', livres:j.livres});
+      ferme('m7'); toast('📖 Bible ajoutée (livres marqués ➕, mémorisée)');
     };
   };
   EL('a3').onclick = () => {
-    EL('m7corps').innerHTML = `<label class="lbl2">Traduction</label>
+    EL('m7corps').innerHTML = `<label class="lbl2">📂 Fichier (TXT, JSON ou PDF — les paragraphes se remplissent seuls)</label>
+      <div style="display:flex;gap:6px;margin-bottom:6px"><input type="file" id="aFil3" accept=".txt,.json,.pdf,text/plain,application/json,application/pdf" style="flex:1"><button class="btn" id="aLir3">📥 Lire</button></div>
+      <label class="lbl2">Traduction</label>
       <div class="filtres" style="margin-bottom:6px"><span class="chip on" id="tV">🟢 VGR</span> <span class="chip" id="tS">🟡 Shekinah</span></div>
       <label class="lbl2">Identifiant (ex : 65-0000X)</label><input class="chp" id="aId">
       <label class="lbl2">Nom / titre de la brochure</label><input class="chp" id="aNom">
-      <label class="lbl2">Contenu : un paragraphe par ligne, « n°. texte »</label><textarea class="chp" id="aTxt" rows="6"></textarea>
+      <label class="lbl2">Contenu : un paragraphe par ligne, « n°. texte » (ou paragraphes séparés par lignes vides)</label><textarea class="chp" id="aTxt" rows="6"></textarea>
       <div class="f" style="padding:8px 0 0"><button class="btn prim" id="aOk3">✅ Ajouter la brochure</button></div>`;
     let trad='VGR'; EL('tV').onclick=()=>{trad='VGR';EL('tV').classList.add('on');EL('tS').classList.remove('on');};
     EL('tS').onclick=()=>{trad='SHEKINAH';EL('tS').classList.add('on');EL('tV').classList.remove('on');};
-    EL('aOk3').onclick = () => {
+    EL('aLir3').onclick = async () => {
+      const fi=EL('aFil3'); if(!fi.files||!fi.files[0]){ toast('Choisissez d\u2019abord un fichier'); return; }
+      try{ const r=await lireFichierAjout(fi.files[0]);
+        let paras=[];
+        if(r.json){ const j=r.json; const arr=j.paras||j.paragraphes||[]; paras=arr.map((p,i)=>Array.isArray(p)?p:[i+1,String(p&&p.texte||p)]); if(!EL('aNom').value) EL('aNom').value=j.titre||j.title||''; }
+        else { paras=parseBrochureFichier(r.texte); if(!EL('aNom').value) EL('aNom').value=fi.files[0].name.replace(/\.[^.]+$/,''); }
+        EL('aTxt').value=paras.map(p=>p[0]+'. '+p[1]).join('\n');
+        toast(paras.length?`📥 ${paras.length} § lus — vérifiez puis ✅ Ajouter`:'⚠️ Aucun paragraphe reconnu');
+      }catch(e){ toast(e==='pdf-manquant'?'⚠️ Lecture PDF indisponible ici — utilisez un TXT':'⚠️ Fichier illisible'); }
+    };
+    EL('aOk3').onclick = async () => {
       const id=EL('aId').value.trim(), nom=EL('aNom').value.trim();
-      const paras = EL('aTxt').value.split('\n').map((l,i)=>{const m=l.match(/^\s*(\d+)\s*[.)\-]\s*(.*)$/);return m?[ +m[1], m[2] ]:null;}).filter(Boolean);
+      let paras = EL('aTxt').value.split('\n').map((l,i)=>{const m=l.match(/^\s*(\d+)\s*[.)\-]\s*(.*)$/);return (m&&m[2].trim())?[ +m[1], m[2].trim() ]:null;}).filter(Boolean);
+      if(!paras.length) paras = parseBrochureFichier(EL('aTxt').value);
       if(!id||!nom||!paras.length){toast('Identifiant, titre et § requis');return;}
       const entree = {id, titre:nom, vgr: trad==='VGR'?{fichier:'',nb_paras:paras.length}:null, shekinah: trad==='SHEKINAH'?{fichier:'',nb_paras:paras.length}:null, _paras:paras};
-      (state.ajouts.brochures=state.ajouts.brochures||[]).push(entree);
-      localStorage.setItem('m4_ajouts', JSON.stringify(state.ajouts));
-      ferme('m7'); state.selectedResourceType='brochure'; construireZ4(); toast('📄 Brochure ajoutée et classée');
+      state.ajoutsMem.brochures.push(entree);
+      await ajtSauver({k:'brochure:'+id+':'+trad, type:'brochure', id, titre:nom, trad, paras});
+      ferme('m7'); state.selectedResourceType='brochure';
+      document.querySelectorAll('.fam').forEach(x=>x.classList.toggle('on', x.dataset.fam==='brochure'));
+      construireZ4(); toast('📄 Brochure ajoutée et classée (mémorisée)');
     };
   };
 };
@@ -937,18 +1427,23 @@ EL('bPlus').onclick = () => {
   });
   (state.ajouts.bibles||[]).forEach(j=>j.livres.forEach(L=>M4_BIBLE.livres.push({nom:L.nom+' ➕', chapitres:L.chapitres})));
 })();
+async function chargerAjoutsFichiers(){
+  /* v3.10 : ajouts volumineux (zone 7 + fichiers) réintégrés depuis le stockage permanent */
+  const arr=await ajtLister();
+  arr.forEach(a=>{
+    try{
+      if(a.type==='chant'){ const R=M4_CHANTS.recueils.find(r=>r.id===a.recueil)||M4_CHANTS.recueils[0]; R.songs.push({num:a.num,titre:a.titre,texte:a.texte}); R.nb++; }
+      if(a.type==='bible'){ (a.livres||[]).forEach(L=>M4_BIBLE.livres.push({nom:L.nom+' ➕', chapitres:L.chapitres})); }
+      if(a.type==='brochure'){ state.ajoutsMem.brochures.push({id:a.id,titre:a.titre,vgr:a.trad==='VGR'?{fichier:'',nb_paras:(a.paras||[]).length}:null,shekinah:a.trad==='SHEKINAH'?{fichier:'',nb_paras:(a.paras||[]).length}:null,_paras:a.paras}); }
+    }catch(_){}
+  });
+}
 /* brochures ajoutées à la main → livrées avec leurs paragraphes */
 const DEMO_BRO = [[1,"Nous sommes en train d’acquérir du matériel nouveau pour l’enregistrement."],[2,"Nous ne savons pas trop où nous serons d’un soir à l’autre. Ceci, c’est, je pense, le troisième déplacement en quatre soirs, et je pense que nous nous déplacerons encore demain soir…"],[3,"J’espère qu’un de ces jours, quand je reviendrai à Oakland, eh bien, nous pourrons peut-être prendre quelque chose comme cette salle-ci pendant une semaine ou deux, et là, nous pourrions avoir un vrai…"],[4,"Eh bien, je dirais ceci : nous passons juste un soir ou deux quelque part, puis nous allons cent cinquante kilomètres plus loin, et juste au moment où on saisit la chose…"],[5,"Donc, je pense qu’après mon retour du Canada, eh bien, avant que nous allions au Mexique, ou ailleurs, je pense que nous allons déterminer les endroits où y tenir un réveil…"],[6,"Un peu comme dans ma propre ville, à Jeffersonville, dans l’Indiana, eh bien, il n’y a rien là-bas, oh, dès que nous sommes dans la ville, des centaines de gens affluent de partout…"]];
 /* ================= NAVIGATEURS ▲▼ + CLAVIER ================= */
 function nav(d){
-  if(state.bro.id && state.bro.mode==='continuous'){
-    const c = document.querySelector('#bcont'); if(c && c._bouge) c._bouge(d* (Math.round(state.fontSize*.5*state.lineSpacing)+2)); return;
-  }
-  if(state.bro.id){
-    state.bro.pos = Math.max(0, Math.min(state.bro.paras.length-1, state.bro.pos + d));
-    if(state.bro.mode==='paragraph'){ broParagraphe(); }
-    preparerZ3(itemBro(state.bro.paras[state.bro.pos])); return;
-  }
+  const _t=Date.now(); if(_t-(state._navT||0)<25) return; state._navT=_t;  // v3.10 : rafales clavier apprivoisées
+  if(state.bro.id){ bougeProj(d); return; }   // v3 : flèches/Espace = projection LIGNE PAR LIGNE
   if(state.selectedResourceType==='bible' && state.bible.livre>=0 && state.bible.chapitre>=0){
     const L=M4_BIBLE.livres[state.bible.livre], C=L.chapitres[state.bible.chapitre];
     const v = Math.max(0, Math.min(C.length-1, (state.bible.verset<0?0:state.bible.verset)+d));
@@ -969,31 +1464,22 @@ function nav(d){
   }
 }
 EL('prev').onclick=()=>nav(-1); EL('next').onclick=()=>nav(1);
+/* v3 : ⏮ Retour = ramener la dernière projection (écran + zone 5, position exacte) */
+EL('retour').onclick=()=>{
+  const item = state.projStack.pop();
+  if(!item){ toast('⏮ Rien avant — aucune projection précédente'); return; }
+  state.preview = item; state.displayEnabled = true; majBoutons();
+  if(item.snap) restaurerSnap(item.snap, false);
+  rendreZ3(); toast('⏮ Retour : ' + item.label);
+};
+/* v3 : zoom et marges de l'ÉCRAN DE PROJECTION seul (la zone de travail ne bouge pas) */
+EL('pzoomM').onclick=()=>{ state.projTaille=Math.max(.7, +(state.projTaille-.1).toFixed(2)); rendreZ3(); };
+EL('pzoomP').onclick=()=>{ state.projTaille=Math.min(1.6, +(state.projTaille+.1).toFixed(2)); rendreZ3(); };
+const MARGES_NOM=['▦ Marges : étroit','▦ Marges : normal','▦ Marges : large'];
+EL('pmarge').onclick=()=>{ state.projMarge=(state.projMarge+1)%3; EL('pmarge').textContent=MARGES_NOM[state.projMarge]; rendreZ3(); };
 EL('z5up').onclick=()=>nav(-1); EL('z5dn').onclick=()=>nav(1);
-/* SYNCHRO au défilement : la strophe/le verset visible en tête devient courant dans la zone 3 */
-EL('z5corps').addEventListener('scroll', ()=>{
-  const stubs = EL('z5corps').querySelectorAll('.strophe');
-  if(!stubs.length) return;
-  const top = EL('z5corps').getBoundingClientRect().top;
-  let best = null;
-  stubs.forEach(p=>{ if(p.getBoundingClientRect().top < top + 70) best = p; });
-  if(!best || best.dataset.i===undefined) return;
-  const i = +best.dataset.i;
-  if(state.selectedResourceType==='bible' && state.bible.livre>=0 && i!==state.bible.verset){
-    const L=M4_BIBLE.livres[state.bible.livre], C=L.chapitres[state.bible.chapitre];
-    state.bible.verset=i;
-    projeterSync({refhd:`${L.nom} ${state.bible.chapitre+1}:${i+1}`, ref:'Segond 1910', titre:refTxt()+':'+(i+1), texte:C[i],
-      label:`📖 ${refTxt()}:${i+1}`, snap:{kind:'bible',livre:state.bible.livre,chapitre:state.bible.chapitre,verset:i}});
-  } else if(!state.bro.id && state.chant.idx>=0 && i!==state.chant.pos){
-    const R=M4_CHANTS.recueils[state.chant.recueil];
-    const parties=partiesChant((state.edits[R.id+'-'+state.chant.idx])||R.songs[state.chant.idx].texte);
-    if(!parties[i]) return;
-    state.chant.pos=i;
-    projeterSync({entete:R.songs[state.chant.idx].titre, titre:`${R.songs[state.chant.idx].num} — ${R.songs[state.chant.idx].titre} · ${parties[i].tag}`,
-      texte:parties[i].texte, label:`🎵 ${R.songs[state.chant.idx].num} ${R.songs[state.chant.idx].titre} · ${parties[i].tag}`,
-      snap:{kind:'chant',recueil:state.chant.recueil,idx:state.chant.idx,pos:i}});
-  }
-}, {passive:true});
+/* v3 : la molette/le doigt en zone 5 DÉFILE LE PANNEAU SEUL — la projection ne bouge
+   que par double-clic ou flèches/Espace (jamais par la molette). */
 document.addEventListener('keydown', e=>{
   if(e.target.matches('input,textarea') ) return;
   if(e.key==='ArrowDown'||e.key===' '){ e.preventDefault(); nav(1); }
@@ -1025,30 +1511,71 @@ const _obs = new ResizeObserver(els=>{
   }
 });
 document.querySelectorAll('.tile').forEach(t=>_obs.observe(t));
-/* ================= DÉMARRAGE ================= */
-majBoutons(); rendreZ3(); construireZ4();
-setTimeout(()=>{
-  const sp=EL('splash'); sp.style.opacity='0'; setTimeout(()=>{ sp.remove();
-    toast('🖥️ Projecteur détecté — connecté en mode transparent (modifiable en zone 8)');
-  },520);
-}, 2600);
-/* service worker + embarquement progressif en arrière-plan (hors-ligne) */
-if('serviceWorker' in navigator){ addEventListener('load', ()=>navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
-async function embarquerPartiellement(){
-  try{
-    const idx = (window.M4_BROCHURES.brochures||[]);      // embarquement INTÉGRAL progressif (hors-ligne après)
-    let fait = 0;
-    for(const b of idx){
-      const trad = b.vgr ? 'vgr' : 'shekinah';
-      fetch(`data/brochures/${trad}-textes/${b.id}.json.gz`).catch(()=>{});
-      fait++;
-      if(fait % 150 === 0) toast(`📦 Embarquement hors-ligne : ${fait}/${idx.length} brochures…`);
-      await new Promise(r=>setTimeout(r, 25));
-    }
-    toast('✅ Embarquement terminé — tout fonctionne maintenant sans réseau');
-  }catch(e){}
+/* ================= DÉMARRAGE v3 : splash 5 s + cercle de progression réel ================= */
+const CACHE_NOM='m4p-v3k';   // même nom que dans sw.js
+function progresSplash(pct,msg){
+  const c=EL('cercleProg'); if(c) c.style.strokeDashoffset=(326.7*(1-Math.min(100,Math.max(0,pct))/100)).toFixed(1);
+  const t=EL('splashPct'); if(t) t.textContent=Math.round(pct)+'%';
+  const m=EL('splashMsg'); if(m&&msg) m.textContent=msg;
 }
-addEventListener('load', ()=>setTimeout(embarquerPartiellement, 4000));
+const attendre=ms=>new Promise(r=>setTimeout(r,ms));
+async function embarquerTout(){
+  /* v3 : TOUTES les brochures (VGR + Shekinah) stockées dans l'appareil, par vagues rapides */
+  const T00=Date.now();
+  const idx=(window.M4_BROCHURES&&window.M4_BROCHURES.brochures)||[];
+  const fichiers=[];
+  idx.forEach(b=>{ if(b.vgr) fichiers.push(`data/brochures/vgr-textes/${b.id}.json.gz`); if(b.shekinah) fichiers.push(`data/brochures/shekinah-textes/${b.id}.json.gz`); });
+  let cache=null; const deja=new Set();
+  try{
+    if(!('caches' in window)) return {fait:0,total:fichiers.length,sansCache:true};
+    cache=await caches.open(CACHE_NOM);
+    const cles=await cache.keys();
+    cles.forEach(k=>{ const u=String(k.url); const m=u.match(/data\/brochures\/.*\.json\.gz$/); if(m) deja.add(m[0]); });
+  }catch(_){ return {fait:0,total:fichiers.length,sansCache:true}; }
+  const reste=fichiers.filter(f=>!deja.has(f));
+  if(!reste.length) return {fait:fichiers.length,total:fichiers.length,complet:true};
+  let fait=fichiers.length-reste.length;
+  const VAGUE=8;
+  for(let i=0;i<reste.length;i+=VAGUE){
+    const vague=reste.slice(i,i+VAGUE);
+    await Promise.all(vague.map(f=>fetch(f).then(r=>{ if(r&&r.ok&&cache) return cache.put(f,r.clone()); }).catch(()=>{})));
+    fait+=vague.length;
+    if(fait%24<8){ const sec=Math.round((Date.now()-T00)/1000); progresSplash(5+90*fait/fichiers.length, `📦 Installation : ${fait}/${fichiers.length} · ${Math.round(100*fait/fichiers.length)}% · ${sec}s`); }
+  }
+  return {fait,total:fichiers.length};
+}
+async function demarrage(){
+  majBoutons(); rendreZ3();
+  try{ await chargerAjoutsFichiers(); }catch(_){}
+  construireZ4();
+  choisirPolice('Capture');
+  const T0=Date.now();
+  try{
+    if('serviceWorker' in navigator){ try{ await navigator.serviceWorker.register('./sw.js'); }catch(_){} }
+    try{ if(navigator.storage&&navigator.storage.persist) await navigator.storage.persist(); }catch(_){}  // v3.9 : le navigateur ne doit JAMAIS effacer nos contenus
+    progresSplash(4,'🕊️ Ouverture…');
+    await attendre(400);
+    progresSplash(8,'📖 Vérification des contenus installés…');
+    const res=await embarquerTout();
+    if(res.sansCache) progresSplash(92,'📖 Mode direct (sans cache système)…');
+    else if(res.complet) progresSplash(92,'✅ Contenus déjà installés — vérification…');
+    else { const sec=Math.round((Date.now()-T0)/1000); progresSplash(96,`✅ ${res.fait}/${res.total} contenus installés en ${sec}s…`); }
+    progresSplash(97,'🔍 Index de recherche instantanée…');
+    await preparerIndexRecherche();
+  }catch(_){}
+  const ecoule=Date.now()-T0;
+  if(ecoule<5000) await attendre(5000-ecoule);   // le logo se montre au moins 5 s
+  progresSplash(100,'✅ Prêt — 100 % hors-ligne');
+  await attendre(350);
+  const sp=EL('splash'); if(sp){ sp.style.opacity='0'; setTimeout(()=>{ sp.remove(); },520); }
+  toast('🖥️ Projecteur détecté — connecté en mode transparent (modifiable en zone 8)');
+  tentativeAutoPublic();
+  prechargerFond();   // v3.8 : tout devient instantané tout seul, en arrière-plan
+  setInterval(()=>{ try{ let auto=false; try{auto=localStorage.getItem('m4_public_auto')==='1';}catch(_){}
+    if(auto&&state.projectionConnected&&!EN_PUBLIC&&(!WIN_PUB||WIN_PUB.closed)){ const w=window.open(location.pathname+'?public=1&fs=1','m4public'); if(w) WIN_PUB=w; } }catch(_){} }, 10000);  // v3.10 : réparation auto du 2ᵉ écran
+  if(new URLSearchParams(location.search).get('testvitesse')==='1'){ setTimeout(testVitesse, 900); }
+}
+demarrage();
 </script>
 </body>
 </html>

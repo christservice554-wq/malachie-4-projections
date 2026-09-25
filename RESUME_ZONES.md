@@ -34,3 +34,10 @@
 
 ## Étape 6 — Critères de validation
 ✔ 8 zones présentes et identifiables · ✔ bouton ＋ (recueil/Bible/brochure) · ✔ Bible navigable livre/chapitre/verset avec rétrécissement · ✔ brochures 2 lectures + retour rapide des § · ✔ cantiques éditables, strophes séparées · ✔ zone 3 fixe centrée bornée · ✔ historique restaurable à la position exacte · ✔ Projection et Affichage indépendants · ✔ double-clic = affichage auto, simple clic = non · ✔ fond parchemin par défaut · ✔ transparent quand affichage coupé · ✔ confirmations pour les actions destructrices · ✔ texte jamais coupé hors limites.
+
+## MISE À JOUR — VERSION 3 (v3.7)
+- **Démarrage** : splash 5 s, CERCLE de progression + % (installation réelle des contenus) → « Prêt — 100 % hors-ligne » → la projection repart toute seule sur le 2ᵉ écran (plein écran) si autorisée une fois.
+- **Zone 2** : écriture compacte (✒️ + bouton ＋ = boîtier : Capture/Sermon/Georgia/Calibri/Verdana) ; fonds : Charbon/Noir/Nuit/Bleu.
+- **Zone 3** : ⏮ Retour + A−/A+ écran (zoom projection seule) + ▦ Marges ; brochures = texte continu.
+- **Zone 5** : ne mélange plus jamais (nettoyage à chaque changement) ; Bible = numéros rouges espacés ; brochure = paragraphes + tête jaune.
+- **Gestes** : molette = panneaux seuls ; flèches/Espace = projection (ligne par ligne) ; double-clic = afficher ; 1 clic brochure = positionner.

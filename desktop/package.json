@@ -1,16 +1,19 @@
 {
   "name": "malachie4-projections",
   "productName": "Malachie 4 Projections",
-  "version": "3.0.0",
-  "description": "Gestion de projection du culte — modèle 8 zones (Projection/Affichage)",
+  "version": "3.1.0",
+  "description": "Gestion de projection du culte — modèle 8 zones, projection auto plein écran (Version 3)",
   "main": "electron-main.js",
   "license": "GPL-3.0",
-  "scripts": { "start": "electron .", "dist": "electron-builder --win portable --x64" },
+  "scripts": { "start": "electron .", "dist": "electron-builder --win nsis portable --x64" },
   "devDependencies": { "electron": "^33.0.0", "electron-builder": "^25.0.0" },
   "build": {
     "appId": "org.christservice.malachie4projections",
-    "files": ["electron-main.js", "../app/**"],
-    "win": { "target": "portable" },
-    "portable": { "artifactName": "Malachie4-Projections-2.exe" }
+    "files": ["electron-main.js", "icon.ico", "../app/**"],
+    "win": { "target": ["nsis", "portable"], "icon": "icon.ico" },
+    "nsis": { "oneClick": false, "perMachine": false, "allowToChangeInstallationDirectory": true, "artifactName": "Malachie4-Projections-Setup-3.${ext}", "shortcutName": "Malachie 4 Projections" },
+    "portable": { "artifactName": "Malachie4-Projections-3.exe" },
+    "linux": { "target": ["AppImage"], "category": "Utility", "icon": "../app/assets/logo.png", "artifactName": "Malachie4-Projections-3.${ext}" },
+    "mac": { "target": ["dmg"], "category": "public.app-category.utilities", "artifactName": "Malachie4-Projections-3.${ext}" }
   }
 }

@@ -1,7 +1,7 @@
 // Coquille Electron — Malachie 4 Projections
 // Sert l'app en HTTP local (127.0.0.1) : brochures, décompression gzip et service worker
 // fonctionnent à 100 % hors-ligne, exactement comme sur le web.
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, screen } = require('electron');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
@@ -33,6 +33,26 @@ function creerServeur() {
 }
 let serveur = null;
 
+
+/* v3 : fenêtre publique AUTOMATIQUE en plein écran sur le 2ᵉ écran (style VideoPsalm) */
+let winPub = null;
+function fenetrePublique(){
+  try{
+    const ecrans = screen.getAllDisplays();
+    const ext = ecrans.find(d => d.bounds.x !== 0 || d.bounds.y !== 0) || ecrans[1];
+    if(!ext) return;   // un seul écran : l'utilisateur utilisera ⛶ 2ᵉ écran dans l'app
+    if(winPub && !winPub.isDestroyed()) return;
+    winPub = new BrowserWindow({
+      x: ext.bounds.x, y: ext.bounds.y, width: ext.bounds.width, height: ext.bounds.height,
+      fullscreen: true, frame: false, backgroundColor: '#0a0a0c', title: 'Malachie 4 — Public',
+      autoHideMenuBar: true, webPreferences: { contextIsolation: true }
+    });
+    winPub.loadURL('http://127.0.0.1:47847/index.html?public=1');
+    winPub.setAlwaysOnTop(true, 'screen-saver');   // v3.9 : RIEN ne passe devant (souris, notifications)
+    winPub.setKiosk(true);                          // v3.9 : plein écran verrouillé
+  }catch(e){}
+}
+
 async function creerFenetre() {
   serveur = await creerServeur();
   const win = new BrowserWindow({
@@ -44,7 +64,7 @@ async function creerFenetre() {
   win.loadURL('http://127.0.0.1:47847/index.html');
 }
 app.whenReady().then(() => {
-  creerFenetre();
+  creerFenetre().then(() => setTimeout(fenetrePublique, 1200));
   app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) creerFenetre(); });
 });
 app.on('window-all-closed', () => { if (serveur) serveur.close(); if (process.platform !== 'darwin') app.quit(); });

@@ -1,13 +1,16 @@
 {
   "name": "Malachie 4 Projections",
   "short_name": "Malachie 4",
-  "description": "Gestion de projection du culte — 8 zones, Projection/Affichage indépendants, Bible LSG complète, 2 recueils, brochures du Message, hors-ligne.",
+  "description": "Gestion de projection du culte — 8 zones, projection auto plein écran, Bible LSG complète, 2 recueils, brochures du Message, hors-ligne.",
+  "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#1c3a2a",
+  "orientation": "any",
+  "background_color": "#0a0a0c",
   "theme_color": "#1c3a2a",
   "lang": "fr",
+  "categories": ["utilities", "lifestyle", "education"],
   "icons": [
     { "src": "./assets/logo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "./assets/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }

@@ -1,32 +1,88 @@
-name: Construire le EXE Windows
+name: Construire la Version 3 (EXE + ZIP)
 
 on:
   push:
     paths:
       - '.github/workflows/build-exe.yml'
       - 'desktop/**'
+      - 'app/index.html'
+      - 'app/sw.js'
+      - 'app/manifest.json'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  exe-windows:
+  win:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Installer et construire (electron + electron-builder portable)
+      - name: Construire (installateur NSIS + portable)
         run: |
           cd desktop
           npm install
-          npx electron-builder --win portable --x64 -p never
-      - name: Publier l'EXE dans la release v3.0
-        shell: pwsh
+          npx electron-builder --win nsis portable --x64 -p never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: win
+          path: desktop/dist/*.exe
+
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Construire (AppImage)
         run: |
-          $exe = Get-ChildItem -Path desktop\dist -Filter *.exe -Recurse | Select-Object -First 1
-          gh release upload v3.0 $exe.FullName --clobber
+          cd desktop
+          npm install
+          npx electron-builder --linux AppImage --x64 -p never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: desktop/dist/*.AppImage
+
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Construire (DMG)
+        run: |
+          cd desktop
+          npm install
+          npx electron-builder --mac dmg -p never
+      - name: Publier le DMG dans la release v3.1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view v3.1 >/dev/null 2>&1 || gh release create v3.1 --title "Version 3 (v3.10) — imports PDF + turbo sûr + zone Liens" --notes "Voir RESUME_VERSION3.md dans le dépôt."
+          gh release upload v3.1 desktop/dist/*.dmg --clobber
+
+  release:
+    needs: [win, linux]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Construire le ZIP complet v3.1
+        run: zip -qr Malachie4-Projections-COMPLET-v3.1.zip app desktop README.md CAHIER_DES_CHARGES.md RESUME_ZONES.md ARCHITECTURE.md MANUEL_D_UTILISATION.md LIENS_ET_EXPLOITATION.md RESUME_VERSION3.md LICENSE simulation-windows.html simulation-vitesse.html
+      - name: Créer la release v3.1 si absente
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release view v3.1 >/dev/null 2>&1 || gh release create v3.1 --title "Version 3 (v3.10) — imports PDF + turbo sûr + zone Liens" --notes "Portable Windows Malachie4-Projections-3.exe + installateur Setup + AppImage Linux + ZIP complet. Voir RESUME_VERSION3.md."
+      - name: Publier EXE + AppImage + ZIP
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload v3.1 dist/* Malachie4-Projections-COMPLET-v3.1.zip --clobber
